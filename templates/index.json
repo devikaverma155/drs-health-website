@@ -1,1013 +1,371 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "marquee_YQXpcF": {
-      "type": "marquee",
-      "blocks": {
-        "text_rFYKGk": {
-          "type": "text",
-          "settings": {
-            "text": "<p>We make things that work better and last longer.</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "custom",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "tight",
-            "letter_spacing": "tight",
-            "case": "none",
-            "wrap": "nowrap",
-            "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "text_rFYKGk"
-      ],
-      "name": "t:names.marquee_section",
+    "announcement_bar": {
+      "type": "announcement-bar-custom",
       "settings": {
-        "movement_direction": "normal",
-        "color_scheme": "",
-        "padding-block-start": 16,
-        "padding-block-end": 16,
-        "gap_between_elements": 10
+        "text": "<p>✓ Clinically tested & certified • 100% natural ingredients • Free shipping on orders over ₹499</p>",
+        "color_scheme": "success",
+        "show_close_button": true
       }
     },
-    "slideshow_HpJHXJ": {
-      "type": "slideshow",
+    "hero": {
+      "type": "drs-hero",
       "blocks": {
-        "slide_PDcjxt": {
-          "type": "_slide",
+        "button_1": {
+          "type": "button",
           "settings": {
-            "media_type_1": "image",
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-6",
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 48,
-            "padding-block-end": 48,
-            "padding-inline-start": 48,
-            "padding-inline-end": 48
-          },
-          "blocks": {
-            "text_WzAVF4": {
-              "type": "text",
-              "name": "t:names.heading",
-              "settings": {
-                "text": "<h2>New arrivals</h2>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_ga4McU": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Introducing our latest products, made especially for the season. Shop your favorites before they're gone!</p>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 20,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_PjMtXA": {
-              "type": "button",
-              "settings": {
-                "label": "Shop now",
-                "link": "shopify://collections/all",
-                "open_in_new_tab": false,
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_WzAVF4",
-            "text_ga4McU",
-            "button_PjMtXA"
-          ]
+            "button_label": "Explore Products",
+            "button_style": "primary",
+            "show_arrow": true
+          }
         },
-        "slide_9TJypa": {
-          "type": "_slide",
+        "button_2": {
+          "type": "button",
           "settings": {
-            "media_type_1": "image",
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-6",
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 48,
-            "padding-block-end": 48,
-            "padding-inline-start": 48,
-            "padding-inline-end": 48
-          },
-          "blocks": {
-            "text_883WtT": {
-              "type": "text",
-              "name": "t:names.heading",
-              "settings": {
-                "text": "<h2>Bestsellers</h2>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_nGGTHR": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Discover the bestsellers that have captured the hearts of our customers with their perfect blend of functionality and style.</p>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 20,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_tCJ7Qx": {
-              "type": "button",
-              "settings": {
-                "label": "Shop now",
-                "link": "shopify://collections/all",
-                "open_in_new_tab": false,
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_883WtT",
-            "text_nGGTHR",
-            "button_tCJ7Qx"
-          ]
+            "button_label": "Free Consultation",
+            "button_style": "secondary",
+            "show_arrow": true
+          }
         }
       },
-      "block_order": [
-        "slide_PDcjxt",
-        "slide_9TJypa"
-      ],
-      "name": "t:names.slideshow_full_frame",
+      "block_order": ["button_1", "button_2"],
       "settings": {
-        "display_mode": "full_frame",
-        "section_width": "full-width",
-        "full_frame_on_mobile": false,
-        "slideshow_gap": 12,
-        "corner_radius": 0,
-        "slide_height": "medium",
-        "content_position": "on-media",
-        "color_scheme": "",
-        "icons_style": "arrows_large",
-        "icons_shape": "none",
-        "slideshow_controls_style": "dots",
-        "autoplay": false,
-        "autoplay_speed": 4,
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "badge": "Clinically Tested",
+        "heading": "Premium Healthcare Solutions for Modern Wellness",
+        "subheading": "Trusted by thousands. Backed by science. Delivered with care.",
+        "description": "<p>DRS Health combines the power of traditional wellness knowledge with modern scientific research to bring you premium healthcare products you can trust.</p>",
+        "trust_text": "Clinically tested & certified",
+        "hero_size": "medium",
+        "min_height": 600,
+        "content_alignment": "center"
       }
     },
-    "section_LNVaA8": {
-      "type": "section",
+    "health_concerns": {
+      "type": "health-concern-grid",
       "blocks": {
-        "image_HXXit8": {
-          "type": "image",
+        "concern_1": {
+          "type": "concern",
           "settings": {
-            "link": "",
-            "image_ratio": "square",
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "title": "Immunity",
+            "description": "Strengthen your immune system",
+            "color": "green"
+          }
         },
-        "group_QgkmUQ": {
-          "type": "group",
+        "concern_2": {
+          "type": "concern",
           "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 24,
-            "width": "custom",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "text_ATQWYp": {
-              "type": "text",
-              "name": "t:names.heading",
-              "settings": {
-                "text": "<h2>Our signature product</h2>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h3",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_PRE44x": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Made with care and unconditionally loved by our customers, this signature bestseller exceeds all expectations.</p>",
-                "width": "fit-content",
-                "max_width": "narrow",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "image_YJyP6X": {
-              "type": "image",
-              "name": "t:names.image",
-              "settings": {
-                "link": "",
-                "image_ratio": "adapt",
-                "width": "custom",
-                "custom_width": 38,
-                "width_mobile": "custom",
-                "custom_width_mobile": 100,
-                "height": "fill",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "image_hY6hPU": {
-              "type": "image",
-              "name": "t:names.image",
-              "settings": {
-                "link": "",
-                "image_ratio": "adapt",
-                "width": "custom",
-                "custom_width": 38,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_rTfBfh": {
-              "type": "button",
-              "settings": {
-                "label": "About US",
-                "link": "shopify://collections/all",
-                "open_in_new_tab": false,
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_ATQWYp",
-            "text_PRE44x",
-            "image_YJyP6X",
-            "image_hY6hPU",
-            "button_rTfBfh"
-          ]
+            "title": "Energy",
+            "description": "Boost vitality and stamina",
+            "color": "orange"
+          }
+        },
+        "concern_3": {
+          "type": "concern",
+          "settings": {
+            "title": "Nutrition",
+            "description": "Complete nutritional support",
+            "color": "blue"
+          }
+        },
+        "concern_4": {
+          "type": "concern",
+          "settings": {
+            "title": "Wellness",
+            "description": "Overall health and balance",
+            "color": "purple"
+          }
+        },
+        "concern_5": {
+          "type": "concern",
+          "settings": {
+            "title": "Therapeutic Care",
+            "description": "Targeted health solutions",
+            "color": "red"
+          }
         }
       },
-      "block_order": [
-        "image_HXXit8",
-        "group_QgkmUQ"
-      ],
-      "name": "t:names.image_with_text",
+      "block_order": ["concern_1", "concern_2", "concern_3", "concern_4", "concern_5"],
       "settings": {
-        "content_direction": "row",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 32,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 40,
-        "padding-block-end": 40
+        "heading": "Health Concerns We Address",
+        "subheading": "Find the right wellness solution for your health goals"
       }
     },
-    "section_kcEXJM": {
-      "type": "section",
+    "featured_products": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "Our Best Sellers",
+        "subheading": "Trusted by thousands of customers",
+        "products_count": 6,
+        "columns": 3,
+        "show_rating": true,
+        "review_count": 128,
+        "show_benefits": true,
+        "show_view_all": true
+      }
+    },
+    "product_categories": {
+      "type": "product-category-cards",
       "blocks": {
-        "group_HtiQbX": {
-          "type": "group",
+        "category_1": {
+          "type": "category",
           "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 16,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "icon_8rRWdY": {
-              "type": "icon",
-              "settings": {
-                "icon": "eye",
-                "width": 32,
-                "link": "",
-                "open_in_new_tab": false
-              },
-              "blocks": {}
-            },
-            "group_rRiK7q": {
-              "type": "group",
-              "settings": {
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 4,
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "background_media": "none",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "link": "",
-                "open_in_new_tab": false,
-                "placeholder": "",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "text_LGm7mh": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<h2>Intentional design</h2>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "center",
-                    "type_preset": "h3",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "text_Q7b4YW": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>Everything we do starts with why</p>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "center",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "text_LGm7mh",
-                "text_Q7b4YW"
-              ]
-            }
-          },
-          "block_order": [
-            "icon_8rRWdY",
-            "group_rRiK7q"
-          ]
+            "title": "Syrup",
+            "description": "Liquid wellness formulations",
+            "product_count": "18",
+            "layout": "image"
+          }
         },
-        "group_A96TT6": {
-          "type": "group",
+        "category_2": {
+          "type": "category",
           "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 16,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "icon_ixTzjz": {
-              "type": "icon",
-              "settings": {
-                "icon": "heart",
-                "width": 32,
-                "link": "",
-                "open_in_new_tab": false
-              },
-              "blocks": {}
-            },
-            "group_c7Ewyw": {
-              "type": "group",
-              "settings": {
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 4,
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "background_media": "none",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "link": "",
-                "open_in_new_tab": false,
-                "placeholder": "",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "text_qkMKyM": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<h2>Made with care</h2>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "center",
-                    "type_preset": "h3",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "text_yErGpx": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>We believe in building better</p>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "center",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "text_qkMKyM",
-                "text_yErGpx"
-              ]
-            }
-          },
-          "block_order": [
-            "icon_ixTzjz",
-            "group_c7Ewyw"
-          ]
+            "title": "Tablets",
+            "description": "Convenient daily wellness",
+            "product_count": "24",
+            "layout": "image"
+          }
         },
-        "group_GqknX7": {
-          "type": "group",
+        "category_3": {
+          "type": "category",
           "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 16,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "icon_xUW8xE": {
-              "type": "icon",
-              "settings": {
-                "icon": "silhouette",
-                "width": 32,
-                "link": "",
-                "open_in_new_tab": false
-              },
-              "blocks": {}
-            },
-            "group_78EVfx": {
-              "type": "group",
-              "settings": {
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 4,
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "background_media": "none",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "link": "",
-                "open_in_new_tab": false,
-                "placeholder": "",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "text_mRQzx8": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<h2>A team with a goal</h2>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "center",
-                    "type_preset": "h3",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "text_cffPrt": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>Real people making great products</p>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "center",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "text_mRQzx8",
-                "text_cffPrt"
-              ]
-            }
-          },
-          "block_order": [
-            "icon_xUW8xE",
-            "group_78EVfx"
-          ]
+            "title": "Capsules",
+            "description": "Fast-absorbing formulas",
+            "product_count": "20",
+            "layout": "image"
+          }
+        },
+        "category_4": {
+          "type": "category",
+          "settings": {
+            "title": "Protein Powder",
+            "description": "Nutritional support",
+            "product_count": "12",
+            "layout": "image"
+          }
+        },
+        "category_5": {
+          "type": "category",
+          "settings": {
+            "title": "Nutraceuticals",
+            "description": "Specialized nutrition",
+            "product_count": "16",
+            "layout": "image"
+          }
+        },
+        "category_6": {
+          "type": "category",
+          "settings": {
+            "title": "Sachets",
+            "description": "Easy-to-use portions",
+            "product_count": "14",
+            "layout": "image"
+          }
         }
       },
-      "block_order": [
-        "group_HtiQbX",
-        "group_A96TT6",
-        "group_GqknX7"
-      ],
-      "name": "t:names.icons_with_text",
+      "block_order": ["category_1", "category_2", "category_3", "category_4", "category_5", "category_6"],
       "settings": {
-        "content_direction": "row",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 16,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "heading": "Shop by Category",
+        "subheading": "Find the right form for your wellness journey"
       }
     },
-    "17710594105a46cfcf": {
-      "type": "_blocks",
+    "services": {
+      "type": "services-grid",
+      "blocks": {
+        "service_1": {
+          "type": "service",
+          "settings": {
+            "title": "Third Party Manufacturing",
+            "description": "Custom product manufacturing for your brand",
+            "features": "WHO-GMP certified, Flexible batch sizes, Quality guaranteed",
+            "cta_label": "Learn More",
+            "card_style": "default"
+          }
+        },
+        "service_2": {
+          "type": "service",
+          "settings": {
+            "title": "Pharma Franchise",
+            "description": "Become a DRS Health distribution partner",
+            "features": "Proven business model, Marketing support, Training included",
+            "cta_label": "Explore Franchise",
+            "card_style": "default"
+          }
+        },
+        "service_3": {
+          "type": "service",
+          "settings": {
+            "title": "Product Development",
+            "description": "Create innovative health solutions",
+            "features": "R&D expertise, Regulatory guidance, Market research",
+            "cta_label": "Start Development",
+            "card_style": "default"
+          }
+        },
+        "service_4": {
+          "type": "service",
+          "settings": {
+            "title": "Free Consultation",
+            "description": "Get personalized wellness guidance from experts",
+            "features": "One-on-one advice, Custom plan, Follow-up support",
+            "cta_label": "Book Now",
+            "card_style": "featured"
+          }
+        },
+        "service_5": {
+          "type": "service",
+          "settings": {
+            "title": "Nutrition Guidance",
+            "description": "Professional dietary support for health goals",
+            "features": "Personalized plans, Food recommendations, Progress tracking",
+            "cta_label": "Start Now",
+            "card_style": "default"
+          }
+        },
+        "service_6": {
+          "type": "service",
+          "settings": {
+            "title": "Custom Formulation",
+            "description": "Develop formulations tailored to your needs",
+            "features": "Expert chemists, Quality testing, Fast turnaround",
+            "cta_label": "Request Quote",
+            "card_style": "default"
+          }
+        }
+      },
+      "block_order": ["service_1", "service_2", "service_3", "service_4", "service_5", "service_6"],
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "heading": "Our Services",
+        "subheading": "From product development to consultation, we support your wellness journey"
+      }
+    },
+    "manufacturing_trust": {
+      "type": "manufacturing-trust",
+      "blocks": {
+        "cert_1": {
+          "type": "certification",
+          "settings": {
+            "title": "WHO-GMP Certified",
+            "description": "Meets global pharmaceutical manufacturing standards"
+          }
+        },
+        "cert_2": {
+          "type": "certification",
+          "settings": {
+            "title": "ISO 22000:2018",
+            "description": "Food safety management system certified"
+          }
+        },
+        "cert_3": {
+          "type": "certification",
+          "settings": {
+            "title": "FSSAI Licensed",
+            "description": "Complies with Indian food safety regulations"
+          }
+        },
+        "cert_4": {
+          "type": "certification",
+          "settings": {
+            "title": "ISO 9001:2015",
+            "description": "Quality management system certified"
+          }
+        }
+      },
+      "block_order": ["cert_1", "cert_2", "cert_3", "cert_4"],
+      "settings": {
+        "heading": "Quality & Manufacturing Excellence",
+        "description": "DRS Health is committed to the highest standards of pharmaceutical excellence and safety",
+        "show_image": true
+      }
+    },
+    "testimonials": {
+      "type": "testimonials-slider",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "testimonial_text": "The quality and effectiveness of DRS Health products have truly transformed my wellness routine. I've seen visible improvements in my energy levels and overall health.",
+            "author_name": "Sarah Johnson",
+            "author_title": "Health Coach, Customer",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "testimonial_text": "As a practicing physician, I recommend DRS Health to my patients. Their commitment to quality and science-backed formulations is evident in every product.",
+            "author_name": "Dr. Rajesh Patel",
+            "author_title": "MD, Internal Medicine",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {
+            "testimonial_text": "Finally, a wellness brand I can trust! The natural ingredients, the certifications, and the results speak for themselves. DRS Health is my go-to.",
+            "author_name": "Priya Sharma",
+            "author_title": "Fitness Enthusiast",
+            "rating": 5,
+            "show_rating": true
+          }
+        }
+      },
+      "block_order": ["testimonial_1", "testimonial_2", "testimonial_3"],
+      "settings": {
+        "heading": "What Our Customers Say",
+        "subheading": "Real stories from real people who trust DRS Health"
+      }
+    },
+    "brand_story": {
+      "type": "brand-story-preview",
+      "blocks": {
+        "button_1": {
+          "type": "button",
+          "settings": {
+            "button_label": "Read Our Full Story",
+            "button_style": "primary",
+            "show_arrow": true
+          }
+        }
+      },
+      "block_order": ["button_1"],
+      "settings": {
+        "badge": "Our Story",
+        "heading": "Trusted by Wellness Seekers Across India",
+        "description": "<p>Since inception, DRS Health has been committed to creating science-backed wellness products that truly make a difference. Our manufacturing excellence, combined with traditional knowledge, brings you healthcare solutions you can trust.</p>",
+        "highlights": "20+ Years of Excellence, WHO-GMP Certified, Science-Backed Formulations"
+      }
+    },
+    "consultation": {
+      "type": "consultation-banner",
+      "settings": {
+        "badge": "Get Expert Guidance",
+        "heading": "Book Your Free Wellness Consultation",
+        "description": "Connect with our health experts for personalized guidance tailored to your wellness goals. No obligation, completely free.",
+        "api_endpoint": "https://your-backend-api.com/api/leads",
+        "trust_text": "Your data is secure and will never be shared"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter-signup",
+      "settings": {
+        "heading": "Join Our Wellness Community",
+        "description": "Get wellness tips, product updates, and exclusive offers delivered to your inbox.",
+        "trust_text": "We respect your privacy. Unsubscribe at any time."
       }
     }
   },
   "order": [
-    "marquee_YQXpcF",
-    "slideshow_HpJHXJ",
-    "section_LNVaA8",
-    "section_kcEXJM",
-    "17710594105a46cfcf"
+    "announcement_bar",
+    "hero",
+    "health_concerns",
+    "featured_products",
+    "product_categories",
+    "services",
+    "manufacturing_trust",
+    "testimonials",
+    "brand_story",
+    "consultation",
+    "newsletter"
   ]
 }
