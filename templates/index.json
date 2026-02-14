@@ -90,17 +90,19 @@
         "subheading": "Find the right wellness solution for your health goals"
       }
     },
-    "featured_products": {
-      "type": "featured-products",
+    "best_sellers": {
+      "type": "best-sellers",
       "settings": {
-        "heading": "Our Best Sellers",
+        "heading": "Best Sellers",
         "subheading": "Trusted by thousands of customers",
         "products_count": 6,
         "columns": 3,
-        "show_rating": true,
-        "review_count": 128,
-        "show_benefits": true,
-        "show_view_all": true
+        "columns_mobile": "2",
+        "show_quantity_selector": false,
+        "show_view_all": true,
+        "add_to_cart_text": "Add to Cart",
+        "sold_out_text": "Out of Stock",
+        "view_all_text": "View All Products"
       }
     },
     "product_categories": {
@@ -359,7 +361,7 @@
     "announcement_bar",
     "hero",
     "health_concerns",
-    "featured_products",
+    "best_sellers",
     "product_categories",
     "services",
     "manufacturing_trust",

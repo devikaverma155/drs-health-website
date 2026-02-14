@@ -1,0 +1,463 @@
+{% comment %}
+  Best Sellers Section
+  Collection-based product grid with add-to-cart, variant support, optional quantity
+  Design system: clean clinical ecommerce (DRS Health)
+{% endcomment %}
+
+<section class="best-sellers-health best-sellers-health--columns-{{ section.settings.columns }}" id="best-sellers-{{ section.id }}">
+  <div class="best-sellers-health__container">
+    {% if section.settings.heading != blank %}
+      <div class="best-sellers-health__header">
+        <h2 class="best-sellers-health__title">{{ section.settings.heading }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p class="best-sellers-health__subtitle">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.collection != blank %}
+      <div class="best-sellers-health__grid" style="--columns: {{ section.settings.columns }}; --columns-mobile: {{ section.settings.columns_mobile }};">
+        {% for product in section.settings.collection.products limit: section.settings.products_count %}
+          <div class="best-sellers-health__card">
+            <a href="{{ product.url }}" class="best-sellers-health__card-image-wrap">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 500 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  loading="lazy"
+                  width="500"
+                  height="500"
+                  class="best-sellers-health__card-img"
+                >
+              {% else %}
+                <div class="best-sellers-health__card-placeholder">{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+              {% endif %}
+              {% if product.compare_at_price > product.price %}
+                <span class="best-sellers-health__badge">
+                  {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+                  Save {{ discount }}%
+                </span>
+              {% endif %}
+            </a>
+
+            <div class="best-sellers-health__card-content">
+              <h3 class="best-sellers-health__card-title">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+
+              <div class="best-sellers-health__card-price">
+                {% if product.compare_at_price > product.price %}
+                  <span class="best-sellers-health__price-current">{{ product.price | money }}</span>
+                  <span class="best-sellers-health__price-compare">{{ product.compare_at_price | money }}</span>
+                {% else %}
+                  <span class="best-sellers-health__price-current">{{ product.price | money }}</span>
+                {% endif %}
+              </div>
+
+              <form method="post" action="/cart/add" class="best-sellers-health__form">
+                {% if product.variants.size > 1 %}
+                  <div class="best-sellers-health__variants">
+                    <label for="variant-{{ section.id }}-{{ product.id }}" class="visually-hidden">Variant</label>
+                    <select
+                      name="id"
+                      id="variant-{{ section.id }}-{{ product.id }}"
+                      class="best-sellers-health__variant-select"
+                    >
+                      {% for variant in product.variants %}
+                        <option
+                          value="{{ variant.id }}"
+                          {% if variant == product.selected_or_first_available_variant %}selected{% endif %}
+                          {% unless variant.available %}disabled{% endunless %}
+                        >
+                          {{ variant.title }}{% unless variant.available %} - Sold out{% endunless %}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                {% else %}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                {% endif %}
+                {% if section.settings.show_quantity_selector %}
+                  <label for="quantity-{{ section.id }}-{{ product.id }}" class="visually-hidden">Quantity</label>
+                  <input
+                    type="number"
+                    name="quantity"
+                    id="quantity-{{ section.id }}-{{ product.id }}"
+                    value="1"
+                    min="1"
+                    max="99"
+                    class="best-sellers-health__quantity"
+                  >
+                {% endif %}
+                <button
+                  type="submit"
+                  class="best-sellers-health__add-btn"
+                  {% unless product.available %}disabled{% endunless %}
+                >
+                  {% if product.available %}
+                    {{ section.settings.add_to_cart_text | default: 'Add to Cart' }}
+                  {% else %}
+                    {{ section.settings.sold_out_text | default: 'Out of Stock' }}
+                  {% endif %}
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if section.settings.show_view_all and section.settings.collection != blank %}
+        <div class="best-sellers-health__cta">
+          <a href="{{ section.settings.collection.url }}" class="best-sellers-health__view-all">
+            {{ section.settings.view_all_text | default: 'View All Products' }}
+          </a>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="best-sellers-health__placeholder">
+        <p>Select a collection in the theme editor to display products.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .best-sellers-health {
+    padding: 3rem 1.5rem;
+    background-color: #FFFFFF;
+  }
+
+  .best-sellers-health__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .best-sellers-health__header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .best-sellers-health__title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .best-sellers-health__subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, 0.81);
+    margin: 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .best-sellers-health__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columns, 3), 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 749px) {
+    .best-sellers-health__grid {
+      grid-template-columns: repeat(var(--columns-mobile, 2), 1fr);
+      gap: 1rem;
+    }
+  }
+
+  .best-sellers-health__card {
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .best-sellers-health__card:hover {
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .best-sellers-health__card-image-wrap {
+    display: block;
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background-color: #f5f5f5;
+  }
+
+  .best-sellers-health__card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .best-sellers-health__card:hover .best-sellers-health__card-img {
+    transform: scale(1.03);
+  }
+
+  .best-sellers-health__card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+  }
+
+  .best-sellers-health__badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 0.25rem 0.5rem;
+    background: #000000;
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+  }
+
+  .best-sellers-health__card-content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .best-sellers-health__card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 0.5rem 0;
+    color: #000000;
+  }
+
+  .best-sellers-health__card-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .best-sellers-health__card-title a:hover {
+    color: #333333;
+  }
+
+  .best-sellers-health__card-price {
+    margin-bottom: 1rem;
+  }
+
+  .best-sellers-health__price-current {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #000000;
+  }
+
+  .best-sellers-health__price-compare {
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.81);
+    text-decoration: line-through;
+    margin-left: 0.5rem;
+  }
+
+  .best-sellers-health__form {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .best-sellers-health__quantity {
+    width: 80px;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    background: #fafafa;
+    color: #000000;
+    -moz-appearance: textfield;
+  }
+
+  .best-sellers-health__quantity::-webkit-outer-spin-button,
+  .best-sellers-health__quantity::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .best-sellers-health__variant-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    background: #fafafa;
+    color: #000000;
+    cursor: pointer;
+  }
+
+  .best-sellers-health__add-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    background: #000000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .best-sellers-health__add-btn:hover:not(:disabled) {
+    background: #333333;
+  }
+
+  .best-sellers-health__add-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .best-sellers-health__cta {
+    text-align: center;
+  }
+
+  .best-sellers-health__view-all {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #000000;
+    background: transparent;
+    border: 2px solid #000000;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .best-sellers-health__view-all:hover {
+    background: #000000;
+    color: #FFFFFF;
+  }
+
+  .best-sellers-health__placeholder {
+    padding: 3rem;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.81);
+    background: #fafafa;
+    border: 1px dashed rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Best Sellers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Trusted by thousands of customers"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "Number of products",
+      "min": 2,
+      "max": 12,
+      "default": 6,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 4,
+      "default": 3,
+      "step": 1
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns (mobile)",
+      "default": "2",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity_selector",
+      "label": "Show quantity selector",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all' button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to cart button text",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_text",
+      "label": "Sold out button text",
+      "default": "Out of Stock"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all button text",
+      "default": "View All Products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Best Sellers",
+      "settings": {
+        "heading": "Best Sellers",
+        "subheading": "Trusted by thousands of customers",
+        "products_count": 6,
+        "columns": 3,
+        "show_view_all": true
+      }
+    }
+  ]
+}
+{% endschema %}
