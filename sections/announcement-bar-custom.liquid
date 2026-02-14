@@ -1,0 +1,252 @@
+{% comment %}
+  Announcement Bar Custom Section
+  Healthcare-focused editable announcement banner
+  Supports text, background color, and close button functionality
+{% endcomment %}
+
+<div class="announcement-bar-custom announcement-bar-custom--{{ section.settings.color_scheme }}" role="region" aria-label="Announcement">
+  <div class="announcement-bar-custom__container">
+    <div class="announcement-bar-custom__content">
+      {% if section.settings.icon != blank %}
+        <div class="announcement-bar-custom__icon">
+          <img 
+            src="{{ section.settings.icon | image_url: width: 24 }}" 
+            alt=""
+            loading="lazy"
+            width="24"
+            height="24"
+          >
+        </div>
+      {% endif %}
+      <div class="announcement-bar-custom__text">
+        {{ section.settings.text }}
+      </div>
+    </div>
+    {% if section.settings.show_close_button %}
+      <button 
+        class="announcement-bar-custom__close" 
+        aria-label="Close announcement"
+        type="button"
+        data-dismiss
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    {% endif %}
+  </div>
+</div>
+
+<script defer="defer">
+  document.addEventListener('DOMContentLoaded', function() {
+    const announcement = document.querySelector('[data-dismiss]');
+    if (announcement) {
+      announcement.addEventListener('click', function() {
+        this.closest('.announcement-bar-custom').style.display = 'none';
+        if (localStorage) {
+          localStorage.setItem('announcement-dismissed', 'true');
+        }
+      });
+    }
+    
+    // Check if previously dismissed
+    if (localStorage && localStorage.getItem('announcement-dismissed') === 'true') {
+      document.querySelector('.announcement-bar-custom').style.display = 'none';
+    }
+  });
+</script>
+
+<style>
+  .announcement-bar-custom {
+    padding: var(--spacing-2) var(--spacing-4);
+    text-align: center;
+    font-size: var(--font-body-size, 0.875rem);
+    line-height: 1.5;
+    transition: all 0.3s ease;
+  }
+
+  .announcement-bar-custom__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-3);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .announcement-bar-custom__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    flex: 1;
+  }
+
+  .announcement-bar-custom__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .announcement-bar-custom__icon img {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+
+  .announcement-bar-custom__text {
+    flex: 1;
+  }
+
+  .announcement-bar-custom__text a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+  }
+
+  .announcement-bar-custom__text a:hover {
+    opacity: 0.8;
+  }
+
+  .announcement-bar-custom__close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    padding: var(--spacing-1);
+    cursor: pointer;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    transition: opacity 0.2s ease;
+  }
+
+  .announcement-bar-custom__close:hover {
+    opacity: 0.6;
+  }
+
+  .announcement-bar-custom__close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Color scheme variants */
+  .announcement-bar-custom--default {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .announcement-bar-custom--accent {
+    background-color: var(--color-primary);
+    color: var(--color-primary-button-text);
+    border-bottom: 1px solid var(--color-primary);
+  }
+
+  .announcement-bar-custom--success {
+    background-color: #E8F5E9;
+    color: #1B5E20;
+    border-bottom: 1px solid #C8E6C9;
+  }
+
+  .announcement-bar-custom--info {
+    background-color: #E3F2FD;
+    color: #0D47A1;
+    border-bottom: 1px solid #BBDEFB;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 640px) {
+    .announcement-bar-custom {
+      padding: var(--spacing-3) var(--spacing-3);
+      font-size: 0.75rem;
+    }
+
+    .announcement-bar-custom__container {
+      gap: var(--spacing-2);
+    }
+
+    .announcement-bar-custom__content {
+      gap: var(--spacing-1);
+    }
+
+    .announcement-bar-custom__icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .announcement-bar-custom__close {
+      width: 28px;
+      height: 28px;
+    }
+
+    .announcement-bar-custom__close svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Announcement text",
+      "default": "<p>Welcome to DRS Health - Premium Wellness Products</p>",
+      "info": "Include links with HTML formatting"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Icon (optional)",
+      "info": "Recommended size: 24x24px"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "accent",
+          "label": "Primary"
+        },
+        {
+          "value": "success",
+          "label": "Success (Green)"
+        },
+        {
+          "value": "info",
+          "label": "Info (Blue)"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_close_button",
+      "label": "Show close button",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar",
+      "settings": {
+        "text": "<p>✓ Clinically tested & certified • 100% natural ingredients • Free shipping on orders over ₹499</p>",
+        "color_scheme": "success",
+        "show_close_button": true
+      }
+    }
+  ]
+}
+{% endschema %}

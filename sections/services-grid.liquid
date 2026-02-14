@@ -1,0 +1,471 @@
+{% comment %}
+  Services Grid Section
+  Display DRS services and consultation options
+  Services: Third Party Manufacturing, Pharma Franchise, Product Development, 
+  Free Consultation, Nutrition Guidance, Custom Formulation Support
+{% endcomment %}
+
+<section class="services-grid">
+  <div class="services-grid__container">
+    {% if section.settings.heading != blank %}
+      <div class="services-grid__header">
+        <h2 class="services-grid__title">{{ section.settings.heading }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p class="services-grid__subtitle">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="services-grid__grid">
+        {% for block in section.blocks %}
+          <div class="service-card service-card--{{ block.settings.card_style }}">
+            {% if block.settings.icon != blank %}
+              <div class="service-card__icon">
+                <img 
+                  src="{{ block.settings.icon | image_url: width: 64 }}" 
+                  alt="{{ block.settings.title }}"
+                  loading="lazy"
+                  width="64"
+                  height="64"
+                >
+              </div>
+            {% else %}
+              <div class="service-card__icon-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"></path>
+                </svg>
+              </div>
+            {% endif %}
+
+            <h3 class="service-card__title">{{ block.settings.title }}</h3>
+
+            {% if block.settings.description != blank %}
+              <p class="service-card__description">{{ block.settings.description }}</p>
+            {% endif %}
+
+            {% if block.settings.features != blank %}
+              <ul class="service-card__features">
+                {% assign features_array = block.settings.features | split: ',' %}
+                {% for feature in features_array %}
+                  <li class="service-card__feature">{{ feature | strip }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            {% if block.settings.cta_label != blank and block.settings.cta_link != blank %}
+              <a href="{{ block.settings.cta_link }}" class="service-card__cta">
+                {{ block.settings.cta_label }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .services-grid {
+    padding: var(--spacing-8) var(--spacing-4);
+    background: linear-gradient(135deg, var(--color-background) 0%, #F8FAFB 100%);
+  }
+
+  .services-grid__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .services-grid__header {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+  }
+
+  .services-grid__title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--color-foreground-heading);
+    margin: 0 0 var(--spacing-3) 0;
+    letter-spacing: -0.02em;
+  }
+
+  .services-grid__subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-foreground);
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.85;
+  }
+
+  .services-grid__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--spacing-5);
+  }
+
+  /* Service Card */
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    padding: var(--spacing-6);
+    background: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), #4CAF50);
+    transition: left 0.3s ease;
+  }
+
+  .service-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 12px 32px rgba(76, 175, 80, 0.15);
+    transform: translateY(-6px);
+  }
+
+  .service-card:hover::before {
+    left: 0;
+  }
+
+  /* Card style variants */
+  .service-card--featured {
+    grid-column: auto;
+    background: linear-gradient(135deg, #F0F9F6 0%, #FFFFFF 100%);
+    border: 2px solid var(--color-primary);
+    transform: scale(1.02);
+  }
+
+  .service-card--featured:hover {
+    transform: scale(1.04) translateY(-6px);
+  }
+
+  .service-card__icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .service-card:hover .service-card__icon {
+    background-color: rgba(76, 175, 80, 0.2);
+    transform: scale(1.1) rotate(-5deg);
+  }
+
+  .service-card__icon img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+
+  .service-card__icon-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+  }
+
+  .service-card__icon-placeholder svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .service-card__title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--color-foreground-heading);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .service-card__description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-foreground);
+    margin: 0;
+    opacity: 0.85;
+  }
+
+  .service-card__features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .service-card__feature {
+    font-size: 0.875rem;
+    color: var(--color-foreground);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+    opacity: 0.8;
+  }
+
+  .service-card__feature::before {
+    content: '✓';
+    font-weight: 700;
+    color: var(--color-primary);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .service-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-4);
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    width: fit-content;
+    margin-top: auto;
+  }
+
+  .service-card__cta:hover {
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+    transform: translateX(4px);
+  }
+
+  .service-card__cta svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.2s ease;
+  }
+
+  .service-card__cta:hover svg {
+    transform: translateX(2px);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .services-grid {
+      padding: var(--spacing-6) var(--spacing-3);
+    }
+
+    .services-grid__grid {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-4);
+    }
+
+    .service-card {
+      padding: var(--spacing-5);
+    }
+
+    .service-card--featured {
+      transform: scale(1);
+    }
+
+    .service-card--featured:hover {
+      transform: translateY(-4px);
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .services-grid__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .service-card {
+      padding: var(--spacing-4);
+      gap: var(--spacing-3);
+    }
+
+    .service-card__icon {
+      width: 56px;
+      height: 56px;
+    }
+
+    .service-card__icon img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .service-card__title {
+      font-size: 1.25rem;
+    }
+
+    .service-card__features {
+      gap: var(--spacing-1);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Services Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Our Services"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Section subheading",
+      "default": "From product development to consultation, we support your wellness journey"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Service Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Service icon",
+          "info": "Recommended: 64x64px, transparent background"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Service title",
+          "default": "Free Consultation"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "placeholder": "Connect with our wellness experts"
+        },
+        {
+          "type": "text",
+          "id": "features",
+          "label": "Features (comma-separated)",
+          "placeholder": "Expert guidance, Personalized plans, Follow-up support",
+          "info": "Separate features with commas"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "CTA button label",
+          "placeholder": "Book Consultation"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "CTA button link"
+        },
+        {
+          "type": "select",
+          "id": "card_style",
+          "label": "Card style",
+          "default": "default",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "featured",
+              "label": "Featured (Highlighted)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Services Grid",
+      "blocks": [
+        {
+          "type": "service",
+          "settings": {
+            "title": "Third Party Manufacturing",
+            "description": "Custom product manufacturing for your brand",
+            "features": "WHO-GMP certified, Flexible batch sizes, Quality guaranteed",
+            "cta_label": "Learn More",
+            "card_style": "default"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "title": "Pharma Franchise",
+            "description": "Become a DRS Health distribution partner",
+            "features": "Proven business model, Marketing support, Training included",
+            "cta_label": "Explore Franchise",
+            "card_style": "default"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "title": "Product Development",
+            "description": "Create innovative health solutions",
+            "features": "R&D expertise, Regulatory guidance, Market research",
+            "cta_label": "Start Development",
+            "card_style": "default"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "title": "Free Consultation",
+            "description": "Get personalized wellness guidance from experts",
+            "features": "One-on-one advice, Custom plan, Follow-up support",
+            "cta_label": "Book Now",
+            "card_style": "featured"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "title": "Nutrition Guidance",
+            "description": "Professional dietary support for health goals",
+            "features": "Personalized plans, Food recommendations, Progress tracking",
+            "cta_label": "Start Now",
+            "card_style": "default"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "title": "Custom Formulation",
+            "description": "Develop formulations tailored to your needs",
+            "features": "Expert chemists, Quality testing, Fast turnaround",
+            "cta_label": "Request Quote",
+            "card_style": "default"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,505 @@
+{% comment %}
+  DRS Hero Section
+  Premium healthcare hero with background image, heading, subheading, and CTAs
+  Supports multiple CTA buttons and product launch messaging
+{% endcomment %}
+
+<section class="drs-hero drs-hero--{{ section.settings.hero_size }}" style="--hero-min-height: {{ section.settings.min_height }}px;">
+  {% if section.settings.background_image != blank %}
+    <div class="drs-hero__background" style="background-image: url('{{ section.settings.background_image | image_url: width: 1500 }}');">
+      <div class="drs-hero__overlay" style="background-color: rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }});"></div>
+    </div>
+  {% endif %}
+  
+  <div class="drs-hero__container">
+    <div class="drs-hero__content drs-hero__content--{{ section.settings.content_alignment }}">
+      {% if section.settings.badge != blank %}
+        <div class="drs-hero__badge">
+          {{ section.settings.badge }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h1 class="drs-hero__heading">
+          {{ section.settings.heading }}
+        </h1>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="drs-hero__subheading">
+          {{ section.settings.subheading }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="drs-hero__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+        <div class="drs-hero__buttons">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'button' %}
+                <a 
+                  href="{{ block.settings.button_link }}" 
+                  class="button drs-hero__button drs-hero__button--{{ block.settings.button_style }}"
+                >
+                  {{ block.settings.button_label }}
+                  {% if block.settings.show_arrow %}
+                    <span class="button__icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </span>
+                  {% endif %}
+                </a>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.trust_text != blank %}
+        <div class="drs-hero__trust">
+          <svg class="drs-hero__trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>{{ section.settings.trust_text }}</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .drs-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: var(--hero-min-height, 600px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .drs-hero__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 0;
+  }
+
+  .drs-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .drs-hero__container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-6) var(--spacing-4);
+  }
+
+  .drs-hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .drs-hero__content--left {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .drs-hero__content--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .drs-hero__content--right {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .drs-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    background-color: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 24px;
+    color: #2E7D32;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    width: fit-content;
+  }
+
+  .drs-hero__badge::before {
+    content: '✓';
+    font-weight: 700;
+  }
+
+  .drs-hero__heading {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--color-foreground-heading, #000000);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .drs-hero__subheading {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    line-height: 1.4;
+    color: var(--color-foreground, #000000);
+    margin: 0;
+    opacity: 0.95;
+    font-weight: 500;
+  }
+
+  .drs-hero__description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-foreground, #000000);
+    max-width: 500px;
+    opacity: 0.85;
+  }
+
+  .drs-hero__buttons {
+    display: flex;
+    gap: var(--spacing-3);
+    flex-wrap: wrap;
+  }
+
+  .drs-hero__button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all var(--hover-transition-duration) var(--hover-transition-timing);
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+
+  .drs-hero__button--primary {
+    background-color: var(--color-primary-button-background, #4CAF50);
+    color: var(--color-primary-button-text, #ffffff);
+    border-color: var(--color-primary-button-background, #4CAF50);
+  }
+
+  .drs-hero__button--primary:hover {
+    background-color: var(--color-primary-button-hover-background, #45a049);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.2);
+  }
+
+  .drs-hero__button--secondary {
+    background-color: transparent;
+    color: var(--color-foreground, #000000);
+    border-color: var(--color-foreground, #000000);
+  }
+
+  .drs-hero__button--secondary:hover {
+    background-color: var(--color-foreground, #000000);
+    color: var(--color-background, #ffffff);
+    transform: translateY(-2px);
+  }
+
+  .button__icon {
+    display: flex;
+    align-items: center;
+    width: 18px;
+    height: 18px;
+  }
+
+  .button__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .drs-hero__trust {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    color: #2E7D32;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-top: var(--spacing-2);
+  }
+
+  .drs-hero__trust-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  /* Size variants */
+  .drs-hero--small {
+    --hero-min-height: 400px;
+  }
+
+  .drs-hero--medium {
+    --hero-min-height: 600px;
+  }
+
+  .drs-hero--large {
+    --hero-min-height: 800px;
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .drs-hero__heading {
+      color: var(--color-foreground-heading, #ffffff);
+    }
+
+    .drs-hero__subheading,
+    .drs-hero__description {
+      color: var(--color-foreground, #ffffff);
+    }
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .drs-hero {
+      min-height: 450px;
+    }
+
+    .drs-hero__container {
+      padding: var(--spacing-5) var(--spacing-3);
+    }
+
+    .drs-hero__heading {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    .drs-hero__subheading {
+      font-size: 1.125rem;
+    }
+
+    .drs-hero__buttons {
+      justify-content: center;
+      gap: var(--spacing-2);
+    }
+
+    .drs-hero__content--left,
+    .drs-hero__content--right {
+      align-items: center;
+      text-align: center;
+    }
+
+    .drs-hero__badge {
+      align-self: center;
+    }
+
+    .drs-hero__button {
+      padding: var(--spacing-2) var(--spacing-4);
+      font-size: 0.95rem;
+    }
+
+    .drs-hero__trust {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .drs-hero__button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .drs-hero__description {
+      max-width: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "info": "Recommended: 1500x800px minimum"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge text (optional)",
+      "placeholder": "New Launch",
+      "default": "Clinically Tested"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Premium Healthcare Solutions for Modern Wellness",
+      "info": "Main heading text"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Trusted by thousands. Backed by science. Delivered with care.",
+      "info": "Secondary heading text"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description (optional)",
+      "info": "Support text or additional details"
+    },
+    {
+      "type": "text",
+      "id": "trust_text",
+      "label": "Trust badge text (optional)",
+      "placeholder": "100% Natural • Clinically Tested • WHO-GMP Certified",
+      "default": "Clinically tested & certified"
+    },
+    {
+      "type": "select",
+      "id": "hero_size",
+      "label": "Hero height",
+      "default": "medium",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small (400px)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium (600px)"
+        },
+        {
+          "value": "large",
+          "label": "Large (800px)"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height",
+      "min": 300,
+      "max": 900,
+      "step": 50,
+      "default": 600,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "default": "primary",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Primary"
+            },
+            {
+              "value": "secondary",
+              "label": "Secondary"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_arrow",
+          "label": "Show arrow icon",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Section",
+      "blocks": [
+        {
+          "type": "button",
+          "settings": {
+            "button_label": "Explore Products",
+            "button_style": "primary",
+            "show_arrow": true
+          }
+        },
+        {
+          "type": "button",
+          "settings": {
+            "button_label": "Free Consultation",
+            "button_style": "secondary",
+            "show_arrow": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

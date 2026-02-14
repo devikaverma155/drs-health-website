@@ -1,0 +1,629 @@
+{% comment %}
+  Consultation Banner Section
+  Strong CTA section with consultation inquiry form
+  Sends data to external backend API via JavaScript fetch
+  Form fields: name, phone, email, health_goal
+{% endcomment %}
+
+<section class="consultation-banner">
+  <div class="consultation-banner__container">
+    <div class="consultation-banner__content">
+      {% if section.settings.badge != blank %}
+        <div class="consultation-banner__badge">
+          {{ section.settings.badge }}
+        </div>
+      {% endif %}
+
+      <h2 class="consultation-banner__title">{{ section.settings.heading }}</h2>
+
+      {% if section.settings.description != blank %}
+        <p class="consultation-banner__description">{{ section.settings.description }}</p>
+      {% endif %}
+
+      <div class="consultation-banner__form-wrapper">
+        <form class="consultation-form" id="consultation-form">
+          <input type="hidden" name="form_type" value="consultation">
+          <input type="hidden" name="type" value="consultation">
+
+          <div class="form-group form-group--half">
+            <label for="consultation-name" class="form-label">Full Name <span class="form-required">*</span></label>
+            <input 
+              type="text" 
+              id="consultation-name" 
+              name="name" 
+              class="form-input" 
+              placeholder="Your name"
+              required
+              autocomplete="name"
+            >
+            <span class="form-error" data-field="name"></span>
+          </div>
+
+          <div class="form-group form-group--half">
+            <label for="consultation-email" class="form-label">Email <span class="form-required">*</span></label>
+            <input 
+              type="email" 
+              id="consultation-email" 
+              name="email" 
+              class="form-input" 
+              placeholder="your@email.com"
+              required
+              autocomplete="email"
+            >
+            <span class="form-error" data-field="email"></span>
+          </div>
+
+          <div class="form-group form-group--half">
+            <label for="consultation-phone" class="form-label">Phone Number <span class="form-required">*</span></label>
+            <input 
+              type="tel" 
+              id="consultation-phone" 
+              name="phone" 
+              class="form-input" 
+              placeholder="+91 98765 43210"
+              required
+              autocomplete="tel"
+              pattern="[0-9\-\+\s]+"
+            >
+            <span class="form-error" data-field="phone"></span>
+          </div>
+
+          <div class="form-group form-group--half">
+            <label for="consultation-health-goal" class="form-label">Health Goal <span class="form-required">*</span></label>
+            <select 
+              id="consultation-health-goal" 
+              name="health_goal" 
+              class="form-input" 
+              required
+            >
+              <option value="">Select your health goal</option>
+              <option value="immunity">Boost Immunity</option>
+              <option value="energy">Increase Energy</option>
+              <option value="nutrition">Nutrition Support</option>
+              <option value="wellness">Overall Wellness</option>
+              <option value="therapeutic">Therapeutic Care</option>
+              <option value="weight">Weight Management</option>
+              <option value="beauty">Beauty & Skin</option>
+              <option value="other">Other</option>
+            </select>
+            <span class="form-error" data-field="health_goal"></span>
+          </div>
+
+          <div class="form-group form-group--full">
+            <label for="consultation-message" class="form-label">Additional Details (optional)</label>
+            <textarea 
+              id="consultation-message" 
+              name="message" 
+              class="form-input form-input--textarea" 
+              placeholder="Tell us about your health concerns or goals..."
+              rows="4"
+            ></textarea>
+          </div>
+
+          <div class="form-group form-group--full">
+            <label class="form-checkbox">
+              <input 
+                type="checkbox" 
+                name="consent" 
+                required
+                class="form-checkbox__input"
+              >
+              <span class="form-checkbox__label">I agree to receive updates and wellness tips from DRS Health</span>
+            </label>
+            <span class="form-error" data-field="consent"></span>
+          </div>
+
+          <button type="submit" class="button consultation-form__submit">
+            Book Free Consultation
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+
+          <div class="form-feedback" id="form-feedback" style="display: none;"></div>
+        </form>
+      </div>
+
+      {% if section.settings.trust_text != blank %}
+        <div class="consultation-banner__trust">
+          <svg class="consultation-banner__trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"></path>
+            <polyline points="10 17 14 21 22 9"></polyline>
+          </svg>
+          <span>{{ section.settings.trust_text }}</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<script defer="defer">
+  (function() {
+    const form = document.getElementById('consultation-form');
+    if (!form) return;
+
+    const apiEndpoint = '{{ section.settings.api_endpoint }}';
+    const formFeedback = document.getElementById('form-feedback');
+
+    // Form validation
+    function validateForm(formData) {
+      const errors = {};
+
+      if (!formData.name || formData.name.trim() === '') {
+        errors.name = 'Name is required';
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email || !emailRegex.test(formData.email)) {
+        errors.email = 'Valid email is required';
+      }
+
+      const phoneRegex = /^[\d\-\+\s]{10,}$/;
+      if (!formData.phone || !phoneRegex.test(formData.phone)) {
+        errors.phone = 'Valid phone number is required';
+      }
+
+      if (!formData.health_goal) {
+        errors.health_goal = 'Please select a health goal';
+      }
+
+      if (!formData.consent) {
+        errors.consent = 'You must agree to the consent';
+      }
+
+      return errors;
+    }
+
+    // Display validation errors
+    function showErrors(errors) {
+      // Clear previous errors
+      document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+
+      Object.entries(errors).forEach(([field, message]) => {
+        const errorEl = document.querySelector(`[data-field="${field}"]`);
+        if (errorEl) {
+          errorEl.textContent = message;
+        }
+      });
+    }
+
+    // Clear errors on input
+    form.querySelectorAll('input, select, textarea').forEach(field => {
+      field.addEventListener('change', () => {
+        const errorEl = document.querySelector(`[data-field="${field.name}"]`);
+        if (errorEl) {
+          errorEl.textContent = '';
+        }
+      });
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        name: form.elements['name'].value,
+        email: form.elements['email'].value,
+        phone: form.elements['phone'].value,
+        health_goal: form.elements['health_goal'].value,
+        message: form.elements['message'].value || '',
+        consent: form.elements['consent'].checked,
+        source: 'website',
+        timestamp: new Date().toISOString()
+      };
+
+      // Validate
+      const errors = validateForm(formData);
+      if (Object.keys(errors).length > 0) {
+        showErrors(errors);
+        return;
+      }
+
+      // Disable submit button
+      const submitBtn = form.querySelector('[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+      try {
+        // Show feedback
+        formFeedback.style.display = 'block';
+        formFeedback.className = 'form-feedback form-feedback--loading';
+        formFeedback.textContent = 'Sending your request...';
+
+        const response = await fetch(apiEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          formFeedback.className = 'form-feedback form-feedback--success';
+          formFeedback.innerHTML = '✓ Thank you! Our wellness experts will contact you soon.';
+          
+          // Reset form
+          form.reset();
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+
+          // Hide feedback after 5 seconds
+          setTimeout(() => {
+            formFeedback.style.display = 'none';
+          }, 5000);
+        } else {
+          throw new Error('Failed to submit form');
+        }
+      } catch (error) {
+        console.error('Form submission error:', error);
+        formFeedback.className = 'form-feedback form-feedback--error';
+        formFeedback.innerHTML = '✕ Error submitting request. Please try again or contact us directly.';
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  })();
+</script>
+
+<style>
+  .consultation-banner {
+    padding: var(--spacing-8) var(--spacing-4);
+    background: linear-gradient(135deg, var(--color-primary) 0%, rgba(76, 175, 80, 0.8) 100%);
+    color: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .consultation-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .consultation-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .consultation-banner__container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .consultation-banner__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-5);
+  }
+
+  .consultation-banner__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    width: fit-content;
+  }
+
+  .consultation-banner__badge::before {
+    content: '✓';
+    font-weight: 700;
+  }
+
+  .consultation-banner__title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.2;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .consultation-banner__description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+    max-width: 600px;
+  }
+
+  /* Consultation Form */
+  .consultation-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-4);
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .form-group--full {
+    grid-column: 1 / -1;
+  }
+
+  .form-group--half {
+    grid-column: auto;
+  }
+
+  .form-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  .form-required {
+    color: #FFE082;
+  }
+
+  .form-input {
+    padding: var(--spacing-3) var(--spacing-4);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: var(--color-foreground);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #FFFFFF;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+  }
+
+  .form-input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .form-input--textarea {
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .form-error {
+    display: block;
+    font-size: 0.8rem;
+    color: #FFE082;
+    min-height: 18px;
+  }
+
+  .form-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+    cursor: pointer;
+  }
+
+  .form-checkbox__input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: #FFFFFF;
+  }
+
+  .form-checkbox__label {
+    font-size: 0.95rem;
+    color: #FFFFFF;
+    line-height: 1.4;
+  }
+
+  .consultation-form__submit {
+    grid-column: 1 / -1;
+    padding: var(--spacing-3) var(--spacing-6);
+    background-color: #FFFFFF;
+    color: var(--color-primary);
+    border: 2px solid #FFFFFF;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .consultation-form__submit:hover:not(:disabled) {
+    background-color: transparent;
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .consultation-form__submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .consultation-form__submit svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .form-feedback {
+    grid-column: 1 / -1;
+    padding: var(--spacing-4);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .form-feedback--success {
+    background-color: rgba(76, 200, 100, 0.2);
+    border: 1px solid rgba(76, 200, 100, 0.4);
+    color: #C8E6C9;
+  }
+
+  .form-feedback--error {
+    background-color: rgba(255, 107, 107, 0.2);
+    border: 1px solid rgba(255, 107, 107, 0.4);
+    color: #FFCDD2;
+  }
+
+  .form-feedback--loading {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+  }
+
+  .consultation-banner__trust {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .consultation-banner__trust-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .consultation-banner {
+      padding: var(--spacing-6) var(--spacing-3);
+    }
+
+    .consultation-banner::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .consultation-form {
+      grid-template-columns: 1fr;
+    }
+
+    .form-group--half {
+      grid-column: 1 / -1;
+    }
+
+    .consultation-banner__title {
+      font-size: 1.75rem;
+    }
+
+    .consultation-banner__description {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .consultation-banner {
+      padding: var(--spacing-5) var(--spacing-3);
+    }
+
+    .consultation-banner__title {
+      font-size: 1.5rem;
+    }
+
+    .consultation-form {
+      gap: var(--spacing-3);
+    }
+
+    .form-input {
+      padding: var(--spacing-2) var(--spacing-3);
+      font-size: 16px; /* Prevents zoom on iOS */
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Consultation Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge text",
+      "default": "Get Expert Guidance"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Book Your Free Wellness Consultation",
+      "info": "Main call-to-action heading"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Connect with our health experts for personalized guidance tailored to your wellness goals. No obligation, completely free.",
+      "info": "Supporting description text"
+    },
+    {
+      "type": "text",
+      "id": "api_endpoint",
+      "label": "API Endpoint",
+      "placeholder": "https://your-backend-api.com/api/leads",
+      "info": "Backend API URL for form submission (POST JSON)"
+    },
+    {
+      "type": "text",
+      "id": "trust_text",
+      "label": "Trust badge text",
+      "default": "Your data is secure and will never be shared",
+      "info": "Privacy/trust messaging"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Consultation Banner"
+    }
+  ]
+}
+{% endschema %}

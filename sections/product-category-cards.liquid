@@ -1,0 +1,499 @@
+{% comment %}
+  Product Category Cards Section
+  Display DRS product categories with icons, descriptions, and links
+  Categories: Syrup, Tablets, Capsules, Protein Powder, Nutraceuticals, Sachets
+{% endcomment %}
+
+<section class="product-category-cards">
+  <div class="product-category-cards__container">
+    {% if section.settings.heading != blank %}
+      <div class="product-category-cards__header">
+        <h2 class="product-category-cards__title">{{ section.settings.heading }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p class="product-category-cards__subtitle">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="product-category-cards__grid">
+        {% for block in section.blocks %}
+          <a 
+            href="{{ block.settings.collection_link }}" 
+            class="category-card category-card--{{ block.settings.layout }}"
+          >
+            {% if block.settings.image != blank %}
+              <div class="category-card__image">
+                <img 
+                  src="{{ block.settings.image | image_url: width: 400 }}" 
+                  alt="{{ block.settings.title }}"
+                  loading="lazy"
+                  width="400"
+                  height="300"
+                >
+                <div class="category-card__overlay"></div>
+              </div>
+            {% else %}
+              <div class="category-card__image-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </div>
+            {% endif %}
+
+            <div class="category-card__content">
+              {% if block.settings.icon != blank %}
+                <div class="category-card__icon">
+                  <img 
+                    src="{{ block.settings.icon | image_url: width: 48 }}" 
+                    alt=""
+                    loading="lazy"
+                    width="48"
+                    height="48"
+                  >
+                </div>
+              {% endif %}
+
+              <h3 class="category-card__title">{{ block.settings.title }}</h3>
+
+              {% if block.settings.description != blank %}
+                <p class="category-card__description">{{ block.settings.description }}</p>
+              {% endif %}
+
+              {% if block.settings.product_count != blank %}
+                <span class="category-card__count">{{ block.settings.product_count }} Products</span>
+              {% endif %}
+
+              <div class="category-card__arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .product-category-cards {
+    padding: var(--spacing-8) var(--spacing-4);
+    background-color: #FAFAFA;
+  }
+
+  .product-category-cards__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .product-category-cards__header {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+  }
+
+  .product-category-cards__title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--color-foreground-heading);
+    margin: 0 0 var(--spacing-3) 0;
+    letter-spacing: -0.02em;
+  }
+
+  .product-category-cards__subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-foreground);
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.85;
+  }
+
+  .product-category-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-4);
+  }
+
+  /* Category Card */
+  .category-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--color-foreground);
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    cursor: pointer;
+  }
+
+  .category-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    transform: translateY(-6px);
+  }
+
+  /* Image variant layout */
+  .category-card--image {
+    height: 300px;
+  }
+
+  .category-card--image .category-card__image {
+    height: 60%;
+  }
+
+  .category-card--image .category-card__content {
+    padding: var(--spacing-4);
+    justify-content: flex-end;
+  }
+
+  /* Text variant layout */
+  .category-card--text {
+    min-height: 280px;
+    justify-content: center;
+  }
+
+  .category-card--text .category-card__content {
+    padding: var(--spacing-5);
+  }
+
+  .category-card__image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #F5F5F5;
+  }
+
+  .category-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .category-card:hover .category-card__image img {
+    transform: scale(1.08);
+  }
+
+  .category-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+    pointer-events: none;
+  }
+
+  .category-card__image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #F5F5F5, #EEEEEE);
+    color: var(--color-primary);
+  }
+
+  .category-card__image-placeholder svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .category-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    position: relative;
+    z-index: 2;
+  }
+
+  .category-card__icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F0F4F8;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .category-card:hover .category-card__icon {
+    background-color: rgba(76, 175, 80, 0.1);
+    transform: scale(1.1);
+  }
+
+  .category-card__icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  .category-card__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-foreground-heading);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .category-card__description {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-foreground);
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  .category-card__count {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background-color: rgba(76, 175, 80, 0.1);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: 6px;
+    width: fit-content;
+  }
+
+  .category-card__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #F5F5F5;
+    color: var(--color-primary);
+    transition: all 0.3s ease;
+    margin-top: auto;
+  }
+
+  .category-card:hover .category-card__arrow {
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+    transform: translateX(4px);
+  }
+
+  .category-card__arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Responsive Grid */
+  @media (max-width: 1024px) {
+    .product-category-cards__grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .product-category-cards {
+      padding: var(--spacing-6) var(--spacing-3);
+    }
+
+    .product-category-cards__grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--spacing-3);
+    }
+
+    .category-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .category-card--image {
+      height: auto;
+    }
+
+    .category-card--image .category-card__image {
+      height: 150px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-category-cards__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-2);
+    }
+
+    .category-card--image {
+      height: auto;
+    }
+
+    .category-card--image .category-card__image {
+      height: 120px;
+    }
+
+    .category-card--image .category-card__content {
+      padding: var(--spacing-3);
+    }
+
+    .category-card__title {
+      font-size: 1rem;
+    }
+
+    .category-card__description {
+      display: none;
+    }
+
+    .category-card__icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    .category-card__icon img {
+      width: 28px;
+      height: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product Category Cards",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Section subheading",
+      "default": "Find the right form for your wellness journey"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Category image",
+          "info": "Recommended: 400x300px"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Category icon (optional)",
+          "info": "Recommended: 48x48px"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category title",
+          "default": "Tablets"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Short description",
+          "placeholder": "Convenient daily wellness"
+        },
+        {
+          "type": "text",
+          "id": "product_count",
+          "label": "Product count (display only)",
+          "placeholder": "24"
+        },
+        {
+          "type": "url",
+          "id": "collection_link",
+          "label": "Collection link"
+        },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Card layout",
+          "default": "image",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image + Text"
+            },
+            {
+              "value": "text",
+              "label": "Text Only"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Category Cards",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Syrup",
+            "description": "Liquid wellness formulations",
+            "product_count": "18",
+            "layout": "image"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Tablets",
+            "description": "Convenient daily wellness",
+            "product_count": "24",
+            "layout": "image"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Capsules",
+            "description": "Fast-absorbing formulas",
+            "product_count": "20",
+            "layout": "image"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Protein Powder",
+            "description": "Nutritional support",
+            "product_count": "12",
+            "layout": "image"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Nutraceuticals",
+            "description": "Specialized nutrition",
+            "product_count": "16",
+            "layout": "image"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Sachets",
+            "description": "Easy-to-use portions",
+            "product_count": "14",
+            "layout": "image"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
