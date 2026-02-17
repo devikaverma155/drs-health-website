@@ -1,0 +1,171 @@
+// DRS Health Admin Dashboard – PostgreSQL (Supabase compatible)
+// Run: npx prisma generate && npx prisma db push (or migrate)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// AUTH
+// ---------------------------------------------------------------------------
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // hashed
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// LEAD MANAGEMENT CRM
+// ---------------------------------------------------------------------------
+
+model Lead {
+  id              String       @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  source          LeadSource
+  category        String?      // e.g. B2B, Retail, Pharmacy, NGO
+  message         String?      @db.Text
+  tags            String[]    @default([])
+  status          LeadStatus   @default(NEW)
+  assignedTo      String?
+  createdAt       DateTime     @default(now())
+  lastContactedAt DateTime?
+  notes           LeadNote[]
+  samples         LeadSample[]
+
+  @@index([source])
+  @@index([status])
+  @@index([category])
+  @@index([createdAt])
+  @@index([phone])
+}
+
+model LeadSample {
+  id           String         @id @default(cuid())
+  leadId       String
+  lead         Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  status       SampleStatus   @default(PENDING)
+  sentAt       DateTime?
+  deliveredAt  DateTime?
+  trackingRef  String?        // courier tracking ID
+  notes        String?        @db.Text
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([leadId])
+  @@index([status])
+}
+
+enum SampleStatus {
+  PENDING    // not yet sent
+  SENT       // dispatched
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  content   String   @db.Text
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  @@index([leadId])
+}
+
+enum LeadSource {
+  contact_form
+  consultation
+  b2b
+  private_labelling
+  manufacturer
+  pcd
+  whatsapp
+  ads
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  CLOSED
+}
+
+// ---------------------------------------------------------------------------
+// WHATSAPP AUTOMATION
+// ---------------------------------------------------------------------------
+
+model AutomationRule {
+  id             String   @id @default(cuid())
+  trigger        String   // e.g. "new_lead"
+  source         String?  // optional filter: consultation, contact_form, etc.
+  messageTemplate String  @db.Text
+  enabled        Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([trigger])
+}
+
+// ---------------------------------------------------------------------------
+// WEBSITE CMS
+// ---------------------------------------------------------------------------
+
+model HeroBanner {
+  id        String   @id @default(cuid())
+  heading   String
+  subtext   String?  @db.Text
+  ctaText   String?
+  ctaLink   String?
+  imageUrl  String?
+  sortOrder Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BestSellerConfig {
+  id           String   @id @default(cuid())
+  productId    String   // placeholder / external ID (Shopify ID later)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model HomepageSection {
+  id        String   @id @default(cuid())
+  key       String   @unique // e.g. "category_pills", "testimonials"
+  config    Json     @default("{}")
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// PRODUCTS (temporary – swap to Shopify sync later)
+// ---------------------------------------------------------------------------
+
+model Product {
+  id          String   @id @default(cuid())
+  handle      String   @unique
+  title       String
+  description String?  @db.Text
+  price       Decimal  @db.Decimal(10, 2)
+  compareAtPrice Decimal? @db.Decimal(10, 2)
+  imageUrl    String?
+  category    String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

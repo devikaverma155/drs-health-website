@@ -1,0 +1,29 @@
+import { HeroSlideshowSection } from '@/sections/HeroSlideshowSection';
+import { CategoryPillsSection } from '@/sections/CategoryPillsSection';
+import { NewLaunchesSection } from '@/sections/NewLaunchesSection';
+import { BestSellersSection } from '@/sections/BestSellersSection';
+import { ServicesSection } from '@/sections/ServicesSection';
+import { ManufacturingQualitySection } from '@/sections/ManufacturingQualitySection';
+import { TestimonialsSection } from '@/sections/TestimonialsSection';
+import { BrandStorySection } from '@/sections/BrandStorySection';
+import { ConsultationFormSection } from '@/sections/ConsultationFormSection';
+import { BlogPreviewSection } from '@/sections/BlogPreviewSection';
+import { FooterCTASection } from '@/sections/FooterCTASection';
+
+export default function HomePage() {
+  return (
+    <>
+      <HeroSlideshowSection />
+      <CategoryPillsSection />
+      <NewLaunchesSection />
+      <BestSellersSection />
+      <ServicesSection />
+      <ManufacturingQualitySection />
+      <TestimonialsSection />
+      <BrandStorySection />
+      <ConsultationFormSection />
+      <BlogPreviewSection />
+      <FooterCTASection />
+    </>
+  );
+}
