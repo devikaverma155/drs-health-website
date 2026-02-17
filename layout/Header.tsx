@@ -1,13 +1,14 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
 const NAV_LINKS = [
-  { href: '/', label: 'Home' },
+  // { href: '/', label: 'Home' },
   { href: '/shop', label: 'Shop' },
   { href: '/consultation', label: 'Free Consultation' },
-  { href: '/about', label: 'About' },
+  { href: '/about', label: 'About us' },
   { href: '/services', label: 'Services' },
   { href: '/manufacturing-quality', label: 'Manufacturing & Quality' },
   { href: '/ngo', label: 'NGO' },
@@ -20,9 +21,16 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-border shadow-sm">
-      <div className="container-tight flex h-16 md:h-18 items-center justify-between">
-        <Link href="/" className="text-xl font-semibold text-primary tracking-tight">
-          DRS Health
+      <div className="container-tight flex h-16 md:h-20 items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src="https://drshealth.in/wp-content/uploads/2025/01/cropped-DRS-Logo.png"
+            alt="DRS Health"
+            width={100}
+            height={80}
+            className="h-12 w-auto"
+          />
+          <span className="hidden sm:inline text-lg font-semibold text-primary tracking-tight">Health Solutions</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">

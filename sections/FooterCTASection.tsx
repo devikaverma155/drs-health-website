@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/Button';
 
 export function FooterCTASection() {
   return (
-    <section className="section-padding bg-primary-dark text-white">
+    <section className="section-padding bg-primary text-white">
       <div className="container-tight text-center max-w-2xl mx-auto">
-        <h2 className="text-2xl md:text-3xl font-semibold">
+        <h2 className="text-2xl md:text-3xl font-semibold text-white">
           Ready to Start Your Wellness Journey?
         </h2>
         <p className="mt-4 text-white/90 leading-relaxed">
@@ -17,7 +17,7 @@ export function FooterCTASection() {
           </Button>
           <Link
             href="/consultation"
-            className="inline-flex items-center justify-center rounded-xl bg-accent-mint text-primary-dark px-6 py-3 text-sm font-semibold hover:bg-white transition-all duration-200 hover:-translate-y-0.5 shadow-card"
+            className="inline-flex items-center justify-center rounded-xl text-primary-dark px-6 py-3 text-sm font-semibold bg-white transition-all duration-200 hover:-translate-y-0.5 shadow-card"
           >
             Free Consultation
           </Link>

@@ -10,19 +10,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#FFFFFF',
-        'soft-bg': '#F4F9F6',
+        background: 'var(--background)',
+        'soft-bg': 'var(--background)',
         foreground: 'var(--foreground)',
         'body-muted': 'var(--body-muted)',
         border: 'var(--border)',
         'input-border': 'var(--input-border)',
-        primary: '#4F8F6B',
-        'primary-dark': '#2E6A4F',
+        primary: 'var(--primary)',
+        'primary-dark': 'var(--primary-dark)',
         accent: {
-          orange: '#F6B26B',
-          blue: '#A7D3F2',
-          lavender: '#C9B6F2',
-          mint: '#BFE8D4',
+          lime: 'var(--accent-lime)',
+          green: 'var(--accent-green)',
+          blue: 'var(--accent-blue)',
+          navy: 'var(--accent-navy)',
         },
       },
       fontFamily: {
@@ -46,18 +46,23 @@ const config: Config = {
         '2xl': '1.5rem',
       },
       boxShadow: {
-        card: '0 8px 30px rgba(0,0,0,0.05)',
-        'card-hover': '0 12px 40px rgba(0,0,0,0.08)',
-        button: '0 2px 8px rgba(79, 143, 107, 0.25)',
+        card: '0 8px 30px rgba(0, 31, 63, 0.08)',
+        'card-hover': '0 12px 40px rgba(0, 31, 63, 0.12)',
+        button: '0 2px 8px rgba(0, 128, 76, 0.25)',
       },
       keyframes: {
         marquee: {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        'marquee-reverse': {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
       },
       animation: {
         marquee: 'marquee 30s linear infinite',
+        'marquee-reverse': 'marquee-reverse 30s linear infinite',
       },
       transitionDuration: {
         DEFAULT: '200ms',

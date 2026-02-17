@@ -1,45 +1,14 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { DEFAULT_SHOP_BANNER_SLIDES } from '@/lib/heroSlides';
+import type { ShopBannerSlideConfig } from '@/lib/heroSlides';
 
-export interface ShopBannerSlide {
-  id: string;
-  title: string;
-  subtitle?: string;
-  ctaLabel?: string;
-  ctaHref?: string;
-  variant?: 'primary' | 'accent';
-}
+export type ShopBannerSlide = ShopBannerSlideConfig;
 
-const DEFAULT_SLIDES: ShopBannerSlide[] = [
-  {
-    id: '1',
-    title: 'New Arrivals',
-    subtitle: 'Discover our latest wellness formulations',
-    ctaLabel: 'Shop new',
-    ctaHref: '/shop?new=1',
-    variant: 'primary',
-  },
-  {
-    id: '2',
-    title: 'Free Consultation',
-    subtitle: 'Book a session with our Ayurvedic experts',
-    ctaLabel: 'Book now',
-    ctaHref: '/consultation',
-    variant: 'accent',
-  },
-  {
-    id: '3',
-    title: 'Authentic Ayurvedic Care',
-    subtitle: 'Weight management, liver care, immunity & more',
-    ctaLabel: 'Shop all',
-    ctaHref: '/shop',
-    variant: 'primary',
-  },
-];
-
-export function ShopBannerSlideshow({ slides = DEFAULT_SLIDES }: { slides?: ShopBannerSlide[] }) {
+export function ShopBannerSlideshow({ slides = DEFAULT_SHOP_BANNER_SLIDES }: { slides?: ShopBannerSlide[] }) {
   const [index, setIndex] = useState(0);
   const slide = slides[index % slides.length];
 
@@ -49,19 +18,32 @@ export function ShopBannerSlideshow({ slides = DEFAULT_SLIDES }: { slides?: Shop
   }, []);
 
   return (
-    <section className="relative h-[200px] md:h-[260px] overflow-hidden bg-soft-bg border-b border-border">
+    <section className="relative h-[200px] md:h-[280px] overflow-hidden bg-soft-bg border-b border-border">
+      {slide.imageUrl && (
+        <div className="absolute inset-0">
+          <Image
+            src={slide.imageUrl}
+            alt={slide.imageAlt ?? slide.title}
+            fill
+            className="object-cover opacity-85"
+            sizes="100vw"
+            priority={index === 0}
+          />
+          <div className="absolute inset-0 bg-black/25" />
+        </div>
+      )}
       <div
         key={slide.id}
-        className="absolute inset-0 flex items-center transition-opacity duration-500"
+        className="absolute inset-0 flex items-center transition-opacity duration-500 z-[1]"
         style={{ opacity: 1 }}
       >
         <div className="container-tight flex flex-col md:flex-row md:items-center md:justify-between gap-6 w-full">
           <div>
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+            <h2 className="text-2xl md:text-3xl font-semibold text-foreground drop-shadow-sm">
               {slide.title}
             </h2>
             {slide.subtitle && (
-              <p className="mt-1 text-body-muted">{slide.subtitle}</p>
+              <p className="mt-1 text-body-muted drop-shadow-sm">{slide.subtitle}</p>
             )}
           </div>
           {slide.ctaHref && (

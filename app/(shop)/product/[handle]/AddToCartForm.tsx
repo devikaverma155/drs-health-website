@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import type { Product } from '@/lib/shopify';
+import type { Product } from '@/lib/woocommerce';
+import { getCheckoutUrl } from '@/lib/woocommerce';
 
 export function AddToCartForm({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
@@ -10,8 +11,7 @@ export function AddToCartForm({ product }: { product: Product }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock: future Shopify cart
-    console.log('Add to cart', { variantId: selectedVariantId, quantity });
+    window.location.href = getCheckoutUrl(product.id, quantity);
   };
 
   return (

@@ -2,8 +2,8 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'cdn.shopify.com' },
       { protocol: 'https', hostname: 'drshealth.in' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
   },
 };

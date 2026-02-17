@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // In production: persist to CRM, email, or Shopify customer
+    // In production: persist to CRM, email, or WooCommerce customer
     // For now we only validate and return success
     return NextResponse.json({
       success: true,

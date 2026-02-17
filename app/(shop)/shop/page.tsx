@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
-import { getProducts } from '@/lib/shopify';
+import { getProducts } from '@/lib/woocommerce';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ShopFilters } from './ShopFilters';
 import { ShopBannerSlideshow } from '@/sections/ShopBannerSlideshow';
 import { TestimonialsSection } from '@/sections/TestimonialsSection';
 import { ShopTrustBar } from '@/sections/ShopTrustBar';
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Shop',

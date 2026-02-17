@@ -2,15 +2,17 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getProduct } from '@/lib/shopify';
+import { getProductBySlug } from '@/lib/woocommerce';
 import { AddToCartForm } from './AddToCartForm';
 import { ProductSchema } from '@/components/StructuredData';
+
+export const revalidate = 60;
 
 type Props = { params: Promise<{ handle: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params;
-  const product = await getProduct(handle);
+  const product = await getProductBySlug(handle);
   if (!product) return { title: 'Product not found' };
   return {
     title: product.title,
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
-  const product = await getProduct(handle);
+  const product = await getProductBySlug(handle);
   if (!product) notFound();
 
   const variant = product.variants[0];

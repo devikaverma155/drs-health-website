@@ -19,7 +19,7 @@ export default async function BestSellersContentPage() {
         <h1 className="text-2xl font-semibold text-slate-900 mt-1">Best sellers</h1>
       </div>
       <p className="text-sm text-slate-500">
-        Choose and order featured products for the homepage. Products are from the Products list (mock); when Shopify is connected, these will map to Shopify product IDs.
+        Choose and order featured products for the homepage. Products are from the Products list (mock); storefront products come from WooCommerce.
       </p>
       <BestSellersEditor configs={configs} products={products} />
     </div>

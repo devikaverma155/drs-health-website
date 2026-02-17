@@ -4,7 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import type { Product } from '@/lib/shopify';
+import type { Product } from '@/lib/woocommerce';
+import { getCheckoutUrl } from '@/lib/woocommerce';
 
 type ProductCardProps = {
   product: Product;
@@ -39,8 +40,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = comparePrice && parseFloat(comparePrice) > parseFloat(price);
 
   const handleAddToCart = () => {
-    // Mock: future Shopify cart integration
-    console.log('Add to cart', { variantId: selectedVariantId, quantity });
+    window.location.href = getCheckoutUrl(product.id, quantity);
   };
 
   return (

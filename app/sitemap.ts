@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next';
-import { MOCK_PRODUCTS, NEW_LAUNCH_PRODUCTS } from '@/lib/shopify';
+import { getProducts } from '@/lib/woocommerce';
 
 const BASE = 'https://drshealth.in';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
     { url: `${BASE}/shop`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
@@ -22,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/information`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
   ];
 
-  const allProducts = [...MOCK_PRODUCTS, ...NEW_LAUNCH_PRODUCTS];
+  const allProducts = await getProducts({ limit: 500 });
 
   const blogSlugs = ['ayurveda-daily-routine', 'liver-care-herbs', 'immunity-winter'];
   const blogUrls: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({

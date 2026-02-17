@@ -1,4 +1,4 @@
-import type { Product } from '@/lib/shopify';
+import type { Product } from '@/lib/woocommerce';
 
 const BASE = 'https://drshealth.in';
 

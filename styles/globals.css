@@ -2,33 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===============================
+   COLOR SYSTEM — IMAGE PALETTE
+   =============================== */
+
 :root {
-  --background: #ffffff;
-  --soft-bg: #F4F9F6;
-  --foreground: #1e2e24;
-  --body-muted: rgba(30, 46, 36, 0.82);
-  --border: rgba(30, 46, 36, 0.08);
-  --input-border: rgba(30, 46, 36, 0.14);
-  --primary: #4F8F6B;
-  --primary-dark: #2E6A4F;
-  --accent-orange: #F6B26B;
-  --accent-blue: #A7D3F2;
-  --accent-lavender: #C9B6F2;
-  --accent-mint: #BFE8D4;
+  /* ===============================
+     BASE BACKGROUNDS
+  =============================== */
+
+  --background: #F7F3EE;   /* herbal paper white */
+  --soft-bg: #EFE6DD;      /* warm natural section */
+
+  /* ===============================
+     TEXT
+  =============================== */
+
+  --foreground: #1A1A1A;
+  --body-muted: rgba(26, 26, 26, 0.72);
+
+  /* ===============================
+     BORDERS
+  =============================== */
+
+  --border: rgba(72, 32, 25, 0.12);
+  --input-border: rgba(72, 32, 25, 0.2);
+
+  /* ===============================
+     BRAND COLORS (AYURVEDIC RED SYSTEM)
+  =============================== */
+
+  --primary: #A3261A;        /* Ayurvedic deep red */
+  --primary-dark: #7F1C13;   /* hover */
+
+  --secondary: #C46A3A;      /* warm clay */
+  --secondary-dark: #5A2E24; /* dark cocoa */
+
+  /* ===============================
+     ACCENTS (NO GREEN)
+  =============================== */
+
+  --accent-sandal: #E6C9A8;   /* sandalwood tone */
+  --accent-rose: #F2D6D3;     /* soft healing tint */
+  --accent-earth: #D9B8A0;    /* herbal earth */
+
+  /* ===============================
+     UI SYSTEM
+  =============================== */
+
   --radius: 0.75rem;
-  --shadow-card: 0 8px 30px rgba(0,0,0,0.05);
-  --shadow-card-hover: 0 12px 40px rgba(0,0,0,0.08);
+
+  --shadow-card: 0 10px 30px rgba(72, 32, 25, 0.08);
+  --shadow-card-hover: 0 16px 45px rgba(72, 32, 25, 0.14);
 }
+
+
+
+/* ===============================
+   BASE LAYER
+   =============================== */
 
 @layer base {
   html {
     @apply scroll-smooth;
   }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.65;
   }
+
   h1, h2, h3, h4, h5, h6 {
     @apply text-foreground tracking-tight;
     font-weight: 600;
@@ -36,55 +80,87 @@
   }
 }
 
+/* ===============================
+   COMPONENTS
+   =============================== */
+
 @layer components {
+
   .container-tight {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
+
   .section-padding {
     @apply py-16 md:py-24;
   }
+
   .card-soft {
-    @apply rounded-2xl border border-border bg-white shadow-card transition-all duration-200;
+    @apply rounded-2xl border border-border bg-white transition-all duration-200;
+    box-shadow: var(--shadow-card);
   }
+
   .card-soft:hover {
     box-shadow: var(--shadow-card-hover);
     transform: translateY(-3px);
   }
+
   .bg-gradient-soft {
-    background: linear-gradient(180deg, var(--soft-bg) 0%, var(--background) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--soft-bg) 0%,
+      var(--background) 100%
+    );
   }
+
+  /* Accent Panels — Updated Palette */
+
   .panel-accent-blue {
-    background: rgba(167, 211, 242, 0.15);
-  }
-  .panel-accent-mint {
-    background: rgba(191, 232, 212, 0.25);
-  }
-  .panel-accent-lavender {
-    background: rgba(201, 182, 242, 0.12);
-  }
-  .panel-accent-orange {
-    background: rgba(246, 178, 107, 0.12);
-  }
+  background: rgba(160, 201, 203, 0.22); /* Aqua Mist */
+}
+
+.panel-accent-mint {
+  background: rgba(236, 236, 220, 0.6); /* Amazon Mist */
+}
+
+.panel-accent-lavender {
+  background: rgba(255, 96, 55, 0.12); /* Toxic Orange soft */
+}
+
+.panel-accent-orange {
+  background: rgba(115, 54, 53, 0.12); /* Garnet soft */
+}
+
+
+  /* Marquee Animation */
+
   @keyframes marquee-scroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
+
   .animate-marquee-scroll {
     animation: marquee-scroll 30s linear infinite;
   }
 }
+
+/* ===============================
+   UTILITIES
+   =============================== */
+
 @layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
+
+  /* Hide scrollbar (Chrome, Safari, Opera) */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  /* Hide scrollbar for IE, Edge and Firefox */
+
+  /* Hide scrollbar (IE, Edge, Firefox) */
   .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
-  /* Animation Pause Utility */
+  /* Pause animation on hover */
   .pause-on-hover:hover {
     animation-play-state: paused;
   }

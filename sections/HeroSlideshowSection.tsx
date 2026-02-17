@@ -1,53 +1,14 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
+import { DEFAULT_HERO_SLIDES } from '@/lib/heroSlides';
+import type { HeroSlideConfig } from '@/lib/heroSlides';
 
-export interface HeroSlide {
-  id: string;
-  headline: string;
-  subtext?: string;
-  ctaLabel?: string;
-  ctaHref?: string;
-  secondaryCtaLabel?: string;
-  secondaryCtaHref?: string;
-  image?: string;
-  imageAlt?: string;
-}
+export type HeroSlide = HeroSlideConfig;
 
-const DEFAULT_SLIDES: HeroSlide[] = [
-  {
-    id: '1',
-    headline: 'Authentic Ayurvedic Wellness, Delivered',
-    subtext: 'Trusted formulations for weight management, liver care, immunity and more. Get free expert consultation.',
-    ctaLabel: 'Shop Products',
-    ctaHref: '/shop',
-    secondaryCtaLabel: 'Free Consultation',
-    secondaryCtaHref: '/consultation',
-  },
-  {
-    id: '2',
-    headline: 'New Launches: Formulations You Can Trust',
-    subtext: 'Discover our latest products, made with the same commitment to quality and tradition.',
-    ctaLabel: 'See New Arrivals',
-    ctaHref: '/shop?new=1',
-    secondaryCtaLabel: 'Book a Consultation',
-    secondaryCtaHref: '/consultation',
-  },
-  {
-    id: '3',
-    headline: 'Visit Our Clinic or Consult Online',
-    subtext: 'Personalised care from our experts. In-clinic visits or online consultation—your choice.',
-    ctaLabel: 'Book Your Slot',
-    ctaHref: '/consultation',
-    secondaryCtaLabel: 'Shop Now',
-    secondaryCtaHref: '/shop',
-  },
-];
-
-export function HeroSlideshowSection({ slides = DEFAULT_SLIDES }: { slides?: HeroSlide[] }) {
+export function HeroSlideshowSection({ slides = DEFAULT_HERO_SLIDES }: { slides?: HeroSlide[] }) {
   const [index, setIndex] = useState(0);
   const current = slides[index % slides.length];
 
@@ -57,7 +18,7 @@ export function HeroSlideshowSection({ slides = DEFAULT_SLIDES }: { slides?: Her
   }, []);
 
   return (
-    <section className="relative min-h-[420px] md:min-h-[520px] flex items-center bg-slate-100 overflow-hidden">
+    <section className="relative min-h-[520px] md:min-h-[680px] flex items-center bg-slate-100 overflow-hidden">
       <div className="absolute inset-0">
         {current.image ? (
           <Image

@@ -20,8 +20,8 @@ export function BrandStorySection() {
               Discover our story
             </Button>
           </div>
-          <div className="bg-soft-bg rounded-2xl aspect-[4/3] flex items-center justify-center text-body-muted border border-border">
-            [Brand imagery placeholder]
+          <div className="bg-soft-bg rounded-xl aspect-[5/3] flex items-center justify-center text-body-muted border border-border">
+          <img src="https://drshealth.in/wp-content/uploads/2024/11/Haircare-2.webp" alt="Brand Story" width={700} height={1000} className="rounded-xl" />
           </div>
         </div>
       </div>

@@ -95,12 +95,12 @@ export async function updateSampleStatus(
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
-  const updates: { status: SampleStatus; sentAt?: Date; deliveredAt?: Date; trackingRef?: string } = {
+  const updates: { status: SampleStatus; sentAt?: Date; deliveredAt?: Date; trackingRef?: string | null } = {
     status,
   };
   if (status === 'SENT' || status === 'IN_TRANSIT') updates.sentAt = new Date();
   if (status === 'DELIVERED') updates.deliveredAt = new Date();
-  if (trackingRef !== undefined) updates.trackingRef = trackingRef || null;
+  if (trackingRef !== undefined) updates.trackingRef = trackingRef?.trim() || null;
   await prisma.leadSample.update({
     where: { id: sampleId },
     data: updates,

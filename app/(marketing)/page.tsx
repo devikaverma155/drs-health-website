@@ -16,11 +16,12 @@ export default function HomePage() {
       <HeroSlideshowSection />
       <CategoryPillsSection />
       <NewLaunchesSection />
+      <BrandStorySection />
       <BestSellersSection />
       <ServicesSection />
       <ManufacturingQualitySection />
       <TestimonialsSection />
-      <BrandStorySection />
+      
       <ConsultationFormSection />
       <BlogPreviewSection />
       <FooterCTASection />

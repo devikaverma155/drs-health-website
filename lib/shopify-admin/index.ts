@@ -1,6 +1,6 @@
 /**
  * Product management abstraction.
- * Currently uses Prisma Product (mock). Swap to Shopify Admin API later with minimal changes.
+ * Currently uses Prisma Product (mock). Storefront products come from WooCommerce.
  */
 
 import { prisma } from '@/lib/prisma';

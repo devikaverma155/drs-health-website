@@ -19,7 +19,7 @@ export default async function AdminProductsPage() {
         </Link>
       </div>
       <p className="text-sm text-slate-500">
-        Products are stored in the database for now. When Shopify is connected, this will sync with Shopify Admin API.
+        Products are stored in the database for now. Storefront products come from WooCommerce.
       </p>
       <div className="rounded-xl bg-white border border-slate-200 overflow-hidden">
         <ProductsTable products={products} />
