@@ -37,15 +37,23 @@ async function wcFetch<T>(path: string, params?: Record<string, string>): Promis
     'Content-Type': 'application/json',
     ...(auth ? { Authorization: `Basic ${auth}` } : {}),
   };
-  const res = await fetch(url, {
-    headers,
-    next: { revalidate: REVALIDATE },
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`WooCommerce API error ${res.status}: ${text}`);
+  
+  try {
+    const res = await fetch(url, {
+      headers,
+      next: { revalidate: REVALIDATE },
+    });
+    
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`WooCommerce API error ${res.status}: ${text}`);
+    }
+    
+    return res.json() as Promise<T>;
+  } catch (error) {
+    console.error(`wcFetch error at ${path}:`, error instanceof Error ? error.message : String(error));
+    throw error;
   }
-  return res.json() as Promise<T>;
 }
 
 /**
@@ -118,6 +126,7 @@ function getCategoriesFallback(): Array<{ slug: string; label: string }> {
 
 /**
  * Get products (UI Product[]). Optional filters: limit, category, minPrice, maxPrice, newOnly.
+ * Gracefully handles API failures by returning empty array instead of throwing.
  */
 export async function getProducts(options?: {
   limit?: number;
@@ -127,43 +136,50 @@ export async function getProducts(options?: {
   newOnly?: boolean;
 }): Promise<Product[]> {
   if (!getBaseUrl()) return [];
-  const perPage = options?.limit ?? 100;
-  const category = options?.category;
-  const newOnly = options?.newOnly;
+  
+  try {
+    const perPage = options?.limit ?? 100;
+    const category = options?.category;
+    const newOnly = options?.newOnly;
 
-  let raw: WooProductRaw[];
-  if (newOnly) {
-    raw = await fetchWooProducts({
-      per_page: Math.max(perPage, 50),
-      orderby: 'date',
-      order: 'desc',
-    });
-    raw = raw.slice(0, 20);
-  } else {
-    raw = await fetchWooProducts({
-      per_page: category ? 100 : perPage,
-    });
-  }
+    let raw: WooProductRaw[];
+    if (newOnly) {
+      raw = await fetchWooProducts({
+        per_page: Math.max(perPage, 50),
+        orderby: 'date',
+        order: 'desc',
+      });
+      raw = raw.slice(0, 20);
+    } else {
+      raw = await fetchWooProducts({
+        per_page: category ? 100 : perPage,
+      });
+    }
 
-  let normalized: NormalizedProduct[] = raw.map(mapWooProduct);
+    let normalized: NormalizedProduct[] = raw.map(mapWooProduct);
 
-  if (category) {
-    normalized = normalized.filter((p) =>
-      p.categories.some((c) => c.slug === category)
+    if (category) {
+      normalized = normalized.filter((p) =>
+        p.categories.some((c) => c.slug === category)
+      );
+    }
+
+    if (options?.minPrice != null) {
+      normalized = normalized.filter((p) => parseFloat(p.price) >= options.minPrice!);
+    }
+    if (options?.maxPrice != null) {
+      normalized = normalized.filter((p) => parseFloat(p.price) <= options.maxPrice!);
+    }
+
+    const products = normalized.map((n) =>
+      normalizedToProduct(n, !!newOnly)
     );
+    return products.slice(0, options?.limit ?? products.length);
+  } catch (error) {
+    console.error('Failed to fetch products:', error instanceof Error ? error.message : String(error));
+    // Return empty array instead of crashing - let page render without products
+    return [];
   }
-
-  if (options?.minPrice != null) {
-    normalized = normalized.filter((p) => parseFloat(p.price) >= options.minPrice!);
-  }
-  if (options?.maxPrice != null) {
-    normalized = normalized.filter((p) => parseFloat(p.price) <= options.maxPrice!);
-  }
-
-  const products = normalized.map((n) =>
-    normalizedToProduct(n, !!newOnly)
-  );
-  return products.slice(0, options?.limit ?? products.length);
 }
 
 /**

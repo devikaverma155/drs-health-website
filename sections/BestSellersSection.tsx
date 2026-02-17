@@ -2,44 +2,70 @@ import Link from 'next/link';
 import { getProducts } from '@/lib/woocommerce';
 import { ProductCard } from '@/components/product/ProductCard';
 
+// Revalidate every 60 seconds for ISR (Incremental Static Regeneration)
+export const revalidate = 60;
+
 export async function BestSellersSection() {
-  const products = await getProducts({ limit: 8 });
-  
-  // We double the array to create a seamless infinite loop
-  const displayProducts = [...products, ...products];
+  try {
+    const products = await getProducts({ limit: 8 });
+    
+    // We double the array to create a seamless infinite loop
+    const displayProducts = [...products, ...products];
 
-  return (
-    <section className="section-padding bg-white overflow-hidden">
-      <div className="container-tight">
-        <div className="flex items-end justify-between gap-4 mb-10">
-          <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
-            Best Sellers
-          </h2>
-          <Link
-            href="/shop"
-            className="text-sm font-medium text-primary hover:underline transition-colors duration-200"
-          >
-            View all
-          </Link>
-        </div>
-      </div>
-
-      {/* Slider carousel — scrolls right (opposite to other product carousels) */}
-      <div className="relative w-full overflow-hidden">
-        <div
-          className="flex gap-6 animate-marquee-reverse pause-on-hover no-scrollbar"
-          style={{ width: 'max-content', willChange: 'transform' }}
-        >
-          {displayProducts.map((product, index) => (
-            <div
-              key={`${product.id}-${index}`}
-              className="w-[280px] md:w-[320px] flex-shrink-0"
+    return (
+      <section className="section-padding bg-white overflow-hidden">
+        <div className="container-tight">
+          <div className="flex items-end justify-between gap-4 mb-10">
+            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+              Best Sellers
+            </h2>
+            <Link
+              href="/shop"
+              className="text-sm font-medium text-primary hover:underline transition-colors duration-200"
             >
-              <ProductCard product={product} />
-            </div>
-          ))}
+              View all
+            </Link>
+          </div>
         </div>
-      </div>
-    </section>
-  );
+
+        {/* Slider carousel — scrolls right (opposite to other product carousels) */}
+        <div className="relative w-full overflow-hidden">
+          <div
+            className="flex gap-6 animate-marquee-reverse pause-on-hover no-scrollbar"
+            style={{ width: 'max-content', willChange: 'transform' }}
+          >
+            {displayProducts.map((product, index) => (
+              <div
+                key={`${product.id}-${index}`}
+                className="w-[280px] md:w-[320px] flex-shrink-0"
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  } catch (error) {
+    console.error('Failed to load best sellers:', error);
+    // Return empty section instead of crashing
+    return (
+      <section className="section-padding bg-white overflow-hidden">
+        <div className="container-tight">
+          <div className="flex items-end justify-between gap-4 mb-10">
+            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+              Best Sellers
+            </h2>
+            <Link
+              href="/shop"
+              className="text-sm font-medium text-primary hover:underline transition-colors duration-200"
+            >
+              View all
+            </Link>
+          </div>
+          <p className="text-center text-body-muted">Loading products...</p>
+        </div>
+      </section>
+    );
+  }
 }
