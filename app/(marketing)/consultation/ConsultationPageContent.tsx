@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
@@ -66,10 +67,11 @@ export function ConsultationPageContent() {
           </div>
 
           <div className="relative h-[420px] rounded-2xl overflow-hidden shadow-card">
-            <img
+            <Image
               src="https://drshealth.in/wp-content/uploads/2026/02/consult.png"
               alt="Ayurvedic consultation"
               className="object-cover w-full h-full"
+              fill
             />
           </div>
         </div>

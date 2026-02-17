@@ -21,7 +21,7 @@ export default function ForBusinessPage() {
             Business Opportunities
           </h1>
           <p className="text-lg text-body-muted max-w-3xl mx-auto">
-            Partner with DRS Health and grow your business. Whether you're a retailer, brand owner, or distributor, we have the right opportunity for you.
+            Partner with DRS Health and grow your business. Whether you&apos;re a retailer, brand owner, or distributor, we have the right opportunity for you.
           </p>
         </div>
 
@@ -105,7 +105,7 @@ export default function ForBusinessPage() {
             Not sure which opportunity is right for you?
           </h2>
           <p className="text-body-muted mb-8 max-w-2xl mx-auto">
-            Talk to our partnership team. We'll help you find the best way to work with DRS Health.
+            Talk to our partnership team. We&apos;ll help you find the best way to work with DRS Health.
           </p>
           <Button href="/contact" variant="primary">
             Get in Touch

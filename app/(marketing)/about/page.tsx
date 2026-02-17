@@ -151,7 +151,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-2xl font-semibold text-foreground mb-4">Our Mission</h3>
               <p className="text-body-muted leading-relaxed mb-4">
-                Establish DRS Health as a science-based, problem-solving, head-to-heel brand, harnessed from nature's wealth and characterized by trust and healthy lives.
+                Establish DRS Health as a science-based, problem-solving, head-to-heel brand, harnessed from nature&apos;s wealth and characterized by trust and healthy lives.
               </p>
               <p className="text-body-muted leading-relaxed text-sm">
                 Develop markets worldwide with an in-depth approach, maintaining the highest ethical standards at each step.
@@ -248,7 +248,7 @@ export default function AboutPage() {
                 We respect, collaborate with, and utilize the talents of each member of the DRS Health family and the local communities to drive our seed-to-shelf policy and rigorously adopt eco-friendly practices to support the environment we inhabit.
               </p>
               <p className="text-body-muted leading-relaxed">
-                Our commitment extends beyond products—it's about creating a sustainable, ethical, and community-first wellness ecosystem that benefits generations to come.
+                Our commitment extends beyond products—it&apos;s about creating a sustainable, ethical, and community-first wellness ecosystem that benefits generations to come.
               </p>
             </div>
           </div>
