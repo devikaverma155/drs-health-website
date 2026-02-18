@@ -6,6 +6,8 @@ import { ShopBannerSlideshow } from '@/sections/ShopBannerSlideshow';
 import { TestimonialsSection } from '@/sections/TestimonialsSection';
 import { ShopTrustBar } from '@/sections/ShopTrustBar';
 
+// ISR + request-time fetching for product data
+// Revalidate every 60 seconds
 export const revalidate = 60;
 
 export const metadata: Metadata = {

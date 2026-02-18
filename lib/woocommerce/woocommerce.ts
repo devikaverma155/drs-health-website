@@ -59,6 +59,7 @@ async function wcFetch<T>(path: string, params?: Record<string, string>): Promis
 /**
  * Fetch products from WooCommerce REST API.
  * Supports per_page, category slug, search, orderby.
+ * Returns empty array if API is unavailable.
  */
 async function fetchWooProducts(params: {
   per_page?: number;
@@ -67,30 +68,43 @@ async function fetchWooProducts(params: {
   orderby?: string;
   order?: 'asc' | 'desc';
 }): Promise<WooProductRaw[]> {
-  const searchParams: Record<string, string> = {
-    per_page: String(params.per_page ?? 100),
-    status: 'publish',
-  };
-  if (params.category) searchParams.category = String(params.category);
-  if (params.search) searchParams.search = params.search;
-  if (params.orderby) searchParams.orderby = params.orderby;
-  if (params.order) searchParams.order = params.order;
+  try {
+    const searchParams: Record<string, string> = {
+      per_page: String(params.per_page ?? 100),
+      status: 'publish',
+    };
+    if (params.category) searchParams.category = String(params.category);
+    if (params.search) searchParams.search = params.search;
+    if (params.orderby) searchParams.orderby = params.orderby;
+    if (params.order) searchParams.order = params.order;
 
-  const data = await wcFetch<WooProductRaw[]>( '/products', searchParams);
-  return Array.isArray(data) ? data : [];
+    const data = await wcFetch<WooProductRaw[]>('/products', searchParams);
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('fetchWooProducts error:', error instanceof Error ? error.message : String(error));
+    // Return empty array instead of throwing - prevents build failures
+    return [];
+  }
 }
 
 /**
  * Fetch single product by slug (WC doesn't have slug endpoint in v3; we fetch by slug via filter).
+ * Returns null if API is unavailable instead of throwing.
  */
 async function fetchProductBySlug(slug: string): Promise<WooProductRaw | null> {
-  const list = await wcFetch<WooProductRaw[]>('/products', {
-    slug,
-    per_page: '1',
-    status: 'publish',
-  });
-  const arr = Array.isArray(list) ? list : [];
-  return arr[0] ?? null;
+  try {
+    const list = await wcFetch<WooProductRaw[]>('/products', {
+      slug,
+      per_page: '1',
+      status: 'publish',
+    });
+    const arr = Array.isArray(list) ? list : [];
+    return arr[0] ?? null;
+  } catch (error) {
+    console.error(`fetchProductBySlug error for ${slug}:`, error instanceof Error ? error.message : String(error));
+    // Return null instead of throwing
+    return null;
+  }
 }
 
 /**
