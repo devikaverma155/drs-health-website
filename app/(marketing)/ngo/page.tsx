@@ -16,22 +16,22 @@ const INITIATIVES = [
   {
     title: 'Community health camps',
     description: 'Free health check-ups and basic Ayurvedic guidance in underserved areas.',
-    image: 'https://images.unsplash.com/photo-1579154204601-01d82e503057?w=600&h=400&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg',
   },
   {
     title: 'Wellness awareness',
     description: 'Workshops and talks on preventive care, diet, and lifestyle using Ayurvedic principles.',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp',
   },
   {
     title: 'Support for the needy',
     description: 'Access to quality Ayurvedic care and formulations for those who cannot afford them.',
-    image: 'https://images.unsplash.com/photo-1631217174715-fbe16acafc77?w=600&h=400&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp',
   },
   {
     title: 'Education and training',
     description: 'Spreading awareness about traditional medicine and training local volunteers where possible.',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png',
   },
 ];
 

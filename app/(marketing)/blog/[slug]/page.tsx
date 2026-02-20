@@ -20,7 +20,7 @@ const POSTS: Record<
     date: '2024-12-26',
     category: 'Herbal Remedies',
     readTime: '8 min read',
-    image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=1200&h=600&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp',
     excerpt: 'Discover the powerful benefits of milk thistle for liver health, detoxification, and overall wellness.',
     content: `Milk thistle, scientifically known as Silybum marianum, is a flowering plant from the daisy family. It has been used for thousands of years in traditional medicine, particularly in Ayurvedic and Mediterranean healing practices. The active compound in milk thistle is silymarin, a flavonoid complex with potent antioxidant and anti-inflammatory properties.
 
@@ -46,7 +46,7 @@ Always consult with an Ayurvedic practitioner before starting any new supplement
     date: '2024-12-26',
     category: 'Supplements',
     readTime: '10 min read',
-    image: 'https://images.unsplash.com/photo-1585268341965-7cc0b3c7b4c3?w=1200&h=600&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png',
     excerpt: 'Explore the scientifically-backed health benefits of apple cider vinegar tablets.',
     content: `Apple cider vinegar (ACV) has been used for centuries as a natural remedy and wellness support. When concentrated into tablet form, it provides a convenient and effective way to harness its benefits.
 
@@ -76,7 +76,7 @@ For best results, ACV tablets should be taken consistently as part of a balanced
     date: '2024-11-12',
     category: 'Natural Remedies',
     readTime: '6 min read',
-    image: 'https://images.unsplash.com/photo-1607003802173-5f1a4ebedc62?w=1200&h=600&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp',
     excerpt: 'Learn how apple cider vinegar can soothe sore throats naturally.',
     content: `A sore throat can be uncomfortable and disruptive to daily life. While there are many over-the-counter options, natural remedies like apple cider vinegar have been used traditionally to soothe throat discomfort.
 
@@ -109,7 +109,7 @@ While traditional use is extensive, modern scientific studies on ACV for sore th
     date: '2024-11-12',
     category: 'Hair Care',
     readTime: '7 min read',
-    image: 'https://images.unsplash.com/photo-1599599810694-2d3f46e99e81?w=1200&h=600&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp',
     excerpt: 'Unlock the secrets of shilajit for hair health and discover how to use it effectively.',
     content: `Shilajit, a mineral-rich substance formed over centuries in the Himalayan mountains, has been a cornerstone of Ayurvedic medicine for thousands of years. It's increasingly recognized for its powerful benefits for hair health.
 
@@ -150,7 +150,7 @@ Most people notice improvements in hair quality within 4-8 weeks of consistent u
     date: '2024-01-15',
     category: 'Lifestyle',
     readTime: '9 min read',
-    image: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=1200&h=600&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg',
     excerpt: 'How to align your day with Ayurvedic principles for better energy and balance.',
     content: `Ayurveda emphasizes living in harmony with natural rhythms and your individual constitution (dosha). By incorporating Ayurvedic practices into your daily routine, you can experience improved energy, better digestion, enhanced mental clarity, and overall wellness.
 
@@ -204,7 +204,7 @@ Ayurveda recommends adjusting routines seasonally. In cooler seasons, emphasize 
     date: '2024-01-08',
     category: 'Herbal Remedies',
     readTime: '8 min read',
-    image: 'https://images.unsplash.com/photo-1544716278-ca5e3af35abd?w=1200&h=600&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp',
     excerpt: 'Traditional herbs that support liver function and natural detoxification.',
     content: `The liver is your body's primary detoxification organ, working tirelessly to filter toxins and support overall health. Ayurvedic herbs have been used for centuries to support optimal liver function.
 
@@ -249,7 +249,7 @@ Always consult with an Ayurvedic practitioner before starting new herbs, especia
     date: '2024-01-01',
     category: 'Wellness',
     readTime: '7 min read',
-    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=600&fit=crop',
+    image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png',
     excerpt: 'Simple Ayurvedic practices to stay healthy through the cold season.',
     content: `Winter is when the body's digestive fire naturally weakens, making it important to take extra care of your immunity. Ayurveda offers time-tested practices to maintain strong immunity through the colder months.
 

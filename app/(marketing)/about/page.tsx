@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { LeadershipCarouselSection } from '@/sections/LeadershipCarouselSection';
+import { BrandHistorySection } from '@/sections/BrandHistorySection';
 
 export const metadata: Metadata = {
   title: 'About Us | DRS Health',
@@ -41,34 +43,10 @@ const VALUES = [
 ];
 
 const SERVICES = [
-  {
-    title: 'Ask Dr. DRS Health',
-    description:
-      'Get prompt, research-backed answers to all your health-related queries.',
-    image:
-      'https://images.unsplash.com/photo-1579154204601-01d82e503057?w=600&h=400&fit=crop',
-  },
-  {
-    title: 'Disease Information',
-    description:
-      'Comprehensive insights about various health conditions and their management.',
-    image:
-      'https://images.unsplash.com/photo-1631217174715-fbe16acafc77?w=600&h=400&fit=crop',
-  },
-  {
-    title: 'Herbal Efficacy',
-    description:
-      'Latest research-backed information about herbs and their therapeutic benefits.',
-    image:
-      'https://images.unsplash.com/photo-1597318972826-8f1a0e1d6010?w=600&h=400&fit=crop',
-  },
-  {
-    title: 'Lifestyle Guidance',
-    description:
-      'Learn about dietary and lifestyle changes to improve your wellbeing.',
-    image:
-      'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=600&h=400&fit=crop',
-  },
+  { title: 'Ask Dr. DRS Health', description: 'Get prompt, research-backed answers to all your health-related queries.', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg' },
+  { title: 'Disease Information', description: 'Comprehensive insights about various health conditions and their management.', image: 'https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp' },
+  { title: 'Herbal Efficacy', description: 'Latest research-backed information about herbs and their therapeutic benefits.', image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp' },
+  { title: 'Lifestyle Guidance', description: 'Learn about dietary and lifestyle changes to improve your wellbeing.', image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp' },
 ];
 
 export default function AboutPage() {
@@ -117,7 +95,7 @@ export default function AboutPage() {
 
           <div className="relative h-96 rounded-2xl overflow-hidden border shadow-card bg-gradient-to-br from-primary/10 to-accent-green/10">
             <Image
-              src="https://images.unsplash.com/photo-1576091160550-2173f7f869?w=600&h=500&fit=crop"
+              src="https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg"
               alt="Health consultation"
               fill
               className="object-cover"
@@ -183,47 +161,11 @@ export default function AboutPage() {
           <h2 className="text-3xl font-semibold text-foreground mb-12 text-center">
             Our Leadership & Legacy
           </h2>
-          <div className="relative rounded-2xl bg-gradient-to-br from-primary/5 to-accent-green/5 border border-border overflow-hidden shadow-card">
-            <div className="grid md:grid-cols-2 gap-0 min-h-[400px]">
-              {/* Portrait side with decorative shapes */}
-              <div className="relative flex items-center justify-center p-8 md:p-12">
-                <div className="relative z-10 w-56 h-56 md:w-64 md:h-64 rounded-2xl overflow-hidden border-4 border-white shadow-lg bg-primary/5 flex items-center justify-center">
-                  <Image
-                    src="https://drshealth.in/wp-content/uploads/2022/12/img.png"
-                    alt="Founder - Dr. Rajendra Kumar Jain"
-                    width={256}
-                    height={256}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {/* Soft curved shapes */}
-                <div className="absolute top-0 left-0 w-40 h-40 md:w-52 md:h-52 rounded-full bg-primary/15 -translate-x-1/2 -translate-y-1/2" aria-hidden />
-                <div className="absolute bottom-0 right-0 w-36 h-36 md:w-44 md:h-44 rounded-full bg-accent-green/20 translate-x-1/3 translate-y-1/3" aria-hidden />
-                <div className="absolute top-1/2 right-0 w-24 h-24 rounded-full bg-accent-lime/30 translate-x-1/2" aria-hidden />
-              </div>
-              {/* Text side */}
-              <div className="flex flex-col justify-center p-8 md:p-12">
-                <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-2">
-                  स्व. डॉ. राजेन्द्र कुमार जैन
-                </h2>
-                <p className="text-sm text-primary font-medium mb-3">(B.I.M.S., H.P.A.)</p>
-                <p className="text-sm text-body-muted mb-4">
-                  Former Consulting Physician and Consultant at Dhanyarasashala
-                </p>
-                <p className="text-body-muted leading-relaxed mb-4">
-                  A distinguished Ayurvedic physician honoured with titles such as &quot;Shreshtha Ayurvednaja&quot; and &quot;Ayurveda Visharad&quot;. He established groundbreaking medicines for immune support and worked with AIIMS Delhi.
-                </p>
-                <p className="text-body-muted leading-relaxed mb-4">
-                  His expertise extended to challenging cases including hydrophobia and urine analysis for diagnosis. He brought relief to many patients suffering from cancer, leprosy, heart disease and other conditions.
-                </p>
-                <p className="text-body-muted leading-relaxed">
-                  His legacy continues to inspire our unwavering commitment to authentic, science-backed Ayurvedic wellness and expert guidance for every individual.
-                </p>
-              </div>
-            </div>
-          </div>
+          <LeadershipCarouselSection />
         </div>
       </section>
+
+      <BrandHistorySection />
 
       {/* GLOBAL VISION */}
       <section className="section-padding bg-soft-bg border-y border-border">
@@ -234,7 +176,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-accent-blue/10 to-primary/10 border border-border shadow-card">
               <Image
-                src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=500&fit=crop"
+                src="https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png"
                 alt="Global expansion"
                 fill
                 className="object-cover"
@@ -252,6 +194,72 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* MANUFACTURING & QUALITY */}
+      <section className="section-padding">
+        <div className="container-tight max-w-5xl">
+          <h2 className="text-3xl font-semibold text-foreground text-center mb-12">
+            Manufacturing & Quality
+          </h2>
+          <p className="text-body-muted leading-relaxed mb-8">
+            At DRS Health, we combine classical Ayurvedic wisdom with rigorous quality standards. Our formulations are produced in facilities that follow Good Manufacturing Practice (GMP) guidelines, so you receive safe, effective products you can trust.
+          </p>
+          
+          <div className="bg-white rounded-2xl p-8 border border-border shadow-card mb-8">
+            <h3 className="text-2xl font-semibold text-foreground mb-6">
+              Our Commitment
+            </h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="flex gap-4">
+                <span className="text-2xl">✓</span>
+                <div>
+                  <p className="font-semibold text-foreground mb-2">Good Manufacturing Practice (GMP)</p>
+                  <p className="text-body-muted text-sm">GMP compliant facilities meeting international standards</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-2xl">✓</span>
+                <div>
+                  <p className="font-semibold text-foreground mb-2">Quality Testing</p>
+                  <p className="text-body-muted text-sm">Testing of raw materials and finished products</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-2xl">✓</span>
+                <div>
+                  <p className="font-semibold text-foreground mb-2">Traditional + Modern</p>
+                  <p className="text-body-muted text-sm">Classical Ayurvedic formulations with modern quality control</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-2xl">✓</span>
+                <div>
+                  <p className="font-semibold text-foreground mb-2">Transparent Sourcing</p>
+                  <p className="text-body-muted text-sm">Open sourcing and production practices</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-2xl">✓</span>
+                <div>
+                  <p className="font-semibold text-foreground mb-2">Documented Processes</p>
+                  <p className="text-body-muted text-sm">Full traceability and safety documentation</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-2xl">✓</span>
+                <div>
+                  <p className="font-semibold text-foreground mb-2">Safety Standards</p>
+                  <p className="text-body-muted text-sm">Every step designed to maintain product integrity</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-body-muted leading-relaxed text-center">
+            We believe quality is non-negotiable. From sourcing herbs to packaging and dispatch, every step is designed to maintain the integrity and efficacy of our products.
+          </p>
         </div>
       </section>
 

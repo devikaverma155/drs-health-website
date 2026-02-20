@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 const MARQUEE_ITEMS = [
+  '🚚 Free shipping on all orders',
   'Free consultation with our Ayurvedic experts — Book now',
   'New launches: Discover our latest wellness formulations',
   'Visit our clinic or consult online — Get personalised care',

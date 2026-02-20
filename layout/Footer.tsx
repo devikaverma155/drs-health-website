@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const SHOP_LINKS = [
   { href: '/shop?category=weight-management', label: 'Weight Management' },
@@ -37,9 +38,19 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8">
           <div>
             <Link href="/" className="text-xl font-semibold">
-              DRS Health
+               <Image
+                          src="https://drshealth.in/wp-content/uploads/2025/01/cropped-DRS-Logo-e1771510375912.png"
+                          alt="DRS Health"
+                          width={100}
+                          height={100}
+                          className="h-8 w-auto"
+                        />
+                          <span className="block text-lg text-white/90 mt-1">Private Limited</span>
+                      
             </Link>
+             
             <p className="mt-4 text-sm text-white/80 max-w-xs leading-relaxed">
+           
               Authentic Ayurvedic wellness. Trusted formulations for modern health.
             </p>
             <Link

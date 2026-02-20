@@ -17,7 +17,7 @@ export function ServicesSection() {
           <div className="bg-white rounded-2xl overflow-hidden border border-border shadow-card transition-all duration-200 hover:shadow-card-hover hover:-translate-y-1">
             <div className="relative h-48 bg-gradient-to-br from-accent-blue/10 to-accent-blue/5 flex items-center justify-center overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1579154204601-01d82e503057?w=500&h=300&fit=crop"
+                src="https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp"
                 alt="Health consultation"
                 width={500}
                 height={300}
@@ -39,7 +39,7 @@ export function ServicesSection() {
           <div className="bg-white rounded-2xl overflow-hidden border border-border shadow-card transition-all duration-200 hover:shadow-card-hover hover:-translate-y-1">
             <div className="relative h-48 bg-gradient-to-br from-accent-green/10 to-accent-green/5 flex items-center justify-center overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1631217174715-fbe16acafc77?w=500&h=300&fit=crop"
+                src="https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp"
                 alt="Product guidance"
                 width={500}
                 height={300}

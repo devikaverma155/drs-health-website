@@ -71,6 +71,12 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.65;
+    /* Subtle themed background: warm paper with very light herbal tint */
+    background-image:
+      radial-gradient(ellipse 120% 80% at 50% -20%, rgba(163, 38, 26, 0.06), transparent),
+      radial-gradient(ellipse 80% 50% at 100% 50%, rgba(196, 106, 58, 0.04), transparent),
+      radial-gradient(ellipse 60% 80% at 0% 80%, rgba(230, 201, 168, 0.08), transparent);
+    background-attachment: fixed;
   }
 
   h1, h2, h3, h4, h5, h6 {

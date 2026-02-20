@@ -3,15 +3,43 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import type { Product } from '@/lib/woocommerce';
-import { getCheckoutUrl } from '@/lib/woocommerce';
+import { useCart } from '@/lib/cartContext';
+import { useRouter } from 'next/navigation';
 
 export function AddToCartForm({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id ?? '');
+  const [isAdding, setIsAdding] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const { addToCart } = useCart();
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = getCheckoutUrl(product.id, quantity);
+    setIsAdding(true);
+
+    try {
+      const variant = product.variants.find((v) => v.id === selectedVariantId) || product.variants[0];
+      const price = variant?.price ?? product.priceRange.minVariantPrice.amount;
+
+      addToCart({
+        productId: product.id,
+        productName: product.title,
+        price,
+        image: product.featuredImage?.url,
+        quantity,
+        permalink: product.permalink,
+      });
+
+      setShowNotification(true);
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   return (
@@ -66,9 +94,25 @@ export function AddToCartForm({ product }: { product: Product }) {
           </button>
         </div>
       </div>
-      <Button type="submit" variant="primary">
-        Add to Cart
-      </Button>
+      <div className="flex gap-3">
+        <Button type="submit" variant="primary" disabled={isAdding}>
+          {isAdding ? 'Adding...' : 'Add to Cart'}
+        </Button>
+      </div>
+      {showNotification && (
+        <div className="text-green-600 text-sm font-medium animate-fade-out">
+          ✓ Added to cart! <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              router.push('/cart');
+            }}
+            className="ml-2 text-green-700 underline hover:text-green-800"
+          >
+            View Cart
+          </button>
+        </div>
+      )}
     </form>
   );
 }

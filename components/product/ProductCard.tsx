@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import type { Product } from '@/lib/woocommerce';
-import { getCheckoutUrl } from '@/lib/woocommerce';
+import { useCart } from '@/lib/cartContext';
 
 type ProductCardProps = {
   product: Product;
@@ -32,6 +32,7 @@ function StarRating({ rating, reviewCount }: { rating: number; reviewCount: numb
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id ?? '');
   const variant = product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0];
@@ -40,7 +41,15 @@ export function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = comparePrice && parseFloat(comparePrice) > parseFloat(price);
 
   const handleAddToCart = () => {
-    window.location.href = getCheckoutUrl(product.id, quantity);
+    addToCart({
+      productId: product.id,
+      productName: product.title,
+      price,
+      image: product.featuredImage?.url,
+      quantity,
+      permalink: `/product/${product.handle}`,
+    });
+    setQuantity(1);
   };
 
   return (

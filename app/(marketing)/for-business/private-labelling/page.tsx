@@ -20,7 +20,7 @@ export default function PrivateLabellingPage() {
           <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-accent-blue/10 to-accent-navy/10 h-[400px] flex items-center justify-center border border-border md:order-2">
             <div className="text-center text-body-muted">
               <Image
-                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=500&h=400&fit=crop"
+                src="https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png"
                 alt="Private labelling packaging design"
                 width={500}
                 height={400}

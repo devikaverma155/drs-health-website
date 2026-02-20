@@ -46,7 +46,7 @@ export default function ContractManufacturingPage() {
           <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-accent-green/10 h-[400px] flex items-center justify-center border border-border">
             <div className="text-center text-body-muted">
               <Image
-                src="https://images.unsplash.com/photo-1581092162562-40038f592154?w=500&h=400&fit=crop"
+                src="https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp"
                 alt="Manufacturing facility"
                 width={500}
                 height={400}
