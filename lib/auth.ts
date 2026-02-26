@@ -13,17 +13,36 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const admin = await prisma.admin.findUnique({
-          where: { email: credentials.email },
-        });
-        if (!admin) return null;
-        const valid = await compare(credentials.password, admin.password);
-        if (!valid) return null;
-        return {
-          id: admin.id,
-          email: admin.email,
-          name: admin.name ?? undefined,
-        };
+        
+        try {
+          const admin = await prisma.admin.findUnique({
+            where: { email: credentials.email },
+          });
+          
+          if (!admin) {
+            if (process.env.NODE_ENV === 'development') {
+              console.error(`[Auth] Admin not found: ${credentials.email}`);
+            }
+            return null;
+          }
+          
+          const valid = await compare(credentials.password, admin.password);
+          if (!valid) {
+            if (process.env.NODE_ENV === 'development') {
+              console.error(`[Auth] Invalid password for: ${credentials.email}`);
+            }
+            return null;
+          }
+          
+          return {
+            id: admin.id,
+            email: admin.email,
+            name: admin.name ?? undefined,
+          };
+        } catch (error) {
+          console.error('[Auth] Database error during authentication:', error);
+          return null;
+        }
       },
     }),
   ],

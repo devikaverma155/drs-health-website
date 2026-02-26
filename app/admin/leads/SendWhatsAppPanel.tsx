@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { sendLeadWhatsApp } from './actions';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
-export function SendWhatsAppPanel({ leadId, phone }: { leadId: string; phone: string }) {
+export function SendWhatsAppPanel({ leadId, phone }: { leadId: string; phone: string | null }) {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<'success' | 'error' | null>(null);
@@ -29,7 +30,8 @@ export function SendWhatsAppPanel({ leadId, phone }: { leadId: string; phone: st
   return (
     <div>
       <h2 className="font-medium text-slate-900 mb-2">Send WhatsApp Message</h2>
-      <p className="text-xs text-slate-500 mb-3">To: {phone}</p>
+      {phone && <p className="text-xs text-slate-500 mb-3">To: {phone}</p>}
+      {!phone && <p className="text-xs text-red-500 mb-3">Phone number not available</p>}
       <form onSubmit={handleSend} className="space-y-2">
         <textarea
           value={message}
@@ -41,9 +43,10 @@ export function SendWhatsAppPanel({ leadId, phone }: { leadId: string; phone: st
         />
         <button
           type="submit"
-          disabled={loading || !message.trim()}
-          className="w-full rounded-lg bg-green-600 text-white py-2 text-sm font-medium hover:bg-green-700 disabled:opacity-50"
+          disabled={loading || !message.trim() || !phone}
+          className="w-full rounded-lg bg-green-600 text-white py-2 text-sm font-medium hover:bg-green-700 disabled:opacity-50 flex items-center justify-center gap-2"
         >
+          {loading && <LoadingSpinner size="sm" />}
           {loading ? 'Sending…' : 'Send'}
         </button>
       </form>

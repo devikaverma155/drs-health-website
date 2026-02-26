@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { addLeadNote } from './actions';
-import type { LeadNote } from '@prisma/client';
+import type { LeadActivity } from '@prisma/client';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 export function LeadNotesTimeline({
   leadId,
   notes,
 }: {
   leadId: string;
-  notes: LeadNote[];
+  notes: LeadActivity[];
 }) {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
@@ -43,8 +44,9 @@ export function LeadNotesTimeline({
         <button
           type="submit"
           disabled={loading || !content.trim()}
-          className="shrink-0 rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark disabled:opacity-50"
+          className="shrink-0 rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark disabled:opacity-50 flex items-center gap-2"
         >
+          {loading && <LoadingSpinner size="sm" />}
           {loading ? 'Adding…' : 'Add'}
         </button>
       </form>
@@ -55,9 +57,9 @@ export function LeadNotesTimeline({
         ) : (
           notes.map((note) => (
             <li key={note.id} className="border-l-2 border-slate-200 pl-3 py-1 text-sm">
-              <p className="text-slate-700 whitespace-pre-wrap">{note.content}</p>
+              <p className="text-slate-700 whitespace-pre-wrap">{note.note || note.action}</p>
               <p className="text-slate-400 text-xs mt-1">
-                {note.createdBy ?? 'System'} · {new Date(note.createdAt).toLocaleString()}
+                {note.createdBy ? `User ${note.createdBy}` : 'System'} · {new Date(note.createdAt).toLocaleString()}
               </p>
             </li>
           ))

@@ -5,7 +5,6 @@ import { LeadDetail } from '../LeadDetail';
 import { LeadNotesTimeline } from '../LeadNotesTimeline';
 import { LeadStatusDropdown } from '../LeadStatusDropdown';
 import { SendWhatsAppPanel } from '../SendWhatsAppPanel';
-import { LeadSamplesSection } from '../LeadSamplesSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,8 +17,7 @@ export default async function LeadDetailPage({
   const lead = await prisma.lead.findUnique({
     where: { id },
     include: {
-      notes: { orderBy: { createdAt: 'desc' } },
-      samples: { orderBy: { createdAt: 'desc' } },
+      activities: { orderBy: { createdAt: 'desc' } },
     },
   });
   if (!lead) notFound();
@@ -43,19 +41,14 @@ export default async function LeadDetailPage({
           </div>
 
           <div className="rounded-xl bg-white border border-slate-200 p-6">
-            <h2 className="font-medium text-slate-900 mb-4">Sample tracking</h2>
-            <LeadSamplesSection leadId={lead.id} samples={lead.samples} />
-          </div>
-
-          <div className="rounded-xl bg-white border border-slate-200 p-6">
-            <h2 className="font-medium text-slate-900 mb-4">Notes</h2>
-            <LeadNotesTimeline leadId={lead.id} notes={lead.notes} />
+            <h2 className="font-medium text-slate-900 mb-4">Activity & Notes</h2>
+            <LeadNotesTimeline leadId={lead.id} notes={lead.activities} />
           </div>
         </div>
 
         <div>
           <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6">
-            <SendWhatsAppPanel leadId={lead.id} phone={lead.phone} />
+            <SendWhatsAppPanel leadId={lead.id} phone={lead.phone || ''} />
           </div>
         </div>
       </div>

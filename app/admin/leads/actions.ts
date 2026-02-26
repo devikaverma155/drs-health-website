@@ -5,14 +5,11 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { sendWhatsAppMessage } from '@/lib/whatsapp';
-import type { LeadStatus, LeadSource, SampleStatus } from '@prisma/client';
-
 export async function createLead(data: {
   name: string;
   email: string;
   phone: string;
-  source: LeadSource;
-  category?: string;
+  source: string;
   message?: string;
 }) {
   const session = await getServerSession(authOptions);
@@ -25,7 +22,6 @@ export async function createLead(data: {
       email: data.email.trim(),
       phone: data.phone.trim(),
       source: data.source,
-      category: data.category?.trim() || null,
       message: data.message?.trim() || null,
     },
   });
@@ -39,11 +35,12 @@ export async function addLeadNote(leadId: string, content: string) {
   if (!session?.user?.id) throw new Error('Unauthorized');
   const trimmed = content?.trim();
   if (!trimmed) throw new Error('Note content is required.');
-  await prisma.leadNote.create({
+  await prisma.leadActivity.create({
     data: {
       leadId,
-      content: trimmed,
-      createdBy: session.user.email ?? session.user.id,
+      action: 'note',
+      note: trimmed,
+      createdBy: session.user.id,
     },
   });
   revalidatePath(`/admin/leads/${leadId}`);
@@ -51,12 +48,12 @@ export async function addLeadNote(leadId: string, content: string) {
   revalidatePath('/admin');
 }
 
-export async function updateLeadStatus(leadId: string, status: LeadStatus) {
+export async function updateLeadStatus(leadId: string, status: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
   await prisma.lead.update({
     where: { id: leadId },
-    data: { status, lastContactedAt: new Date() },
+    data: { status },
   });
   revalidatePath(`/admin/leads/${leadId}`);
   revalidatePath('/admin/leads');
@@ -68,79 +65,19 @@ export async function sendLeadWhatsApp(leadId: string, message: string) {
   if (!session?.user?.id) throw new Error('Unauthorized');
   const lead = await prisma.lead.findUnique({ where: { id: leadId } });
   if (!lead) throw new Error('Lead not found.');
+  if (!lead.phone) throw new Error('Lead phone number not found.');
   const result = await sendWhatsAppMessage(lead.phone, message);
   if (!result.ok) throw new Error(result.error ?? 'Failed to send.');
-  await prisma.lead.update({
-    where: { id: leadId },
-    data: { lastContactedAt: new Date() },
+  // Record WhatsApp message
+  await prisma.whatsAppMessage.create({
+    data: {
+      leadId,
+      phone: lead.phone,
+      direction: 'outbound',
+      message,
+      status: 'sent',
+    },
   });
   revalidatePath(`/admin/leads/${leadId}`);
   revalidatePath('/admin');
-}
-
-// --- Sample tracking ---
-export async function createSample(leadId: string, notes?: string) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error('Unauthorized');
-  await prisma.leadSample.create({
-    data: { leadId, notes: notes?.trim() || null },
-  });
-  revalidatePath(`/admin/leads/${leadId}`);
-}
-
-export async function updateSampleStatus(
-  sampleId: string,
-  status: SampleStatus,
-  trackingRef?: string
-) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error('Unauthorized');
-  const updates: { status: SampleStatus; sentAt?: Date; deliveredAt?: Date; trackingRef?: string | null } = {
-    status,
-  };
-  if (status === 'SENT' || status === 'IN_TRANSIT') updates.sentAt = new Date();
-  if (status === 'DELIVERED') updates.deliveredAt = new Date();
-  if (trackingRef !== undefined) updates.trackingRef = trackingRef?.trim() || null;
-  await prisma.leadSample.update({
-    where: { id: sampleId },
-    data: updates,
-  });
-  revalidatePath(`/admin/leads`);
-}
-
-export async function updateSampleTrackingRef(sampleId: string, trackingRef: string) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error('Unauthorized');
-  await prisma.leadSample.update({
-    where: { id: sampleId },
-    data: { trackingRef: trackingRef.trim() || null },
-  });
-  revalidatePath(`/admin/leads`);
-}
-
-export async function notifySampleStatusOnWhatsApp(sampleId: string) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error('Unauthorized');
-  const sample = await prisma.leadSample.findUnique({
-    where: { id: sampleId },
-    include: { lead: true },
-  });
-  if (!sample) throw new Error('Sample not found.');
-  const statusText =
-    sample.status === 'DELIVERED'
-      ? 'Your sample has been delivered.'
-      : sample.status === 'IN_TRANSIT'
-        ? 'Your sample is in transit.'
-        : sample.status === 'SENT'
-          ? 'Your sample has been dispatched.'
-          : `Sample status: ${sample.status.replace('_', ' ')}.`;
-  const tracking = sample.trackingRef ? ` Tracking: ${sample.trackingRef}.` : '';
-  const message = `Hi ${sample.lead.name}, ${statusText}${tracking}`;
-  const result = await sendWhatsAppMessage(sample.lead.phone, message);
-  if (!result.ok) throw new Error(result.error ?? 'Failed to send.');
-  await prisma.lead.update({
-    where: { id: sample.leadId },
-    data: { lastContactedAt: new Date() },
-  });
-  revalidatePath(`/admin/leads/${sample.leadId}`);
 }

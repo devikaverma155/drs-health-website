@@ -1,5 +1,6 @@
 // DRS Health Admin Dashboard – PostgreSQL (Supabase compatible)
-// Run: npx prisma generate && npx prisma db push (or migrate)
+// Synced with existing database schema
+// Run: npx prisma generate && npx prisma db push
 
 generator client {
   provider = "prisma-client-js"
@@ -11,16 +12,112 @@ datasource db {
 }
 
 // ---------------------------------------------------------------------------
-// AUTH
+// AUTH & USERS
 // ---------------------------------------------------------------------------
 
 model Admin {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid()) @db.Uuid
   email     String   @unique
-  password  String   // hashed
+  password  String // hashed with bcrypt
   name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("admin")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String?
+  email     String?
+  phone     String?
+  role      String?  @default("employee")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  leadActivities LeadActivity[]
+  assignedLeads  Lead[]
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// EMPLOYEE MANAGEMENT
+// ---------------------------------------------------------------------------
+
+model Employee {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String?
+  email       String?
+  phone       String?
+  designation String?
+  department  String?
+  joiningDate DateTime? @map("joining_date") @db.Date
+  salary      Decimal?  @db.Decimal(10, 2)
+  status      String?   @default("active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  documents EmployeeDocument[]
+
+  @@map("employees")
+}
+
+model EmployeeDocument {
+  id           String    @id @default(uuid()) @db.Uuid
+  employeeId   String?   @map("employee_id") @db.Uuid
+  employee     Employee? @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  documentType String?   @map("document_type")
+  fileUrl      String?   @map("file_url")
+  uploadedAt   DateTime? @default(now()) @map("uploaded_at")
+
+  @@index([employeeId])
+  @@map("employee_documents")
+}
+
+// ---------------------------------------------------------------------------
+// RAW MATERIAL MANAGEMENT
+// ---------------------------------------------------------------------------
+
+model RawMaterialBuyer {
+  id               String   @id @default(uuid()) @db.Uuid
+  companyName      String?  @map("company_name")
+  contactPerson    String?  @map("contact_person")
+  phone            String?
+  email            String?
+  materialRequired String?  @map("material_required")
+  quantity         String?
+  location         String?
+  notes            String?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  // Relations
+  orders RawMaterialOrder[]
+
+  @@map("raw_material_buyers")
+}
+
+model RawMaterialOrder {
+  id              String           @id @default(uuid()) @db.Uuid
+  buyerId         String           @map("buyer_id") @db.Uuid
+  buyer           RawMaterialBuyer @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  orderDate       DateTime         @default(now()) @map("order_date")
+  materialType    String?          @map("material_type")
+  quantity        String?
+  unit            String?
+  price           Decimal?         @db.Decimal(10, 2)
+  supplierName    String?          @map("supplier_name")
+  supplierContact String?          @map("supplier_contact")
+  deliveryDate    DateTime?        @map("delivery_date") @db.Date
+  status          String?          @default("pending") // pending, ordered, delivered, cancelled
+  notes           String?
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  @@index([buyerId])
+  @@index([orderDate])
+  @@index([status])
+  @@map("raw_material_orders")
 }
 
 // ---------------------------------------------------------------------------
@@ -28,144 +125,132 @@ model Admin {
 // ---------------------------------------------------------------------------
 
 model Lead {
-  id              String       @id @default(cuid())
-  name            String
-  email           String
-  phone           String
-  source          LeadSource
-  category        String?      // e.g. B2B, Retail, Pharmacy, NGO
-  message         String?      @db.Text
-  tags            String[]    @default([])
-  status          LeadStatus   @default(NEW)
-  assignedTo      String?
-  createdAt       DateTime     @default(now())
-  lastContactedAt DateTime?
-  notes           LeadNote[]
-  samples         LeadSample[]
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String?
+  phone        String?
+  email        String?
+  source       String? // contact_form, consultation, b2b, etc.
+  status       String?  @default("new")
+  companyName  String?  @map("company_name")
+  message      String?
+  city         String?
+  state        String?
+  country      String?
+  assignedTo   String?  @map("assigned_to") @db.Uuid
+  assignedUser User?    @relation(fields: [assignedTo], references: [id])
+  priority     String?  @default("medium")
+  tags         String[] @default([])
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  details          LeadDetail[]
+  activities       LeadActivity[]
+  whatsappMessages WhatsAppMessage[]
 
   @@index([source])
   @@index([status])
-  @@index([category])
+  @@index([assignedTo])
   @@index([createdAt])
+  @@map("leads")
+}
+
+model LeadDetail {
+  id         String  @id @default(uuid()) @db.Uuid
+  leadId     String? @map("lead_id") @db.Uuid
+  lead       Lead?   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  fieldKey   String? @map("field_key")
+  fieldValue String? @map("field_value")
+
+  @@index([leadId])
+  @@map("lead_details")
+}
+
+model LeadActivity {
+  id        String   @id @default(uuid()) @db.Uuid
+  leadId    String?  @map("lead_id") @db.Uuid
+  lead      Lead?    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  action    String?
+  note      String?
+  createdBy String?  @map("created_by") @db.Uuid
+  creator   User?    @relation(fields: [createdBy], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([leadId])
+  @@index([createdBy])
+  @@map("lead_activity")
+}
+
+// ---------------------------------------------------------------------------
+// CLINIC PATIENT MANAGEMENT
+// ---------------------------------------------------------------------------
+
+model ClinicPatient {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String?
+  phone          String?
+  email          String?
+  age            Int?
+  gender         String?
+  condition      String?
+  assignedDoctor String?  @map("assigned_doctor")
+  notes          String?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@map("clinic_patients")
+}
+
+// ---------------------------------------------------------------------------
+// WHATSAPP INTEGRATION
+// ---------------------------------------------------------------------------
+
+model WhatsAppMessage {
+  id        String    @id @default(uuid()) @db.Uuid
+  leadId    String?   @map("lead_id") @db.Uuid
+  lead      Lead?     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  phone     String?
+  direction String? // inbound, outbound
+  message   String?
+  status    String?
+  sentAt    DateTime? @default(now()) @map("sent_at")
+
+  @@index([leadId])
   @@index([phone])
-}
-
-model LeadSample {
-  id           String         @id @default(cuid())
-  leadId       String
-  lead         Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  status       SampleStatus   @default(PENDING)
-  sentAt       DateTime?
-  deliveredAt  DateTime?
-  trackingRef  String?        // courier tracking ID
-  notes        String?        @db.Text
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-
-  @@index([leadId])
-  @@index([status])
-}
-
-enum SampleStatus {
-  PENDING    // not yet sent
-  SENT       // dispatched
-  IN_TRANSIT
-  DELIVERED
-  FAILED
-}
-
-model LeadNote {
-  id        String   @id @default(cuid())
-  leadId    String
-  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  content   String   @db.Text
-  createdBy String?
-  createdAt DateTime @default(now())
-
-  @@index([leadId])
-}
-
-enum LeadSource {
-  contact_form
-  consultation
-  b2b
-  private_labelling
-  manufacturer
-  pcd
-  whatsapp
-  ads
-}
-
-enum LeadStatus {
-  NEW
-  CONTACTED
-  QUALIFIED
-  CONVERTED
-  CLOSED
-}
-
-// ---------------------------------------------------------------------------
-// WHATSAPP AUTOMATION
-// ---------------------------------------------------------------------------
-
-model AutomationRule {
-  id             String   @id @default(cuid())
-  trigger        String   // e.g. "new_lead"
-  source         String?  // optional filter: consultation, contact_form, etc.
-  messageTemplate String  @db.Text
-  enabled        Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  @@index([trigger])
+  @@map("whatsapp_messages")
 }
 
 // ---------------------------------------------------------------------------
 // WEBSITE CMS
 // ---------------------------------------------------------------------------
 
-model HeroBanner {
-  id        String   @id @default(cuid())
-  heading   String
-  subtext   String?  @db.Text
-  ctaText   String?
-  ctaLink   String?
-  imageUrl  String?
-  sortOrder Int      @default(0)
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+model WebsiteContent {
+  id         String   @id @default(uuid()) @db.Uuid
+  sectionKey String?  @map("section_key")
+  title      String?
+  subtitle   String?
+  imageUrl   String?  @map("image_url")
+  ctaText    String?  @map("cta_text")
+  ctaLink    String?  @map("cta_link")
+  isActive   Boolean? @default(true) @map("is_active")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
-model BestSellerConfig {
-  id           String   @id @default(cuid())
-  productId    String   // placeholder / external ID (Shopify ID later)
-  sortOrder    Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
-
-model HomepageSection {
-  id        String   @id @default(cuid())
-  key       String   @unique // e.g. "category_pills", "testimonials"
-  config    Json     @default("{}")
-  updatedAt DateTime @updatedAt
+  @@index([sectionKey])
+  @@map("website_content")
 }
 
 // ---------------------------------------------------------------------------
-// PRODUCTS (temporary – swap to Shopify sync later)
+// CART & ECOMMERCE
 // ---------------------------------------------------------------------------
 
-model Product {
-  id          String   @id @default(cuid())
-  handle      String   @unique
-  title       String
-  description String?  @db.Text
-  price       Decimal  @db.Decimal(10, 2)
-  compareAtPrice Decimal? @db.Decimal(10, 2)
-  imageUrl    String?
-  category    String?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model CartEvent {
+  id           String   @id @default(uuid()) @db.Uuid
+  customerName String?  @map("customer_name")
+  email        String?
+  phone        String?
+  productIds   Json?    @map("product_ids")
+  cartValue    Decimal? @map("cart_value") @db.Decimal(10, 2)
+  status       String?  @default("active")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("cart_events")
 }
