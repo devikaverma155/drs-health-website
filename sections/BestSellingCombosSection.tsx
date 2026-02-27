@@ -55,11 +55,17 @@ export function BestSellingCombosSection() {
   };
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-accent-lime/5 via-soft-bg to-accent-green/5">
-      <div className="max-w-7xl mx-auto">
+    <section className="section-padding section-bg-gradient relative overflow-hidden">
+      {/* Organic background glows */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute -top-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-br from-green-100/15 to-transparent blur-3xl"></div>
+        <div className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-tl from-amber-100/10 to-transparent blur-3xl"></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 relative z-10">
         {/* Section Header */}
-        <div className="mb-12 text-center">
-          <h2 className="text-4xl font-semibold text-foreground mb-4">
+        <div className="mb-16 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Best Selling Combos
           </h2>
           <p className="text-lg text-body-muted max-w-2xl mx-auto">
@@ -69,75 +75,79 @@ export function BestSellingCombosSection() {
 
         {/* Carousel */}
         <div className="relative">
-          {/* Main Carousel */}
-          <div className="bg-white rounded-2xl shadow-card overflow-hidden p-8 md:p-12 border border-border">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              {/* Image */}
-              <div className="relative h-96">
-                <Image
-                  src={combos[currentSlide].image}
-                  alt={combos[currentSlide].title}
-                  fill
-                  className="object-cover rounded-lg"
-                />
-                <div className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold">
-                  {combos[currentSlide].discount} OFF
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="flex flex-col justify-center">
-                <h3 className="text-4xl font-semibold text-foreground mb-4">
-                  {combos[currentSlide].title}
-                </h3>
-                <p className="text-lg text-body-muted mb-8 leading-relaxed">
-                  {combos[currentSlide].description}
-                </p>
-
-                {/* Pricing */}
-                <div className="mb-8">
-                  <div className="flex items-center gap-4">
-                    <span className="text-4xl font-bold text-primary">
-                      {combos[currentSlide].price}
-                    </span>
-                    <span className="text-2xl text-body-muted line-through">
-                      {combos[currentSlide].originalPrice}
-                    </span>
+          {/* Main Carousel Card */}
+          <div className="rounded-3xl overflow-hidden backdrop-blur-md border border-white/40">
+            <div className="bg-gradient-to-br from-white/80 to-white/60 backdrop-filter backdrop-blur-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center p-8 md:p-16">
+                {/* Image with glass effect */}
+                <div className="relative h-96 rounded-2xl overflow-hidden group">
+                  <Image
+                    src={combos[currentSlide].image}
+                    alt={combos[currentSlide].title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {/* Glass overlay effect on image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-full font-bold shadow-lg">
+                    {combos[currentSlide].discount} OFF
                   </div>
                 </div>
 
-                {/* CTA */}
-                <button className="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-xl transition-colors mb-8 inline-block w-full md:w-auto text-center">
-                  Add to Cart
-                </button>
+                {/* Content */}
+                <div className="flex flex-col justify-center">
+                  <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                    {combos[currentSlide].title}
+                  </h3>
+                  <p className="text-lg text-body-muted mb-8 leading-relaxed">
+                    {combos[currentSlide].description}
+                  </p>
 
-                {/* Indicators */}
-                <div className="flex gap-2 items-center">
-                  {combos.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentSlide(idx)}
-                      className={`h-3 rounded-full transition-all ${
-                        idx === currentSlide
-                          ? 'w-8 bg-primary'
-                          : 'w-3 bg-border'
-                      }`}
-                      aria-label={`Go to combo ${idx + 1}`}
-                    />
-                  ))}
+                  {/* Pricing with gold accent */}
+                  <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-amber-50/50 to-white/50 border border-amber-200/30">
+                    <div className="flex items-center gap-4">
+                      <span className="text-4xl font-bold bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
+                        {combos[currentSlide].price}
+                      </span>
+                      <span className="text-xl text-body-muted line-through">
+                        {combos[currentSlide].originalPrice}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* CTA Button with hover effect */}
+                  <button className="bg-gradient-to-r from-primary to-primary-dark hover:shadow-lg hover:from-primary-dark hover:to-primary text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 mb-8 w-full md:w-auto text-center transform hover:scale-105">
+                    Add to Cart
+                  </button>
+
+                  {/* Indicators */}
+                  <div className="flex gap-3 items-center">
+                    {combos.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentSlide(idx)}
+                        className={`rounded-full transition-all duration-300 ${
+                          idx === currentSlide
+                            ? 'w-8 h-3 bg-primary shadow-md'
+                            : 'w-3 h-3 bg-border hover:bg-primary/50'
+                        }`}
+                        aria-label={`Go to combo ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Navigation Buttons */}
+          {/* Navigation Buttons with glass effect */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-card hover:shadow-card-hover hover:bg-accent-green/10 transition-all border border-border"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/80 backdrop-blur-md rounded-full p-3 shadow-lg hover:shadow-xl hover:bg-white/95 hover:from-primary/10 transition-all border border-white/60 group"
             aria-label="Previous combo"
           >
             <svg
-              className="w-6 h-6 text-primary"
+              className="w-6 h-6 text-primary group-hover:text-primary-dark transition-colors"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -153,11 +163,11 @@ export function BestSellingCombosSection() {
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-card hover:shadow-card-hover hover:bg-accent-green/10 transition-all border border-border"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/80 backdrop-blur-md rounded-full p-3 shadow-lg hover:shadow-xl hover:bg-white/95 transition-all border border-white/60 group"
             aria-label="Next combo"
           >
             <svg
-              className="w-6 h-6 text-primary"
+              className="w-6 h-6 text-primary group-hover:text-primary-dark transition-colors"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

@@ -26,7 +26,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-heading)', 'Poppins', 'var(--font-sans)', 'system-ui', 'sans-serif'],
         mono: ['ui-monospace', 'monospace'],
       },
       fontWeight: {
@@ -49,6 +50,8 @@ const config: Config = {
         card: '0 8px 30px rgba(0, 31, 63, 0.08)',
         'card-hover': '0 12px 40px rgba(0, 31, 63, 0.12)',
         button: '0 2px 8px rgba(0, 128, 76, 0.25)',
+        'gold-glow': '0 8px 25px rgba(212, 175, 55, 0.25)',
+        'premium': '0 16px 48px rgba(0, 0, 0, 0.1)',
       },
       keyframes: {
         marquee: {
@@ -67,12 +70,17 @@ const config: Config = {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(100%)' },
         },
+        'slide-up': {
+          '0%': { transform: 'translateY(100%)' },
+          '100%': { transform: 'translateY(0)' },
+        },
       },
       animation: {
         marquee: 'marquee 30s linear infinite',
         'marquee-reverse': 'marquee-reverse 30s linear infinite',
         'slide-in-right': 'slide-in-right 0.3s ease-in-out',
         'slide-out-right': 'slide-out-right 0.3s ease-in-out',
+        'slide-up': 'slide-up 0.3s ease-out',
       },
       transitionDuration: {
         DEFAULT: '200ms',
@@ -82,7 +90,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 };
 
 export default config;

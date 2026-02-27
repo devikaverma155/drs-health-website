@@ -56,12 +56,18 @@ export function ServicesScrollSection() {
   };
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-accent-green/5 via-soft-bg to-accent-blue/5">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={{
+      background: 'linear-gradient(135deg, #F5DEB3 0%, #DAA520 100%)'
+    }}>
+      {/* Enhanced glow */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-gradient-to-bl from-white/20 to-transparent blur-3xl"></div>
+      </div>
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-4xl font-semibold text-foreground mb-4">Our Services</h2>
-          <p className="text-lg text-body-muted max-w-2xl mx-auto">
+          <h2 className="text-4xl font-semibold text-white mb-4">Our Services</h2>
+          <p className="text-lg text-white/90 max-w-2xl mx-auto">
             Comprehensive business solutions tailored for your pharmaceutical needs
           </p>
         </div>

@@ -34,14 +34,20 @@ export function CertificationsSection() {
   };
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-accent-green/5 via-soft-bg to-accent-lime/5">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={{
+      background: 'linear-gradient(135deg, #F5DEB3 0%, #DAA520 100%)'
+    }}>
+      {/* Enhanced glow */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-tr from-white/20 to-transparent blur-3xl"></div>
+      </div>
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-4xl font-semibold text-foreground mb-4">
+          <h2 className="text-4xl font-semibold text-white mb-4">
             Certifications & Standards
           </h2>
-          <p className="text-lg text-body-muted max-w-2xl mx-auto">
+          <p className="text-lg text-white/90 max-w-2xl mx-auto">
             Committed to the highest standards of quality and compliance
           </p>
         </div>

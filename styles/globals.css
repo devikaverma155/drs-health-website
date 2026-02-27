@@ -8,11 +8,11 @@
 
 :root {
   /* ===============================
-     BASE BACKGROUNDS
+     BASE BACKGROUNDS (warm off-white)
   =============================== */
 
-  --background: #F7F3EE;   /* herbal paper white */
-  --soft-bg: #EFE6DD;      /* warm natural section */
+  --background: #ffffff;
+  --soft-bg: #ffffff;
 
   /* ===============================
      TEXT
@@ -29,34 +29,36 @@
   --input-border: rgba(72, 32, 25, 0.2);
 
   /* ===============================
-     BRAND COLORS (AYURVEDIC RED SYSTEM)
+     BRAND COLORS (AYURVEDIC)
   =============================== */
 
-  --primary: #A3261A;        /* Ayurvedic deep red */
-  --primary-dark: #7F1C13;   /* hover */
-
-  --secondary: #C46A3A;      /* warm clay */
-  --secondary-dark: #5A2E24; /* dark cocoa */
+  --primary: #A3261A;
+  --primary-dark: #7F1C13;
+  --secondary: #C46A3A;
+  --secondary-dark: #5A2E24;
 
   /* ===============================
-     ACCENTS (NO GREEN)
+     HERBAL GREEN + GOLD (premium)
   =============================== */
 
-  --accent-sandal: #E6C9A8;   /* sandalwood tone */
-  --accent-rose: #F2D6D3;     /* soft healing tint */
-  --accent-earth: #D9B8A0;    /* herbal earth */
+  --herbal-green: rgba(34, 139, 34, 0.08);
+  --gold-soft: #fa9230;
+  --gold-soft-shadow: rgba(212, 175, 55, 0.25);
+  --gold-light: rgba(212, 175, 55, 0.08);
+  --gold-mid: rgba(212, 175, 55, 0.12);
+
+  --accent-sandal: #E6C9A8;
+  --accent-rose: #F2D6D3;
+  --accent-earth: #D9B8A0;
 
   /* ===============================
      UI SYSTEM
   =============================== */
 
   --radius: 0.75rem;
-
   --shadow-card: 0 10px 30px rgba(72, 32, 25, 0.08);
   --shadow-card-hover: 0 16px 45px rgba(72, 32, 25, 0.14);
 }
-
-
 
 /* ===============================
    BASE LAYER
@@ -71,18 +73,52 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.65;
-    /* Subtle themed background: warm paper with very light herbal tint */
-    background-image:
-      radial-gradient(ellipse 120% 80% at 50% -20%, rgba(163, 38, 26, 0.06), transparent),
-      radial-gradient(ellipse 80% 50% at 100% 50%, rgba(196, 106, 58, 0.04), transparent),
-      radial-gradient(ellipse 60% 80% at 0% 80%, rgba(230, 201, 168, 0.08), transparent);
+    /* Premium layered background: soft herbal green + warm gold glow */
+    background:
+      radial-gradient(ellipse 800px 600px at 15% 5%, rgba(46, 125, 50, 0.15), transparent 50%),
+      radial-gradient(ellipse 900px 700px at 85% 95%, rgba(212, 175, 55, 0.12), transparent 55%),
+      radial-gradient(ellipse 500px 400px at 50% 50%, rgba(34, 139, 34, 0.04), transparent 40%),
+      var(--background);
     background-attachment: fixed;
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* Subtle botanical texture overlay — very faint leaf pattern */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><path d="M200,100 Q250,120 260,180 Q250,200 200,210 Q150,200 140,180 Q150,120 200,100" fill="none" stroke="rgba(46,125,50,0.04)" stroke-width="1"/></svg>');
+    background-repeat: repeat;
+    background-size: 300px 300px;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: multiply;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-foreground tracking-tight;
+    font-family: var(--font-heading), 'Poppins', var(--font-sans), system-ui, sans-serif;
+    @apply text-foreground;
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    @apply text-5xl md:text-6xl font-bold;
+    letter-spacing: -0.03em;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    @apply text-2xl;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -97,17 +133,89 @@
   }
 
   .section-padding {
-    @apply py-16 md:py-24;
+    @apply py-16 md:py-24 relative;
   }
 
+  /* Premium section backgrounds with organic gradients */
+  .section-bg-gradient {
+    position: relative;
+    background:white;
+    background-attachment: fixed;
+  }
+
+  /* Organic botanical glow effect for hero sections */
+  .section-with-glow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 1000px 800px at 10% 20%, rgba(46, 125, 50, 0.08), transparent 50%),
+      radial-gradient(ellipse 900px 700px at 90% 80%, rgba(212, 175, 55, 0.06), transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .section-with-glow > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Alternating section backgrounds */
+  .section-bg-alt {
+    background: linear-gradient(to bottom, #EFEDE4, #F7F6F1);
+  }
+
+  /* Soft card styling */
   .card-soft {
     @apply rounded-2xl border border-border bg-white transition-all duration-200;
     box-shadow: var(--shadow-card);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .card-soft:hover {
     box-shadow: var(--shadow-card-hover);
     transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  /* Premium product card — glass morphism effect */
+  .product-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(212, 175, 55, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
+    z-index: 1;
+  }
+
+  .product-card:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(212, 175, 55, 0.25);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+  }
+
+  .product-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Golden premium button hover state */
+  .btn-primary-gold:hover {
+    box-shadow: 0 8px 25px var(--gold-soft-shadow);
   }
 
   .bg-gradient-soft {
@@ -118,24 +226,52 @@
     );
   }
 
-  /* Accent Panels — Updated Palette */
+  /* Botanical background image utility */
+  .botanical-bg {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .botanical-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"><g opacity="0.06"><path d="M300,100 Q350,150 340,250 Q330,300 300,320 Q270,300 260,250 Q250,150 300,100" fill="none" stroke="rgba(46,125,50,0.4)" stroke-width="2"/><path d="M250,200 L320,280" stroke="rgba(46,125,50,0.3)" stroke-width="1.5" fill="none"/><path d="M350,200 L280,280" stroke="rgba(46,125,50,0.3)" stroke-width="1.5" fill="none"/></g></svg>');
+    background-repeat: no-repeat;
+    background-size: 500px;
+    background-position: -10% 20%;
+    filter: blur(2px);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.04;
+  }
+
+  .botanical-bg > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Accent Panels — Updated with soft gradients */
 
   .panel-accent-blue {
-  background: rgba(160, 201, 203, 0.22); /* Aqua Mist */
-}
+    background: linear-gradient(135deg, rgba(160, 201, 203, 0.15), rgba(160, 201, 203, 0.08));
+    border: 1px solid rgba(160, 201, 203, 0.2);
+  }
 
-.panel-accent-mint {
-  background: rgba(236, 236, 220, 0.6); /* Amazon Mist */
-}
+  .panel-accent-mint {
+    background: linear-gradient(135deg, rgba(236, 236, 220, 0.4), rgba(212, 175, 55, 0.08));
+    border: 1px solid rgba(212, 175, 55, 0.15);
+  }
 
-.panel-accent-lavender {
-  background: rgba(255, 96, 55, 0.12); /* Toxic Orange soft */
-}
+  .panel-accent-lavender {
+    background: linear-gradient(135deg, rgba(255, 96, 55, 0.12), rgba(255, 96, 55, 0.08));
+    border: 1px solid rgba(255, 96, 55, 0.15);
+  }
 
-.panel-accent-orange {
-  background: rgba(115, 54, 53, 0.12); /* Garnet soft */
-}
-
+  .panel-accent-orange {
+    background: linear-gradient(135deg, rgba(115, 54, 53, 0.15), rgba(115, 54, 53, 0.08));
+    border: 1px solid rgba(115, 54, 53, 0.2);
+  }
 
   /* Marquee Animation */
 

@@ -13,7 +13,7 @@ export async function BestSellersSection() {
     const displayProducts = [...products, ...products];
 
     return (
-      <section className="section-padding bg-white overflow-hidden">
+      <section className="section-padding section-bg-gradient overflow-hidden">
         <div className="container-tight">
           <div className="flex items-end justify-between gap-4 mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
@@ -50,7 +50,7 @@ export async function BestSellersSection() {
     console.error('Failed to load best sellers:', error);
     // Return empty section instead of crashing
     return (
-      <section className="section-padding bg-white overflow-hidden">
+      <section className="section-padding section-bg-gradient overflow-hidden">
         <div className="container-tight">
           <div className="flex items-end justify-between gap-4 mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold text-foreground">

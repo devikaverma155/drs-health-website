@@ -36,6 +36,7 @@ export interface NormalizedProduct {
   categories: Array<{ id: number; name: string; slug: string }>;
   stockStatus: string;
   permalink: string;
+  minQuantity: number;
 }
 
 /**
@@ -57,6 +58,8 @@ export interface Product {
   title: string;
   description: string;
   descriptionHtml?: string;
+  shortDescription?: string;
+  shortDescriptionHtml?: string;
   featuredImage?: { url: string; altText?: string };
   images?: Array<{ url: string; altText?: string }>;
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
@@ -69,4 +72,5 @@ export interface Product {
   reviewCount?: number;
   isNewLaunch?: boolean;
   permalink?: string;
+  minQuantity?: number;
 }
