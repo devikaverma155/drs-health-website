@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Inter, Playfair_Display } from 'next/font/google';
 import '@/styles/globals.css';
 import { MarqueeBar } from '@/layout/MarqueeBar';
 import { Header } from '@/layout/Header';
@@ -7,6 +8,9 @@ import { OrganizationSchema } from '@/components/StructuredData';
 import { CartProvider } from '@/lib/cartContext';
 import { CartDrawer } from '@/components/CartDrawer';
 import { AuthSessionProvider } from '@/lib/SessionProvider';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const playfair = Playfair_Display({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-heading' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://drshealth.in'),
@@ -29,15 +33,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen flex flex-col font-sans">
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <body className="min-h-screen flex flex-col font-sans relative antialiased">
         <AuthSessionProvider>
           <CartProvider>
             <OrganizationSchema />
-            <MarqueeBar />
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            <div className="relative z-10 flex flex-col flex-1 min-h-screen">
+              <MarqueeBar />
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
             <CartDrawer />
           </CartProvider>
         </AuthSessionProvider>

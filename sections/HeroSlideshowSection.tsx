@@ -18,7 +18,10 @@ export function HeroSlideshowSection({ slides = DEFAULT_HERO_SLIDES }: { slides?
   }, []);
 
   return (
-    <section className="relative min-h-[520px] md:min-h-[680px] flex items-center bg-slate-100 overflow-hidden">
+    <section className="relative min-h-[520px] md:min-h-[680px] flex items-center bg-[#F7F6F1] overflow-hidden">
+      {/* Organic shape backgrounds (wellness premium) */}
+      <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-green-200 blur-[120px] opacity-20 pointer-events-none" aria-hidden />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-amber-100 blur-[140px] opacity-25 pointer-events-none" aria-hidden />
       <div className="absolute inset-0">
         {current.image ? (
           <Image

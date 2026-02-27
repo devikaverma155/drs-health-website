@@ -53,14 +53,17 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <article className="group flex flex-col h-full border border-border rounded-2xl overflow-hidden bg-white shadow-card transition-all duration-200 hover:shadow-card-hover hover:-translate-y-1">
-      <Link href={`/product/${product.handle}`} className="block relative aspect-square bg-soft-bg">
+    <article className="product-card group flex flex-col h-full rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-card-hover hover:-translate-y-2">
+      {/* Gradient overlay on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-100/0 to-amber-100/0 group-hover:from-amber-100/5 group-hover:to-amber-100/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20 rounded-2xl"></div>
+      
+      <Link href={`/product/${product.handle}`} className="block relative aspect-square bg-soft-bg overflow-hidden">
         {product.featuredImage?.url ? (
           <Image
             src={product.featuredImage.url}
             alt={product.featuredImage.altText ?? product.title}
             fill
-            className="object-cover"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 768px) 50vw, 25vw"
           />
         ) : (
@@ -69,36 +72,36 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
         {hasDiscount && (
-          <span className="absolute top-2 left-2 bg-primary text-white text-xs font-medium px-2 py-0.5 rounded-lg">
+          <span className="absolute top-3 left-3 bg-gradient-to-r from-primary to-primary-dark text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md">
             {Math.round((1 - parseFloat(price) / parseFloat(comparePrice!)) * 100)}% Off
           </span>
         )}
       </Link>
-      <div className="p-4 flex flex-col flex-1">
+      <div className="p-5 flex flex-col flex-1 relative z-10">
         {product.category && (
-          <p className="text-xs text-body-muted uppercase tracking-wider">{product.category}</p>
+          <p className="text-xs text-body-muted uppercase tracking-wider font-medium">{product.category}</p>
         )}
         <Link href={`/product/${product.handle}`}>
-          <h3 className="mt-1 font-semibold text-foreground hover:underline line-clamp-2">
+          <h3 className="mt-2 font-semibold text-foreground hover:text-primary transition-colors line-clamp-2 text-base">
             {product.title}
           </h3>
         </Link>
         {product.rating != null && product.reviewCount != null && (
           <StarRating rating={product.rating} reviewCount={product.reviewCount} />
         )}
-        <div className="mt-2 flex items-baseline gap-2">
-          <span className="text-lg font-semibold">₹{price}</span>
+        <div className="mt-3 flex items-baseline gap-2">
+          <span className="text-lg font-bold text-foreground">₹{price}</span>
           {comparePrice && parseFloat(comparePrice) > parseFloat(price) && (
             <span className="text-sm text-body-muted line-through">₹{comparePrice}</span>
           )}
         </div>
         {product.variants.length > 1 && (
-          <div className="mt-3">
+          <div className="mt-4">
             <label className="sr-only">Variant</label>
             <select
               value={selectedVariantId}
               onChange={(e) => setSelectedVariantId(e.target.value)}
-              className="w-full rounded-xl border border-input-border bg-white px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-input-border bg-white px-3 py-2 text-sm hover:border-primary/30 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
             >
               {product.variants.map((v) => (
                 <option key={v.id} value={v.id}>
@@ -108,23 +111,23 @@ export function ProductCard({ product }: ProductCardProps) {
             </select>
           </div>
         )}
-        <div className="mt-3 flex items-center gap-2">
-          <div className="flex items-center border border-border rounded-xl">
+        <div className="mt-4 flex items-center gap-2">
+          <div className="flex items-center border border-border rounded-lg bg-white/50 backdrop-blur-sm">
             <button
               type="button"
               aria-label="Decrease quantity"
-              className="w-9 h-9 flex items-center justify-center text-foreground hover:bg-gray-100"
+              className="w-8 h-8 flex items-center justify-center text-foreground hover:bg-primary/10 hover:text-primary transition-colors text-sm"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             >
               −
             </button>
-            <span className="w-10 text-center text-sm" aria-live="polite">
+            <span className="w-8 text-center text-sm font-medium" aria-live="polite">
               {quantity}
             </span>
             <button
               type="button"
               aria-label="Increase quantity"
-              className="w-9 h-9 flex items-center justify-center text-foreground hover:bg-gray-100"
+              className="w-8 h-8 flex items-center justify-center text-foreground hover:bg-primary/10 hover:text-primary transition-colors text-sm"
               onClick={() => setQuantity((q) => q + 1)}
             >
               +

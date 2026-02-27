@@ -34,7 +34,16 @@ export function ConsultationFormSection() {
   }
 
   return (
-    <section id="consultation" className="section-padding bg-soft-bg border-y border-border scroll-mt-20 panel-accent-mint">
+    <section
+      id="consultation"
+      className="section-padding bg-soft-bg border-y border-border scroll-mt-20 panel-accent-mint"
+      style={{
+        backgroundImage: "url('https://drshealth.in/wp-content/uploads/2026/02/image-1771828238429-e1771838894777.png')",
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <div className="container-tight max-w-xl">
         <h2 className="text-2xl md:text-3xl font-semibold text-foreground text-center mb-2">
           Get Free Consultation

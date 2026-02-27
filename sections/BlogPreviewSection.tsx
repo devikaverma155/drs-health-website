@@ -8,15 +8,21 @@ const POSTS = [
 
 export function BlogPreviewSection() {
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding relative overflow-hidden" style={{
+      background: 'linear-gradient(135deg, #D97706 0%, #A3261A 100%)'
+    }}>
+      {/* Enhanced glow */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-gradient-to-bl from-white/20 to-transparent blur-3xl"></div>
+      </div>
       <div className="container-tight">
         <div className="flex items-end justify-between gap-4 mb-10">
-          <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+          <h2 className="text-2xl md:text-3xl font-semibold text-white">
             From Our Blog
           </h2>
           <Link
             href="/blog"
-            className="text-sm font-medium text-primary hover:underline transition-colors duration-200"
+            className="text-sm font-medium text-white hover:text-white/80 transition-colors duration-200"
           >
             View all
           </Link>
@@ -25,8 +31,8 @@ export function BlogPreviewSection() {
           {POSTS.map(({ slug, title, date }) => (
             <li key={slug}>
               <Link href={`/blog/${slug}`} className="group block">
-                <span className="text-sm text-body-muted">{date}</span>
-                <h3 className="mt-1 font-semibold text-foreground group-hover:underline">
+                <span className="text-sm text-white/80">{date}</span>
+                <h3 className="mt-1 font-semibold text-white group-hover:text-white/90">
                   {title}
                 </h3>
               </Link>

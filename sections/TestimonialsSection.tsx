@@ -51,12 +51,18 @@ export function TestimonialsSection() {
   const [index, setIndex] = useState(0);
 
   return (
-    <section className="section-padding bg-soft-bg border-y border-border">
-      <div className="container-tight">
-        <h2 className="text-2xl md:text-3xl font-semibold text-foreground text-center mb-2">
+    <section className="section-padding section-bg-gradient relative overflow-hidden">
+      {/* Organic botanical glow */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-green-100/15 to-transparent blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-bl from-amber-100/10 to-transparent blur-3xl"></div>
+      </div>
+      
+      <div className="container-tight relative z-10">
+        <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-4">
           Trusted By <span className="text-primary">10 Lakh+</span> Customers
         </h2>
-        <p className="text-body-muted text-center mb-12 max-w-2xl mx-auto">
+        <p className="text-lg text-body-muted text-center mb-16 max-w-2xl mx-auto">
           Real stories from people whose lives have been transformed by our authentic Ayurvedic formulations.
         </p>
 
@@ -64,21 +70,21 @@ export function TestimonialsSection() {
           {TESTIMONIALS.slice(index, index + 3).map((testimonial, i) => (
             <div
               key={`${index}-${i}`}
-              className="bg-white rounded-2xl p-6 md:p-8 border border-border shadow-card hover:shadow-card-hover transition-all duration-200 h-full flex flex-col"
+              className="product-card rounded-2xl p-8 flex flex-col h-full hover:from-amber-100/10 hover:to-amber-100/5 group"
             >
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <span key={i} className="text-accent-lime text-lg text-golden">
+                  <span key={i} className="text-amber-500 text-lg group-hover:text-amber-600 transition-colors">
                     ★
                   </span>
                 ))}
               </div>
               <blockquote className="flex-1 mb-6">
-                <p className="text-body-muted leading-relaxed italic">
+                <p className="text-body-muted leading-relaxed italic text-sm">
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
               </blockquote>
-              <footer className="border-t border-border pt-4">
+              <footer className="border-t border-border/30 pt-4">
                 <div className="font-semibold text-foreground">
                   {testimonial.author}
                 </div>
