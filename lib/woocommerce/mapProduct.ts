@@ -29,6 +29,11 @@ export function mapWooProduct(raw: WooProductRaw): NormalizedProduct {
   const firstImage = raw.images?.[0]?.src ?? null;
   const gallery = (raw.images ?? []).map((img) => img.src).filter(Boolean);
 
+  // Extract min quantity from WooCommerce Min Max Quantity plugin meta
+  const metaData = (raw.meta_data as Array<{ key: string; value: unknown }>) ?? [];
+  const minQtyMeta = metaData.find((m) => m.key === '_wcmmq_min_qty');
+  const minQuantity = minQtyMeta ? Math.max(1, parseInt(String(minQtyMeta.value), 10) || 1) : 1;
+
   return {
     id: String(raw.id),
     name: raw.name ?? '',
@@ -43,6 +48,7 @@ export function mapWooProduct(raw: WooProductRaw): NormalizedProduct {
     categories: raw.categories ?? [],
     stockStatus: raw.stock_status ?? 'instock',
     permalink: raw.permalink ?? '',
+    minQuantity,
   };
 }
 
@@ -81,5 +87,6 @@ export function normalizedToProduct(n: NormalizedProduct, isNewLaunch = false): 
     categorySlug: category?.slug,
     isNewLaunch,
     permalink: n.permalink,
+    minQuantity: n.minQuantity > 1 ? n.minQuantity : undefined,
   };
 }

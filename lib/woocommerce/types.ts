@@ -36,6 +36,7 @@ export interface NormalizedProduct {
   categories: Array<{ id: number; name: string; slug: string }>;
   stockStatus: string;
   permalink: string;
+  minQuantity: number;
 }
 
 /**
@@ -71,4 +72,5 @@ export interface Product {
   reviewCount?: number;
   isNewLaunch?: boolean;
   permalink?: string;
+  minQuantity?: number;
 }

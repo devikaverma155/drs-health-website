@@ -34,7 +34,8 @@ function StarRating({ rating, reviewCount }: { rating: number; reviewCount: numb
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
+  const minQty = product.minQuantity ?? 1;
+  const [quantity, setQuantity] = useState(minQty);
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id ?? '');
   const variant = product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0];
   const price = variant?.price ?? product.priceRange.minVariantPrice.amount;
@@ -50,7 +51,7 @@ export function ProductCard({ product }: ProductCardProps) {
       quantity,
       permalink: `/product/${product.handle}`,
     });
-    setQuantity(1);
+    setQuantity(minQty);
   };
 
   return (
@@ -121,7 +122,7 @@ export function ProductCard({ product }: ProductCardProps) {
               type="button"
               aria-label="Decrease quantity"
               className="w-8 h-8 flex items-center justify-center text-foreground hover:bg-primary/10 hover:text-primary transition-colors text-sm"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              onClick={() => setQuantity((q) => Math.max(minQty, q - 1))}
             >
               −
             </button>

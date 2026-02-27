@@ -6,7 +6,8 @@ import { useCart } from '@/lib/cartContext';
 import { useRouter } from 'next/navigation';
 
 export function AddToCartForm({ product }: { product: Product }) {
-  const [quantity, setQuantity] = useState(1);
+  const minQty = product.minQuantity ?? 1;
+  const [quantity, setQuantity] = useState(minQty);
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id ?? '');
   const [isAdding, setIsAdding] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
@@ -81,15 +82,15 @@ export function AddToCartForm({ product }: { product: Product }) {
             type="button"
             aria-label="Decrease quantity"
             className="w-10 h-11 flex items-center justify-center text-foreground hover:bg-gray-100 transition-colors text-lg font-medium"
-            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            onClick={() => setQuantity((q) => Math.max(minQty, q - 1))}
           >
             −
           </button>
           <input
             type="number"
-            min={1}
+            min={minQty}
             value={quantity}
-            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
+            onChange={(e) => setQuantity(Math.max(minQty, parseInt(e.target.value, 10) || minQty))}
             className="w-12 h-11 text-center border-x border-border bg-transparent text-foreground font-medium [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           />
           <button
@@ -134,6 +135,16 @@ export function AddToCartForm({ product }: { product: Product }) {
           Buy Now
         </button>
       </div>
+
+      {/* Min quantity notice */}
+      {minQty > 1 && (
+        <p className="text-xs text-amber-600 font-medium flex items-center gap-1">
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Minimum order quantity: {minQty}
+        </p>
+      )}
 
       {/* Success notification */}
       {showNotification && (
