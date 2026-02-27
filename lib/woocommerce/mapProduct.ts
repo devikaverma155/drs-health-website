@@ -4,6 +4,22 @@ import type { NormalizedProduct, Product, ProductVariant } from './types';
 const CURRENCY = 'INR';
 
 /**
+ * Strip HTML tags and decode common HTML entities to get plain text.
+ */
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, ' ')       // remove tags
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')           // collapse whitespace
+    .trim();
+}
+
+/**
  * Map WooCommerce API product to normalized internal format.
  */
 export function mapWooProduct(raw: WooProductRaw): NormalizedProduct {
@@ -44,11 +60,16 @@ export function normalizedToProduct(n: NormalizedProduct, isNewLaunch = false): 
     available: n.stockStatus === 'instock',
   };
   const category = n.categories[0];
+  const descHtml = n.description || '';
+  const shortDescHtml = n.shortDescription || '';
   return {
     id: n.id,
     handle: n.slug,
     title: n.name,
-    description: n.description || n.shortDescription,
+    description: stripHtml(descHtml || shortDescHtml),
+    descriptionHtml: descHtml || undefined,
+    shortDescription: stripHtml(shortDescHtml),
+    shortDescriptionHtml: shortDescHtml || undefined,
     featuredImage: n.image ? { url: n.image, altText: n.name } : undefined,
     images: n.gallery.map((url) => ({ url, altText: n.name })),
     priceRange: { minVariantPrice: { amount: price, currencyCode: CURRENCY } },

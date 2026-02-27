@@ -11,8 +11,8 @@
      BASE BACKGROUNDS (warm off-white)
   =============================== */
 
-  --background: #F7F6F1;
-  --soft-bg: #EFEDE4;
+  --background: #ffffff;
+  --soft-bg: #ffffff;
 
   /* ===============================
      TEXT
@@ -42,7 +42,7 @@
   =============================== */
 
   --herbal-green: rgba(34, 139, 34, 0.08);
-  --gold-soft: #D4AF37;
+  --gold-soft: #fa9230;
   --gold-soft-shadow: rgba(212, 175, 55, 0.25);
   --gold-light: rgba(212, 175, 55, 0.08);
   --gold-mid: rgba(212, 175, 55, 0.12);
@@ -99,7 +99,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading), 'Playfair Display', ui-serif, Georgia, serif;
+    font-family: var(--font-heading), 'Poppins', var(--font-sans), system-ui, sans-serif;
     @apply text-foreground;
     font-weight: 600;
     line-height: 1.25;
@@ -139,7 +139,7 @@
   /* Premium section backgrounds with organic gradients */
   .section-bg-gradient {
     position: relative;
-    background: linear-gradient(135deg, #F7F6F1 0%, #EFEDE4 50%, #F7F6F1 100%);
+    background:white;
     background-attachment: fixed;
   }
 

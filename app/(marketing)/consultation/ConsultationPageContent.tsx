@@ -6,6 +6,100 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
 
+const DOCTORS = [
+  {
+    name: 'Vd. Dr. Manoj Jain (BAMS)',
+    title: 'Ayurvedacharya',
+    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-00-16.jpg',
+    description:
+      'Dr. Manoj Jain (BAMS) is an experienced Ayurvedic physician with 20+ years of expertise in holistic healing. He focuses on treating the root cause of health concerns through personalized Ayurvedic treatments, combining classical wisdom with modern clinical understanding. His compassionate approach and commitment to authentic Ayurveda have helped numerous patients achieve lasting wellness.',
+  },
+  {
+    name: 'Vaidya Dhanya Kumar Jain (DNYS)',
+    title: 'Ayurvedacharya & Founder',
+    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-01-10-e1772191818188.jpg',
+    description:
+      'With 25+ years of experience in Ayurveda, Vaidya Dhanya Kumar Jain founded DRS Health Solutions (Dhanya Ras Shala) in 2003 in Tikamgarh (M.P.) to carry forward the rich legacy of his grandfather, Rajvaidya Pandit Barelal Ji. With a powerful vision to take Ayurveda to every home across the world, he is a dedicated practitioner and formulation expert who creates authentic and result-oriented Ayurvedic medicines while actively treating patients at his clinic with holistic care, and has also been serving Jeev Daya Parmarth Jan Kalyan Samiti (NGO) for several years as the Secretary of the community, actively contributing towards social welfare and humanitarian service. His mission continues to guide our commitment to purity, effectiveness, and true Ayurvedic principles.',
+  },
+];
+
+function DoctorCarousel() {
+  const [current, setCurrent] = useState(0);
+  const doctor = DOCTORS[current];
+
+  return (
+    <section className="py-20">
+      <div className="container-tight max-w-5xl">
+        <h2 className="text-3xl font-semibold text-center mb-12">
+          Guided by Experienced Ayurvedic Practitioners
+        </h2>
+
+        <div className="bg-white rounded-2xl border border-border shadow-card overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 h-[32rem]">
+            {/* Full image on the left */}
+            <div className="relative h-80 md:h-full">
+              <Image
+                src={doctor.image}
+                alt={doctor.name}
+                fill
+                className="object-cover object-top"
+              />
+            </div>
+
+            {/* Content on the right */}
+            <div className="flex flex-col justify-center p-8 lg:p-10 overflow-y-auto">
+              <h3 className="text-2xl font-semibold text-foreground mb-1">
+                {doctor.name}
+              </h3>
+              <p className="text-sm text-primary font-medium mb-5">
+                {doctor.title}
+              </p>
+              <p className="text-body-muted leading-relaxed text-sm mb-8 line-clamp-[10]">
+                {doctor.description}
+              </p>
+
+              {/* Controls — pinned to bottom */}
+              <div className="flex items-center gap-3 mt-auto pt-4">
+                <button
+                  onClick={() => setCurrent((p) => (p - 1 + DOCTORS.length) % DOCTORS.length)}
+                  aria-label="Previous doctor"
+                  className="p-2.5 rounded-full border border-border bg-white shadow-sm hover:shadow-card transition-all"
+                >
+                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setCurrent((p) => (p + 1) % DOCTORS.length)}
+                  aria-label="Next doctor"
+                  className="p-2.5 rounded-full border border-border bg-white shadow-sm hover:shadow-card transition-all"
+                >
+                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                <div className="flex gap-2 ml-auto">
+                  {DOCTORS.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrent(idx)}
+                      className={`h-2 rounded-full transition-all ${
+                        idx === current ? 'w-8 bg-primary' : 'w-2 bg-border'
+                      }`}
+                      aria-label={`Go to doctor ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ConsultationPageContent() {
   const [status, setStatus] = useState<
     'idle' | 'loading' | 'success' | 'error'
@@ -149,20 +243,7 @@ export function ConsultationPageContent() {
       </section>
 
       {/* ================= DOCTOR TRUST ================= */}
-      <section className="py-20">
-        <div className="container-tight max-w-4xl text-center">
-          <h2 className="text-3xl font-semibold mb-6">
-            Guided by Experienced Ayurvedic Practitioners
-          </h2>
-
-          <p className="text-body-muted leading-relaxed">
-            Our consultations are conducted by qualified Ayurvedic experts
-            trained in holistic diagnosis combining traditional Ayurvedic
-            wisdom with modern lifestyle understanding. We focus on identifying
-            root causes and providing sustainable health solutions.
-          </p>
-        </div>
-      </section>
+      <DoctorCarousel />
 
       {/* ================= FORM ================= */}
       <section

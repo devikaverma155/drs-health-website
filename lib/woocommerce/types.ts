@@ -57,6 +57,8 @@ export interface Product {
   title: string;
   description: string;
   descriptionHtml?: string;
+  shortDescription?: string;
+  shortDescriptionHtml?: string;
   featuredImage?: { url: string; altText?: string };
   images?: Array<{ url: string; altText?: string }>;
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };

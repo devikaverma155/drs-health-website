@@ -9,6 +9,9 @@ import type { NormalizedProduct, Product } from './types';
 
 const REVALIDATE = 60;
 
+// Cache for category slug to ID mapping
+let categoryCache: Map<string, string> | null = null;
+
 function getBaseUrl(): string | null {
   const url = process.env.NEXT_PUBLIC_WC_API_URL;
   if (!url) return null;
@@ -28,7 +31,7 @@ function getAuth(): string | null {
   return Buffer.from(`${key}:${secret}`).toString('base64');
 }
 
-async function wcFetch<T>(path: string, params?: Record<string, string>): Promise<T> {
+async function wcFetch<T>(path: string, params?: Record<string, string>): Promise<{ data: T; totalPages: number }> {
   const base = requireBaseUrl();
   const auth = getAuth();
   const search = new URLSearchParams(params);
@@ -49,7 +52,9 @@ async function wcFetch<T>(path: string, params?: Record<string, string>): Promis
       throw new Error(`WooCommerce API error ${res.status}: ${text}`);
     }
     
-    return res.json() as Promise<T>;
+    const totalPages = parseInt(res.headers.get('X-WP-TotalPages') ?? '1', 10);
+    const data = await res.json() as T;
+    return { data, totalPages };
   } catch (error) {
     console.error(`wcFetch error at ${path}:`, error instanceof Error ? error.message : String(error));
     throw error;
@@ -57,8 +62,38 @@ async function wcFetch<T>(path: string, params?: Record<string, string>): Promis
 }
 
 /**
+ * Get category ID from slug by fetching all categories and mapping.
+ * WooCommerce API requires category ID for filtering, not slug.
+ */
+async function getCategoryIdFromSlug(slug: string): Promise<string | null> {
+  try {
+    // Check cache first
+    if (categoryCache && categoryCache.has(slug)) {
+      return categoryCache.get(slug) || null;
+    }
+    
+    const { data } = await wcFetch<Array<{ id: number; slug: string }>>('/products/categories', {
+      per_page: '100',
+      hide_empty: '0',
+    });
+    const arr = Array.isArray(data) ? data : [];
+    
+    // Cache the mapping for future use
+    if (arr.length > 0) {
+      categoryCache = new Map(arr.map((c) => [c.slug, String(c.id)]));
+    }
+    
+    const category = arr.find((c) => c.slug === slug);
+    return category ? String(category.id) : null;
+  } catch (error) {
+    console.error(`Error getting category ID for slug "${slug}":`, error);
+    return null;
+  }
+}
+
+/**
  * Fetch products from WooCommerce REST API.
- * Supports per_page, category slug, search, orderby.
+ * Supports per_page, category slug (will be converted to ID), search, orderby.
  * Returns empty array if API is unavailable.
  */
 async function fetchWooProducts(params: {
@@ -67,19 +102,53 @@ async function fetchWooProducts(params: {
   search?: string;
   orderby?: string;
   order?: 'asc' | 'desc';
+  fetchAll?: boolean;
 }): Promise<WooProductRaw[]> {
   try {
+    // WooCommerce max per_page is 100
+    const perPage = Math.min(params.per_page ?? 100, 100);
     const searchParams: Record<string, string> = {
-      per_page: String(params.per_page ?? 100),
+      per_page: String(perPage),
       status: 'publish',
     };
-    if (params.category) searchParams.category = String(params.category);
+    
+    // Convert category slug to ID if provided
+    let categoryId: string | null = null;
+    if (params.category) {
+      categoryId = await getCategoryIdFromSlug(params.category);
+      if (categoryId) {
+        searchParams.category = categoryId;
+      } else {
+        console.warn(`Category slug "${params.category}" not found`);
+        // Return empty array if category doesn't exist
+        return [];
+      }
+    }
+    
     if (params.search) searchParams.search = params.search;
     if (params.orderby) searchParams.orderby = params.orderby;
     if (params.order) searchParams.order = params.order;
 
-    const data = await wcFetch<WooProductRaw[]>('/products', searchParams);
-    return Array.isArray(data) ? data : [];
+    // Fetch first page
+    const { data: firstPage, totalPages } = await wcFetch<WooProductRaw[]>('/products', searchParams);
+    let allProducts = Array.isArray(firstPage) ? firstPage : [];
+
+    // If fetchAll is true and there are more pages, fetch them all
+    if (params.fetchAll && totalPages > 1) {
+      const pagePromises: Promise<{ data: WooProductRaw[]; totalPages: number }>[] = [];
+      for (let page = 2; page <= totalPages; page++) {
+        pagePromises.push(
+          wcFetch<WooProductRaw[]>('/products', { ...searchParams, page: String(page) })
+        );
+      }
+      const results = await Promise.all(pagePromises);
+      for (const { data: pageData } of results) {
+        const arr = Array.isArray(pageData) ? pageData : [];
+        allProducts = allProducts.concat(arr);
+      }
+    }
+
+    return allProducts;
   } catch (error) {
     console.error('fetchWooProducts error:', error instanceof Error ? error.message : String(error));
     // Return empty array instead of throwing - prevents build failures
@@ -93,7 +162,7 @@ async function fetchWooProducts(params: {
  */
 async function fetchProductBySlug(slug: string): Promise<WooProductRaw | null> {
   try {
-    const list = await wcFetch<WooProductRaw[]>('/products', {
+    const { data: list } = await wcFetch<WooProductRaw[]>('/products', {
       slug,
       per_page: '1',
       status: 'publish',
@@ -110,32 +179,28 @@ async function fetchProductBySlug(slug: string): Promise<WooProductRaw | null> {
 /**
  * Get all product categories from WooCommerce (for pills/filters).
  */
-export async function getCategories(): Promise<Array<{ slug: string; label: string }>> {
-  if (!getBaseUrl()) return getCategoriesFallback();
+export async function getCategories(): Promise<Array<{ slug: string; label: string; count: number }>> {
+  if (!getBaseUrl()) return [];
   try {
-    const data = await wcFetch<Array<{ slug: string; name: string }>>('/products/categories', {
+    const { data } = await wcFetch<Array<{ id: number; slug: string; name: string; count: number }>>('/products/categories', {
       per_page: '100',
       hide_empty: '1',
     });
     const arr = Array.isArray(data) ? data : [];
-    return arr.map((c) => ({ slug: c.slug, label: c.name }));
-  } catch {
-    return getCategoriesFallback();
+    
+    // Cache the slug->ID mapping for use in getCategoryIdFromSlug
+    if (arr.length > 0) {
+      categoryCache = new Map(arr.map((c) => [c.slug, String(c.id)]));
+    }
+    
+    // Sort alphabetically by label
+    return arr
+      .map((c) => ({ slug: c.slug, label: c.name, count: c.count ?? 0 }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  } catch (error) {
+    console.error('Failed to fetch categories:', error instanceof Error ? error.message : String(error));
+    return [];
   }
-}
-
-function getCategoriesFallback(): Array<{ slug: string; label: string }> {
-  return [
-    { slug: 'weight-management', label: 'Weight Management' },
-    { slug: 'liver-care', label: 'Liver Care' },
-    { slug: 'immunity', label: 'Immunity' },
-    { slug: 'diabetes', label: 'Diabetes' },
-    { slug: 'digestive-care', label: 'Digestive Care' },
-    { slug: 'anti-migraine', label: 'Anti-migraine' },
-    { slug: 'body-care', label: 'Body Care' },
-    { slug: 'healthy-hairs', label: 'Healthy Hairs' },
-    { slug: 'skin-disorders', label: 'Skin Disorders' },
-  ];
 }
 
 /**
@@ -162,21 +227,18 @@ export async function getProducts(options?: {
         per_page: Math.max(perPage, 50),
         orderby: 'date',
         order: 'desc',
+        fetchAll: true,
       });
       raw = raw.slice(0, 20);
     } else {
       raw = await fetchWooProducts({
-        per_page: category ? 100 : perPage,
+        per_page: 100,
+        category: category,
+        fetchAll: true,
       });
     }
 
     let normalized: NormalizedProduct[] = raw.map(mapWooProduct);
-
-    if (category) {
-      normalized = normalized.filter((p) =>
-        p.categories.some((c) => c.slug === category)
-      );
-    }
 
     if (options?.minPrice != null) {
       normalized = normalized.filter((p) => parseFloat(p.price) >= options.minPrice!);

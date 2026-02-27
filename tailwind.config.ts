@@ -27,7 +27,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
-        serif: ['var(--font-heading)', 'Playfair Display', 'ui-serif', 'Georgia', 'serif'],
+        heading: ['var(--font-heading)', 'Poppins', 'var(--font-sans)', 'system-ui', 'sans-serif'],
         mono: ['ui-monospace', 'monospace'],
       },
       fontWeight: {
@@ -70,12 +70,17 @@ const config: Config = {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(100%)' },
         },
+        'slide-up': {
+          '0%': { transform: 'translateY(100%)' },
+          '100%': { transform: 'translateY(0)' },
+        },
       },
       animation: {
         marquee: 'marquee 30s linear infinite',
         'marquee-reverse': 'marquee-reverse 30s linear infinite',
         'slide-in-right': 'slide-in-right 0.3s ease-in-out',
         'slide-out-right': 'slide-out-right 0.3s ease-in-out',
+        'slide-up': 'slide-up 0.3s ease-out',
       },
       transitionDuration: {
         DEFAULT: '200ms',
@@ -85,7 +90,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 };
 
 export default config;

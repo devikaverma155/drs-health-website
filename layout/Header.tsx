@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { CartIcon as CartIconComponent } from '@/components/CartIcon';
+import { WishlistIcon } from '@/components/WishlistIcon';
 
 const CUSTOMER_STORAGE_KEYS = ['customer-email', 'customer-id', 'customer-first-name', 'customer-last-name', 'customer-phone'];
 
@@ -21,7 +22,7 @@ function clearCustomerSession(): void {
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/shop', label: 'Shop' },
-  { href: '/consultation', label: 'Book Consultation' },
+  { href: '/consultation', label: 'Free Consultation' },
   { href: '/about', label: 'About us' },
   { href: '/services', label: 'Services' },
   // { href: '/manufacturing-quality', label: 'Manufacturing & Quality' },
@@ -135,12 +136,14 @@ export function Header() {
             </div>
           )}
 
+          <WishlistIcon className="p-2 text-foreground hover:opacity-70 transition-opacity" />
           <CartIconComponent className="p-2 text-foreground hover:opacity-70 transition-opacity" />
           </div>
         </div>
 
         {/* Mobile only: Cart + Menu */}
         <div className="flex md:hidden items-center gap-1 flex-shrink-0">
+          <WishlistIcon className="p-2 text-foreground hover:opacity-70 transition-opacity" />
           <CartIconComponent className="p-2 text-foreground hover:opacity-70 transition-opacity" />
           <button
             type="button"
@@ -172,11 +175,11 @@ export function Header() {
             {!isLoggedIn && (
               <div className="border-t border-border mt-4 pt-4 flex flex-col gap-2">
                 <Link
-                  href="/account"
+                  href="/wishlist"
                   className="py-2 text-body-muted hover:text-primary font-medium"
                   onClick={() => setMobileOpen(false)}
                 >
-                  My Account
+                  ♡ My Wishlist
                 </Link>
                 <Link
                   href="/auth/login"
@@ -198,6 +201,13 @@ export function Header() {
             {/* Show account link if logged in */}
             {isLoggedIn && (
               <div className="border-t border-border mt-4 pt-4 flex flex-col gap-2">
+                <Link
+                  href="/wishlist"
+                  className="py-2 text-body-muted hover:text-primary font-medium"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  ♡ My Wishlist
+                </Link>
                 <Link
                   href="/account"
                   className="py-2 text-body-muted hover:text-primary font-medium"

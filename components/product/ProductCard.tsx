@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import type { Product } from '@/lib/woocommerce';
 import { useCart } from '@/lib/cartContext';
+import { WishlistButton } from '@/components/WishlistButton';
 
 type ProductCardProps = {
   product: Product;
@@ -76,6 +77,9 @@ export function ProductCard({ product }: ProductCardProps) {
             {Math.round((1 - parseFloat(price) / parseFloat(comparePrice!)) * 100)}% Off
           </span>
         )}
+        <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+          <WishlistButton product={product} variant="icon" />
+        </div>
       </Link>
       <div className="p-5 flex flex-col flex-1 relative z-10">
         {product.category && (
@@ -111,8 +115,8 @@ export function ProductCard({ product }: ProductCardProps) {
             </select>
           </div>
         )}
-        <div className="mt-4 flex items-center gap-2">
-          <div className="flex items-center border border-border rounded-lg bg-white/50 backdrop-blur-sm">
+        <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <div className="flex items-center justify-center border border-border rounded-lg bg-white/50 backdrop-blur-sm">
             <button
               type="button"
               aria-label="Decrease quantity"
@@ -133,7 +137,7 @@ export function ProductCard({ product }: ProductCardProps) {
               +
             </button>
           </div>
-          <Button variant="primary" className="flex-1" onClick={handleAddToCart}>
+          <Button variant="primary" className="w-full sm:flex-1" onClick={handleAddToCart}>
             Add to Cart
           </Button>
         </div>

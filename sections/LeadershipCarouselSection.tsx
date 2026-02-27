@@ -5,7 +5,6 @@ import Image from 'next/image';
 
 interface Leader {
   id: number;
-  generation: string;
   name: string;
   title: string;
   description: string;
@@ -15,30 +14,27 @@ interface Leader {
 const leaders: Leader[] = [
   {
     id: 1,
-    generation: 'First Generation',
-    name: 'Founder Name',
-    title: 'Founder & Visionary',
+    name: 'Bimbsar Jain',
+    title: 'Director – DRS Health Solutions Pvt. Ltd.',
     description:
-      'Established the foundation of excellence and innovation in healthcare. Pioneering pharmaceutical solutions that transformed the industry.',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg',
+      'Driving the strategic vision and business growth of DRS Health Solutions, Bimbsar Jain brings leadership, innovation, and a commitment to taking authentic Ayurveda to every home across India and beyond.',
+    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-15-23-12-e1772191735849.jpg',
   },
   {
     id: 2,
-    generation: 'Second Generation',
-    name: 'Leadership Name',
-    title: 'Chairman & MD',
+    name: 'Vd. Dr. Dhanyakumar Jain (DNYS)',
+    title: 'Ayurvedacharya & Founder',
     description:
-      'Expanded vision globally while maintaining core values. Introduced modern manufacturing and distribution networks across India.',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp',
+      'With 25+ years of experience in Ayurveda, Vaidya Dhanya Kumar Jain founded DRS Health Solutions (Dhanya Ras Shala) in 2003 in Tikamgarh (M.P.) to carry forward the rich legacy of his grandfather, Rajvaidya Pandit Barelal Ji. A dedicated practitioner and formulation expert who creates authentic and result-oriented Ayurvedic medicines.',
+    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-01-10-e1772191818188.jpg',
   },
   {
     id: 3,
-    generation: 'Third Generation',
-    name: 'Modern Leader Name',
-    title: 'CEO & Director',
+    name: 'Vd. Dr. Manoj Jain (BAMS)',
+    title: 'Ayurvedacharya',
     description:
-      'Driving digital transformation and sustainable growth. Leading with innovation, technology, and commitment to healthcare excellence.',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg',
+      'Dr. Manoj Jain (BAMS) is an experienced Ayurvedic physician with 20+ years of expertise in holistic healing. He focuses on treating the root cause of health concerns through personalized Ayurvedic treatments, combining classical wisdom with modern clinical understanding.',
+    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-00-16.jpg',
   },
 ];
 
@@ -72,28 +68,25 @@ export function LeadershipCarouselSection() {
         <div className="relative bg-gradient-to-br from-accent-blue/10 to-primary/5 rounded-2xl overflow-hidden p-8 lg:p-12 border border-border shadow-card">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Image */}
-            <div className="relative h-96 lg:h-full min-h-96">
+            <div className="relative h-[28rem] lg:h-[32rem] w-full">
               <Image
                 src={currentLeader.image}
                 alt={currentLeader.name}
                 fill
-                className="object-cover rounded-xl"
+                className="object-cover object-top rounded-xl"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
             </div>
 
             {/* Content */}
-            <div className="flex flex-col justify-center">
-              <span className="text-sm font-semibold text-primary uppercase tracking-wider mb-3">
-                {currentLeader.generation}
-              </span>
-              <h3 className="text-4xl font-semibold text-foreground mb-2">
+            <div className="flex flex-col justify-center min-h-[24rem]">
+              <h3 className="text-3xl lg:text-4xl font-semibold text-foreground mb-2">
                 {currentLeader.name}
               </h3>
-              <p className="text-lg text-primary font-semibold mb-6">
+              <p className="text-lg text-primary font-semibold mb-4">
                 {currentLeader.title}
               </p>
-              <p className="text-body-muted text-lg leading-relaxed mb-8">
+              <p className="text-body-muted text-base lg:text-lg leading-relaxed mb-8 line-clamp-6">
                 {currentLeader.description}
               </p>
 

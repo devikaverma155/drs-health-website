@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Wrap product fetching in try/catch to prevent build failure
   let productUrls: MetadataRoute.Sitemap = [];
   try {
-    const allProducts = await getProducts({ limit: 500 });
+    const allProducts = await getProducts({ limit: 200 });
     productUrls = allProducts.map((p) => ({
       url: `${BASE}/product/${p.handle}`,
       lastModified: new Date(),
