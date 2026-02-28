@@ -4,12 +4,21 @@ import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 export default async function RawMaterialsPage() {
-  const buyers = await prisma.rawMaterialBuyer.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: {
-      _count: { select: { orders: true } },
-    },
-  });
+  const [buyers, orderCountRows] = await Promise.all([
+    prisma.rawMaterialBuyer.findMany({
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.rawMaterialOrder.groupBy({
+      by: ['buyerId'],
+      _count: { id: true },
+      where: { buyerId: { not: null } },
+    }),
+  ]);
+
+  const orderCountByBuyer = new Map<string, number>();
+  for (const row of orderCountRows) {
+    if (row.buyerId) orderCountByBuyer.set(row.buyerId, row._count.id);
+  }
 
   return (
     <div className="space-y-6">
@@ -55,9 +64,9 @@ export default async function RawMaterialsPage() {
                   <td className="px-4 py-3 text-slate-600">{buyer.phone || '-'}</td>
                   <td className="px-4 py-3 text-slate-600">{buyer.email || '-'}</td>
                   <td className="px-4 py-3 text-slate-600">{buyer.materialRequired || '-'}</td>
-                  <td className="px-4 py-3 text-slate-600">{buyer._count.orders}</td>
+                  <td className="px-4 py-3 text-slate-600">{orderCountByBuyer.get(buyer.id) ?? 0}</td>
                   <td className="px-4 py-3 text-slate-600">{buyer.location || '-'}</td>
-                  <td className="px-4 py-3 text-slate-500">{new Date(buyer.createdAt).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 text-slate-500">{buyer.createdAt ? new Date(buyer.createdAt).toLocaleDateString() : '-'}</td>
                   <td className="px-4 py-3">
                     <Link href={`/admin/raw-materials/${buyer.id}`} className="text-sm text-primary hover:underline">
                       Edit

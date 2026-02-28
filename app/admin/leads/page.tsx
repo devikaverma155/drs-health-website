@@ -32,8 +32,8 @@ export default async function AdminLeadsPage({
   const q = params.q?.trim();
 
   const where: Prisma.LeadWhereInput = {};
-  if (source) where.source = source;
-  if (status) where.status = status;
+  if (source) (where as Record<string, unknown>).source = source;
+  if (status) (where as Record<string, unknown>).status = status;
   if (q) {
     where.OR = [
       { name: { contains: q, mode: 'insensitive' } },
@@ -45,7 +45,6 @@ export default async function AdminLeadsPage({
   const leads = await prisma.lead.findMany({
     where,
     orderBy: { createdAt: 'desc' },
-    include: { _count: { select: { activities: true } } },
   });
 
   return (

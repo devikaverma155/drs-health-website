@@ -14,12 +14,14 @@ export default async function LeadDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const lead = await prisma.lead.findUnique({
-    where: { id },
-    include: {
-      activities: { orderBy: { createdAt: 'desc' } },
-    },
-  });
+  const [lead, activities] = await Promise.all([
+    prisma.lead.findUnique({ where: { id } }),
+    // Separate query: works even when Prisma client doesn't expose Lead.activities relation
+    (prisma as unknown as { leadActivity: { findMany: (args: { where: { leadId: string }; orderBy: { createdAt: 'desc' } }) => Promise<Array<{ id: string; note: string | null; action: string | null; createdBy: string | null; createdAt: Date | null }>> } }).leadActivity.findMany({
+      where: { leadId: id },
+      orderBy: { createdAt: 'desc' },
+    }),
+  ]);
   if (!lead) notFound();
 
   return (
@@ -42,7 +44,7 @@ export default async function LeadDetailPage({
 
           <div className="rounded-xl bg-white border border-slate-200 p-6">
             <h2 className="font-medium text-slate-900 mb-4">Activity & Notes</h2>
-            <LeadNotesTimeline leadId={lead.id} notes={lead.activities} />
+            <LeadNotesTimeline leadId={lead.id} notes={activities} />
           </div>
         </div>
 

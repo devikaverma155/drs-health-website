@@ -4,12 +4,21 @@ import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 export default async function EmployeesPage() {
-  const employees = await prisma.employee.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: {
-      _count: { select: { documents: true } },
-    },
-  });
+  const [employees, docCountRows] = await Promise.all([
+    prisma.employee.findMany({
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.employeeDocument.groupBy({
+      by: ['employeeId'],
+      _count: { id: true },
+      where: { employeeId: { not: null } },
+    }),
+  ]);
+
+  const docCountByEmployee = new Map<string, number>();
+  for (const row of docCountRows) {
+    if (row.employeeId) docCountByEmployee.set(row.employeeId, row._count.id);
+  }
 
   return (
     <div className="space-y-6">
@@ -55,7 +64,7 @@ export default async function EmployeesPage() {
                   <td className="px-4 py-3 text-slate-600">{employee.phone || '-'}</td>
                   <td className="px-4 py-3 text-slate-600">{employee.designation || '-'}</td>
                   <td className="px-4 py-3 text-slate-600">{employee.department || '-'}</td>
-                  <td className="px-4 py-3 text-slate-600">{employee._count.documents}</td>
+                  <td className="px-4 py-3 text-slate-600">{docCountByEmployee.get(employee.id) ?? 0}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
                       employee.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'
@@ -63,7 +72,7 @@ export default async function EmployeesPage() {
                       {employee.status || 'active'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-500">{new Date(employee.createdAt).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 text-slate-500">{employee.createdAt ? new Date(employee.createdAt).toLocaleDateString() : '-'}</td>
                   <td className="px-4 py-3">
                     <Link href={`/admin/employees/${employee.id}`} className="text-sm text-primary hover:underline">
                       Edit

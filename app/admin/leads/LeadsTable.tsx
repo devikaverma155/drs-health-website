@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Lead } from '@prisma/client';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
-type LeadWithCount = Lead & { _count: { activities: number } };
+type LeadWithCount = Lead & { _count?: { activities: number } };
 
 export function LeadsTable({ leads, loading }: { leads: LeadWithCount[]; loading?: boolean }) {
   if (loading) {
@@ -51,8 +51,8 @@ export function LeadsTable({ leads, loading }: { leads: LeadWithCount[]; loading
                 {lead.status || 'new'}
               </span>
             </td>
-            <td className="px-4 py-3 text-slate-600">{lead._count.activities}</td>
-            <td className="px-4 py-3 text-slate-500">{new Date(lead.createdAt).toLocaleDateString()}</td>
+            <td className="px-4 py-3 text-slate-600">{lead._count?.activities ?? '-'}</td>
+            <td className="px-4 py-3 text-slate-500">{lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : '-'}</td>
           </tr>
         ))}
       </tbody>
