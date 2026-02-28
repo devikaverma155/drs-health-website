@@ -14,12 +14,13 @@ export default async function RawMaterialBuyerDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const buyer = await prisma.rawMaterialBuyer.findUnique({
-    where: { id },
-    include: {
-      orders: { orderBy: { orderDate: 'desc' } },
-    },
-  });
+  const [buyer, orders] = await Promise.all([
+    prisma.rawMaterialBuyer.findUnique({ where: { id } }),
+    prisma.rawMaterialOrder.findMany({
+      where: { buyerId: id },
+      orderBy: { orderDate: 'desc' },
+    }),
+  ]);
 
   if (!buyer) notFound();
 
@@ -40,11 +41,11 @@ export default async function RawMaterialBuyerDetailPage({
 
           <div className="rounded-xl bg-white border border-slate-200 p-6">
             <h2 className="font-medium text-slate-900 mb-4">Orders</h2>
-            {buyer.orders.length === 0 ? (
+            {orders.length === 0 ? (
               <p className="text-sm text-slate-500 mb-4">No orders yet.</p>
             ) : (
               <div className="space-y-3 mb-4">
-                {buyer.orders.map((order) => (
+                {orders.map((order) => (
                   <div key={order.id} className="border border-slate-200 rounded-lg p-3 text-sm">
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-medium">{order.materialType || 'Order'}</span>
