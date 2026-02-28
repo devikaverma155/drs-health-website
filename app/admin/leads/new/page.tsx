@@ -14,8 +14,6 @@ const SOURCES = [
   'ads',
 ] as const;
 
-const CATEGORIES = ['B2B', 'Retail', 'Pharmacy', 'NGO', 'Hospital', 'Distributor', 'Other'];
-
 export default function NewLeadPage() {
   return (
     <div className="space-y-6">
@@ -23,7 +21,7 @@ export default function NewLeadPage() {
         ← Leads
       </Link>
       <h1 className="text-2xl font-semibold text-slate-900">Add lead</h1>
-      <AddLeadForm sources={SOURCES} categories={CATEGORIES} />
+      <AddLeadForm sources={SOURCES} />
     </div>
   );
 }

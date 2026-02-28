@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import { LeadSource, LeadStatus } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +13,7 @@ async function getDashboardData() {
     prisma.lead.count({ where: { createdAt: { gte: startOfToday } } }),
     prisma.lead.count({ where: { createdAt: { gte: startOfWeek } } }),
     prisma.lead.groupBy({ by: ['source'], _count: { id: true } }),
-    prisma.lead.count({ where: { status: LeadStatus.CONVERTED } }),
+    prisma.lead.count({ where: { status: 'converted' } }),
   ]);
 
   const total = await prisma.lead.count();
@@ -69,8 +68,8 @@ export default async function AdminDashboardPage() {
               <p className="text-sm text-slate-500">No leads yet</p>
             ) : (
               data.bySource.map(({ source, _count }) => (
-                <div key={source} className="flex items-center justify-between text-sm">
-                  <span className="text-slate-700">{source.replace(/_/g, ' ')}</span>
+                <div key={source || 'unknown'} className="flex items-center justify-between text-sm">
+                  <span className="text-slate-700">{source?.replace(/_/g, ' ') || 'Unknown'}</span>
                   <span className="font-medium text-slate-900">{_count.id}</span>
                 </div>
               ))
@@ -102,11 +101,11 @@ export default async function AdminDashboardPage() {
                     <tr key={lead.id} className="border-b border-slate-50">
                       <td className="py-2 pr-2">
                         <Link href={`/admin/leads/${lead.id}`} className="text-primary hover:underline">
-                          {lead.name}
+                          {lead.name || '-'}
                         </Link>
                       </td>
-                      <td className="py-2 pr-2 text-slate-600">{lead.source.replace(/_/g, ' ')}</td>
-                      <td className="py-2 text-slate-600">{lead.status}</td>
+                      <td className="py-2 pr-2 text-slate-600">{lead.source?.replace(/_/g, ' ') || '-'}</td>
+                      <td className="py-2 text-slate-600">{lead.status || '-'}</td>
                     </tr>
                   ))}
                 </tbody>

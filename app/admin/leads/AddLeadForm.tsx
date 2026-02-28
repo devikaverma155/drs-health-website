@@ -3,22 +3,20 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createLead } from './actions';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 type Source = 'contact_form' | 'consultation' | 'b2b' | 'private_labelling' | 'manufacturer' | 'pcd' | 'whatsapp' | 'ads';
 
 export function AddLeadForm({
   sources,
-  categories,
 }: {
   sources: readonly Source[];
-  categories: string[];
 }) {
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [source, setSource] = useState<Source>(sources[0]);
-  const [category, setCategory] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,7 +31,6 @@ export function AddLeadForm({
         email: email.trim(),
         phone: phone.trim(),
         source,
-        category: category.trim() || undefined,
         message: message.trim() || undefined,
       });
       router.push('/admin/leads');
@@ -45,7 +42,7 @@ export function AddLeadForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-xl space-y-4 rounded-xl bg-white border border-slate-200 p-6">
+    <form onSubmit={handleSubmit} className="max-w-xl space-y-4 rounded-xl bg-white border border-slate-200 p-6 relative">
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-1">Name *</label>
         <input
@@ -89,34 +86,31 @@ export function AddLeadForm({
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-        >
-          <option value="">Select category</option>
-          {categories.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </div>
-      <div>
         <label className="block text-sm font-medium text-slate-700 mb-1">Message</label>
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           rows={3}
           className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          disabled={loading}
         />
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
+      {loading && (
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-xl flex items-center justify-center z-10">
+          <div className="text-center">
+            <LoadingSpinner size="lg" />
+            <p className="mt-2 text-sm text-slate-600">Saving to database...</p>
+          </div>
+        </div>
+      )}
       <div className="flex gap-2">
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark disabled:opacity-50"
+          className="rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark disabled:opacity-50 flex items-center gap-2"
         >
+          {loading && <LoadingSpinner size="sm" />}
           {loading ? 'Creating…' : 'Create lead'}
         </button>
         <button

@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import type { LeadSource, LeadStatus } from '@prisma/client';
 
 export function LeadFilters({
   sources,
@@ -10,10 +9,10 @@ export function LeadFilters({
   defaultStatus,
   defaultQ,
 }: {
-  sources: LeadSource[];
-  statuses: LeadStatus[];
-  defaultSource?: LeadSource;
-  defaultStatus?: LeadStatus;
+  sources: string[];
+  statuses: string[];
+  defaultSource?: string;
+  defaultStatus?: string;
   defaultQ?: string;
 }) {
   const router = useRouter();

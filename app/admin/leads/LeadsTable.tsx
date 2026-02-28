@@ -1,9 +1,19 @@
 import Link from 'next/link';
-import type { Lead, LeadSource, LeadStatus } from '@prisma/client';
+import type { Lead } from '@prisma/client';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
-type LeadWithCount = Lead & { _count: { notes: number } };
+type LeadWithCount = Lead & { _count: { activities: number } };
 
-export function LeadsTable({ leads }: { leads: LeadWithCount[] }) {
+export function LeadsTable({ leads, loading }: { leads: LeadWithCount[]; loading?: boolean }) {
+  if (loading) {
+    return (
+      <div className="p-8 text-center">
+        <LoadingSpinner size="md" />
+        <p className="mt-4 text-sm text-slate-500">Loading leads...</p>
+      </div>
+    );
+  }
+
   if (leads.length === 0) {
     return (
       <div className="p-8 text-center text-slate-500 text-sm">
@@ -30,18 +40,18 @@ export function LeadsTable({ leads }: { leads: LeadWithCount[] }) {
           <tr key={lead.id} className="border-b border-slate-100 hover:bg-slate-50/50">
             <td className="px-4 py-3">
               <Link href={`/admin/leads/${lead.id}`} className="font-medium text-primary hover:underline">
-                {lead.name}
+                {lead.name || '-'}
               </Link>
             </td>
-            <td className="px-4 py-3 text-slate-600">{lead.email}</td>
-            <td className="px-4 py-3 text-slate-600">{lead.phone}</td>
-            <td className="px-4 py-3 text-slate-600">{lead.source.replace(/_/g, ' ')}</td>
+            <td className="px-4 py-3 text-slate-600">{lead.email || '-'}</td>
+            <td className="px-4 py-3 text-slate-600">{lead.phone || '-'}</td>
+            <td className="px-4 py-3 text-slate-600">{lead.source?.replace(/_/g, ' ') || '-'}</td>
             <td className="px-4 py-3">
               <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
-                {lead.status}
+                {lead.status || 'new'}
               </span>
             </td>
-            <td className="px-4 py-3 text-slate-600">{lead._count.notes}</td>
+            <td className="px-4 py-3 text-slate-600">{lead._count.activities}</td>
             <td className="px-4 py-3 text-slate-500">{new Date(lead.createdAt).toLocaleDateString()}</td>
           </tr>
         ))}

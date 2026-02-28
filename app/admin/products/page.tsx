@@ -1,28 +1,21 @@
+import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { getProducts } from '@/lib/shopify-admin';
-import { ProductsTable } from './ProductsTable';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminProductsPage() {
-  const products = await getProducts();
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-slate-900">Products</h1>
-        <Link
-          href="/admin/products/new"
-          className="rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark"
-        >
-          Add product
-        </Link>
       </div>
-      <p className="text-sm text-slate-500">
-        Products are stored in the database for now. Storefront products come from WooCommerce.
-      </p>
-      <div className="rounded-xl bg-white border border-slate-200 overflow-hidden">
-        <ProductsTable products={products} />
+      <div className="rounded-xl bg-white border border-slate-200 p-8 text-center">
+        <p className="text-slate-500 mb-4">
+          Products are managed through WooCommerce. Use the WooCommerce admin panel to manage products.
+        </p>
+        <p className="text-sm text-slate-400">
+          Product data is synced from WooCommerce API and displayed on the storefront.
+        </p>
       </div>
     </div>
   );

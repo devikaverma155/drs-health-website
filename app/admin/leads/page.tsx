@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import { LeadSource, LeadStatus, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { LeadsTable } from './LeadsTable';
 import { LeadFilters } from './LeadFilters';
 
 export const dynamic = 'force-dynamic';
 
-const SOURCES: LeadSource[] = [
+const SOURCES: string[] = [
   'contact_form',
   'consultation',
   'b2b',
@@ -17,7 +17,7 @@ const SOURCES: LeadSource[] = [
   'ads',
 ];
 
-const STATUSES: LeadStatus[] = ['NEW', 'CONTACTED', 'QUALIFIED', 'CONVERTED', 'CLOSED'];
+const STATUSES: string[] = ['new', 'contacted', 'qualified', 'converted', 'closed'];
 
 type SearchParams = { source?: string; status?: string; q?: string };
 
@@ -27,8 +27,8 @@ export default async function AdminLeadsPage({
   searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-  const source = params.source as LeadSource | undefined;
-  const status = params.status as LeadStatus | undefined;
+  const source = params.source;
+  const status = params.status;
   const q = params.q?.trim();
 
   const where: Prisma.LeadWhereInput = {};
@@ -45,7 +45,7 @@ export default async function AdminLeadsPage({
   const leads = await prisma.lead.findMany({
     where,
     orderBy: { createdAt: 'desc' },
-    include: { _count: { select: { notes: true } } },
+    include: { _count: { select: { activities: true } } },
   });
 
   return (
@@ -63,7 +63,7 @@ export default async function AdminLeadsPage({
       <LeadFilters sources={SOURCES} statuses={STATUSES} defaultSource={source} defaultStatus={status} defaultQ={q} />
 
       <div className="rounded-xl bg-white border border-slate-200 overflow-hidden">
-        <LeadsTable leads={leads} />
+        <LeadsTable leads={leads} loading={false} />
       </div>
     </div>
   );
