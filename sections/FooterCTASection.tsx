@@ -10,7 +10,7 @@ export function FooterCTASection() {
         <div className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-tl from-amber-100/10 to-transparent blur-3xl"></div>
       </div>
       <div className="container-tight text-center max-w-2xl mx-auto">
-        <h2 className="text-2xl md:text-3xl font-semibold text-white">
+        <h2 className="font-heading text-3xl md:text-4xl font-semibold text-white">
           Ready to Start Your Wellness Journey?
         </h2>
         <p className="mt-4 text-white/90 leading-relaxed">

@@ -56,7 +56,7 @@ export function LeadershipCarouselSection() {
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <h2 className="text-4xl font-semibold text-foreground mb-4">
+          <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">
             Our Leadership Journey
           </h2>
           <p className="text-lg text-body-muted max-w-2xl mx-auto">
@@ -80,7 +80,7 @@ export function LeadershipCarouselSection() {
 
             {/* Content */}
             <div className="flex flex-col justify-center min-h-[24rem]">
-              <h3 className="text-3xl lg:text-4xl font-semibold text-foreground mb-2">
+              <h3 className="font-heading text-2xl lg:text-3xl font-semibold text-foreground mb-2">
                 {currentLeader.name}
               </h3>
               <p className="text-lg text-primary font-semibold mb-4">

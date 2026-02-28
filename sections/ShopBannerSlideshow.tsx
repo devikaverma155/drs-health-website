@@ -39,7 +39,7 @@ export function ShopBannerSlideshow({ slides = DEFAULT_SHOP_BANNER_SLIDES }: { s
       >
         <div className="container-tight flex flex-col md:flex-row md:items-center md:justify-between gap-6 w-full">
           <div>
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground drop-shadow-sm">
+            <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground drop-shadow-sm">
               {slide.title}
             </h2>
             {slide.subtitle && (

@@ -6,7 +6,7 @@ export function ServicesSection() {
   return (
     <section className="section-padding bg-soft-bg border-y border-border">
       <div className="container-tight">
-        <h2 className="text-2xl md:text-3xl font-semibold text-primary text-center mb-12 ">
+        <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground text-center mb-12">
           Our Services
         </h2>
         <p className="text-body-muted text-center mb-12 max-w-2xl mx-auto">
@@ -25,7 +25,7 @@ export function ServicesSection() {
               />
             </div>
             <div className="p-8">
-              <h3 className="text-lg font-semibold text-foreground">Free Health Consultation</h3>
+              <h3 className="font-heading text-lg font-semibold text-foreground">Free Health Consultation</h3>
               <p className="mt-3 text-body-muted leading-relaxed">
                 Speak with our Ayurvedic experts for personalised advice on diet, lifestyle and product selection. No charge.
               </p>
@@ -47,7 +47,7 @@ export function ServicesSection() {
               />
             </div>
             <div className="p-8">
-              <h3 className="text-lg font-semibold text-foreground">Product Guidance</h3>
+              <h3 className="font-heading text-lg font-semibold text-foreground">Product Guidance</h3>
               <p className="mt-3 text-body-muted leading-relaxed">
                 Not sure which formulation suits you? Our team helps you choose the right products for your health goals.
               </p>
@@ -69,7 +69,7 @@ export function ServicesSection() {
               />
             </div>
             <div className="p-8">
-              <h3 className="text-lg font-semibold text-foreground">Authentic Formulations</h3>
+              <h3 className="font-heading text-lg font-semibold text-foreground">Authentic Formulations</h3>
               <p className="mt-3 text-body-muted leading-relaxed">
                 Classical and modern Ayurvedic formulations, manufactured under strict quality standards for your safety.
               </p>

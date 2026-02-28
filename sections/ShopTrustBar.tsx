@@ -37,7 +37,7 @@ export function ShopTrustBar() {
                 <Icon className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-semibold text-foreground">{title}</h3>
+                <h3 className="font-heading font-semibold text-foreground">{title}</h3>
                 <p className="mt-1 text-sm text-body-muted">{description}</p>
               </div>
             </div>

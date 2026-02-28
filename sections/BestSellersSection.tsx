@@ -13,17 +13,31 @@ export async function BestSellersSection() {
     const displayProducts = [...products, ...products];
 
     return (
-      <section className="section-padding section-bg-gradient overflow-hidden">
+      <section
+        className="section-padding overflow-hidden relative"
+        style={{
+      background: 'rgba(163, 40, 26, 0.1)'
+    }}
+      >
+        {/* Warm decorative glow */}
+        <div className="absolute inset-0 -z-10 pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-gradient-to-bl from-[#A3261A]/10 to-transparent blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-[#C46A3A]/10 to-transparent blur-3xl" />
+        </div>
+
         <div className="container-tight">
-          <div className="flex items-end justify-between gap-4 mb-10">
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+          <div className="text-center mb-12">
+            <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">
               Best Sellers
             </h2>
+            <p className="text-lg text-body-muted max-w-2xl mx-auto mb-4">
+              Our most loved Ayurvedic formulations — trusted by thousands for real results
+            </p>
             <Link
               href="/shop"
-              className="text-sm font-medium text-primary hover:underline transition-colors duration-200"
+              className="text-sm font-semibold text-primary hover:underline transition-colors duration-200"
             >
-              View all
+              View all →
             </Link>
           </div>
         </div>
@@ -50,17 +64,23 @@ export async function BestSellersSection() {
     console.error('Failed to load best sellers:', error);
     // Return empty section instead of crashing
     return (
-      <section className="section-padding section-bg-gradient overflow-hidden">
+      <section
+        className="section-padding overflow-hidden relative"
+        style={{ background: 'linear-gradient(135deg, #FFF0ED 0%, #F9DDD6 40%, #F2CBC2 100%)' }}
+      >
         <div className="container-tight">
-          <div className="flex items-end justify-between gap-4 mb-10">
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
+          <div className="text-center mb-12">
+            <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">
               Best Sellers
             </h2>
+            <p className="text-lg text-body-muted max-w-2xl mx-auto mb-4">
+              Our most loved Ayurvedic formulations — trusted by thousands for real results
+            </p>
             <Link
               href="/shop"
-              className="text-sm font-medium text-primary hover:underline transition-colors duration-200"
+              className="text-sm font-semibold text-primary hover:underline transition-colors duration-200"
             >
-              View all
+              View all →
             </Link>
           </div>
           <p className="text-center text-body-muted">Loading products...</p>

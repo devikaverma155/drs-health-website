@@ -17,7 +17,7 @@ export function BlogPreviewSection() {
       </div>
       <div className="container-tight">
         <div className="flex items-end justify-between gap-4 mb-10">
-          <h2 className="text-2xl md:text-3xl font-semibold text-white">
+          <h2 className="font-heading text-3xl md:text-4xl font-semibold text-white">
             From Our Blog
           </h2>
           <Link
@@ -32,7 +32,7 @@ export function BlogPreviewSection() {
             <li key={slug}>
               <Link href={`/blog/${slug}`} className="group block">
                 <span className="text-sm text-white/80">{date}</span>
-                <h3 className="mt-1 font-semibold text-white group-hover:text-white/90">
+                <h3 className="font-heading mt-1 font-semibold text-white group-hover:text-white/90">
                   {title}
                 </h3>
               </Link>

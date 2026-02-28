@@ -50,7 +50,7 @@ export function LocationMapSection() {
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-4xl font-semibold text-foreground mb-4">Find Us</h2>
+          <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">Find Us</h2>
           <p className="text-lg text-body-muted max-w-2xl mx-auto">
             Visit our offices, clinics, and manufacturing facilities across India
           </p>
@@ -101,7 +101,7 @@ export function LocationMapSection() {
                 <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-semibold mb-3">
                   {location.type}
                 </span>
-                <h3 className="text-2xl font-semibold text-foreground">{location.name}</h3>
+                <h3 className="font-heading text-2xl font-semibold text-foreground">{location.name}</h3>
               </div>
 
               {/* Details */}
@@ -150,7 +150,7 @@ export function LocationMapSection() {
                 href={`https://maps.google.com/?q=${location.latitude},${location.longitude}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors inline-block text-center"
+                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 px-4 rounded-lg transition-colors inline-block text-center"
               >
                 Get Directions
               </a>
@@ -160,19 +160,19 @@ export function LocationMapSection() {
 
         {/* Info Section */}
         <div className="mt-12 bg-white rounded-xl shadow-md p-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Contact Information</h3>
+          <h3 className="font-heading text-2xl font-semibold text-foreground mb-4">Contact Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <p className="text-sm text-gray-500 font-semibold mb-2">General Inquiries</p>
-              <p className="text-lg text-gray-900">info@drshealth.com</p>
+              <p className="text-sm text-body-muted font-semibold mb-2">General Inquiries</p>
+              <p className="text-lg text-foreground">info@drshealth.com</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-semibold mb-2">Business Partnerships</p>
-              <p className="text-lg text-gray-900">business@drshealth.com</p>
+              <p className="text-sm text-body-muted font-semibold mb-2">Business Partnerships</p>
+              <p className="text-lg text-foreground">business@drshealth.com</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-semibold mb-2">Customer Support</p>
-              <p className="text-lg text-gray-900">support@drshealth.com</p>
+              <p className="text-sm text-body-muted font-semibold mb-2">Customer Support</p>
+              <p className="text-lg text-foreground">support@drshealth.com</p>
             </div>
           </div>
         </div>

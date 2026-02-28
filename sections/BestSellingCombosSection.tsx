@@ -90,7 +90,7 @@ export function BestSellingCombosSection() {
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">
             Best Selling Combos
           </h2>
           <p className="text-lg text-body-muted max-w-2xl mx-auto">
@@ -121,7 +121,7 @@ export function BestSellingCombosSection() {
 
                 {/* Content */}
                 <div className="flex flex-col justify-center">
-                  <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                  <h3 className="font-heading text-2xl md:text-3xl font-semibold text-foreground mb-4">
                     {combos[currentSlide].title}
                   </h3>
                   <p className="text-lg text-body-muted mb-8 leading-relaxed">

@@ -16,7 +16,7 @@ export async function NewLaunchesSection() {
           <div className="flex items-end justify-between gap-4 mb-10">
             <div>
               <span className="text-sm font-medium text-primary uppercase tracking-wider">New</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-foreground mt-1">
+              <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mt-1">
                 Newly Launched
               </h2>
             </div>
@@ -56,7 +56,7 @@ export async function NewLaunchesSection() {
           <div className="flex items-end justify-between gap-4 mb-10">
             <div>
               <span className="text-sm font-medium text-primary uppercase tracking-wider">New</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-foreground mt-1">
+              <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mt-1">
                 Newly Launched
               </h2>
             </div>

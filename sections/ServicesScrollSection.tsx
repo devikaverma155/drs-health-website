@@ -66,7 +66,7 @@ export function ServicesScrollSection() {
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-4xl font-semibold text-white mb-4">Our Services</h2>
+          <h2 className="font-heading text-3xl md:text-4xl font-semibold text-white mb-4">Our Services</h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto">
             Comprehensive business solutions tailored for your pharmaceutical needs
           </p>
@@ -130,7 +130,7 @@ export function ServicesScrollSection() {
                 <div className="text-5xl mb-4 transform group-hover:scale-125 transition-transform">
                   {service.icon}
                 </div>
-                <h3 className="text-2xl font-semibold text-foreground mb-3">
+                <h3 className="font-heading text-2xl font-semibold text-foreground mb-3">
                   {service.title}
                 </h3>
                 <p className="text-body-muted mb-6 leading-relaxed">{service.description}</p>
@@ -157,7 +157,7 @@ export function ServicesScrollSection() {
 
         {/* Scroll Indicator */}
         <div className="flex justify-center mt-8">
-          <p className="text-sm text-gray-500">← Scroll to see all services →</p>
+          <p className="text-sm text-body-muted">← Scroll to see all services →</p>
         </div>
       </div>
     </section>

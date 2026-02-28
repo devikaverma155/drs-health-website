@@ -45,7 +45,7 @@ export function ConsultationFormSection() {
       }}
     >
       <div className="container-tight max-w-xl">
-        <h2 className="text-2xl md:text-3xl font-semibold text-foreground text-center mb-2">
+        <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground text-center mb-2">
           Get Free Consultation
         </h2>
         <p className="text-center text-body-muted mb-10">

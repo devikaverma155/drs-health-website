@@ -81,7 +81,7 @@ export function ReelsSection() {
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-4xl font-semibold text-foreground mb-4">Watch & Shop</h2>
+          <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">Watch & Shop</h2>
           <p className="text-lg text-body-muted max-w-2xl mx-auto">
             See our products in action and shop directly from customer testimonials
           </p>
@@ -121,7 +121,7 @@ export function ReelsSection() {
 
               {/* Product Info */}
               <div className="p-4">
-                <h4 className="font-semibold text-sm text-foreground line-clamp-2 mb-2">
+                <h4 className="font-heading font-semibold text-sm text-foreground line-clamp-2 mb-2">
                   {product.title}
                 </h4>
                 <div className="flex items-center gap-2 mb-3">

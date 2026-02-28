@@ -20,7 +20,7 @@ export function ManufacturingQualitySection() {
       <div className="container-tight">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-2xl md:text-3xl font-semibold text-white">
+            <h2 className="font-heading text-3xl md:text-4xl font-semibold text-white">
               Manufacturing & Quality You Can Trust
             </h2>
             <p className="mt-4 text-white/90 leading-relaxed">

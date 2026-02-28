@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 const TESTIMONIALS = [
   {
@@ -51,15 +52,22 @@ export function TestimonialsSection() {
   const [index, setIndex] = useState(0);
 
   return (
-    <section className="section-padding section-bg-gradient relative overflow-hidden">
-      {/* Organic botanical glow */}
+    <section className="section-padding relative overflow-hidden">
+      {/* Background image */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-green-100/15 to-transparent blur-3xl"></div>
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-bl from-amber-100/10 to-transparent blur-3xl"></div>
+        <Image
+          src="https://drshealth.in/wp-content/uploads/2026/02/image-1771828228498-e1771838724548.png"
+          alt="Background accent"
+          fill
+          priority
+          className="object-cover object-center"
+        />
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 bg-white/45 backdrop-blur-[1px]" />
       </div>
       
       <div className="container-tight relative z-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-4">
+        <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground text-center mb-4">
           Trusted By <span className="text-primary">10 Lakh+</span> Customers
         </h2>
         <p className="text-lg text-body-muted text-center mb-16 max-w-2xl mx-auto">

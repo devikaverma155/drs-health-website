@@ -40,7 +40,7 @@ export function BrandHistorySection() {
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <h2 className="text-4xl font-semibold text-foreground mb-4">Our Brand History</h2>
+          <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground mb-4">Our Brand History</h2>
           <p className="text-lg text-body-muted max-w-2xl mx-auto">
             A journey of innovation, commitment, and healthcare excellence spanning decades
           </p>
@@ -70,7 +70,7 @@ export function BrandHistorySection() {
                   
                   <span className="text-3xl block mb-3">{event.icon}</span>
                   
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
+                  <h3 className="font-heading text-xl font-semibold text-foreground mb-2">
                     {event.title}
                   </h3>
                   

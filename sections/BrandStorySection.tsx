@@ -13,7 +13,7 @@ export function BrandStorySection() {
       <div className="container-tight relative z-10">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-2xl md:text-3xl font-semibold text-white">
+            <h2 className="font-heading text-3xl md:text-4xl font-semibold text-white">
               Our Story: Ayurveda Meets Modern Care
             </h2>
             <p className="mt-4 text-white/90 leading-relaxed">

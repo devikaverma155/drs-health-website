@@ -69,7 +69,7 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
       </div>
       <div className="container-tight relative z-10 py-16 md:py-24">
         <div className="max-w-2xl">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground tracking-tight">
+          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground tracking-tight">
             {current.headline}
           </h1>
           {current.subtext && (

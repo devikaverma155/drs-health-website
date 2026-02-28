@@ -21,7 +21,7 @@ export function HeroSection({
         <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-gradient-to-tl from-amber-100/15 to-transparent blur-3xl opacity-40 -mr-32 -mb-32"></div>
       </div>
       <div className="container-tight text-center max-w-3xl mx-auto relative z-10">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">
+        <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground tracking-tight">
           {headline}
         </h1>
         <p className="mt-6 text-lg text-body-muted leading-relaxed max-w-2xl mx-auto">

@@ -8,10 +8,10 @@ import { BrandStorySection } from '@/sections/BrandStorySection';
 import { ConsultationFormSection } from '@/sections/ConsultationFormSection';
 import { BlogPreviewSection } from '@/sections/BlogPreviewSection';
 import { FooterCTASection } from '@/sections/FooterCTASection';
-import { ServicesScrollSection } from '@/sections/ServicesScrollSection';
+import { ServicesCarouselSection } from '@/sections/ServicesCarouselSection';
 import { ReelsSection } from '@/sections/ReelsSection';
 import { BestSellingCombosSection } from '@/sections/BestSellingCombosSection';
-import { CertificationsSection } from '@/sections/CertificationsSection';
+import { CertificationsLogoSection } from '@/sections/CertificationsLogoSection';
 
 // Fetch product data at request time (not build time) to handle API unavailability
 // Uses ISR to revalidate every 60 seconds
@@ -26,13 +26,12 @@ export default function HomePage() {
       <BrandStorySection />
       <BestSellingCombosSection />
       {/* <NewLaunchesSection /> */}
-      <ServicesScrollSection />
-     
-      
+      <ServicesCarouselSection />
+
       <ManufacturingQualitySection />
-      <CertificationsSection />
+      <CertificationsLogoSection />
       <TestimonialsSection />
-       <ReelsSection />
+      <ReelsSection />
       <ConsultationFormSection />
       <BlogPreviewSection />
       <FooterCTASection />
