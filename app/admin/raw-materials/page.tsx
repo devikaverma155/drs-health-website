@@ -4,20 +4,27 @@ import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 export default async function RawMaterialsPage() {
-  const [buyers, orderCountRows] = await Promise.all([
-    prisma.rawMaterialBuyer.findMany({
-      orderBy: { createdAt: 'desc' },
-    }),
-    prisma.rawMaterialOrder.groupBy({
-      by: ['buyerId'],
-      _count: { id: true },
-      where: { buyerId: { not: null } },
-    }),
-  ]);
+  const buyers = await prisma.rawMaterialBuyer.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // Get order counts for each buyer
+  const buyerIds = buyers.map(b => b.id).filter((id): id is string => id !== null);
+  const orderCounts = buyerIds.length > 0
+    ? await prisma.rawMaterialOrder.groupBy({
+        by: ['buyerId'],
+        _count: { id: true },
+        where: {
+          buyerId: { in: buyerIds },
+        },
+      })
+    : [];
 
   const orderCountByBuyer = new Map<string, number>();
-  for (const row of orderCountRows) {
-    if (row.buyerId) orderCountByBuyer.set(row.buyerId, row._count.id);
+  for (const row of orderCounts) {
+    if (row.buyerId) {
+      orderCountByBuyer.set(row.buyerId, row._count.id);
+    }
   }
 
   return (
