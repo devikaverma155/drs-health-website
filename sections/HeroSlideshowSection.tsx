@@ -8,8 +8,38 @@ import type { HeroSlideConfig } from '@/lib/heroSlides';
 
 export type HeroSlide = HeroSlideConfig;
 
-export function HeroSlideshowSection({ slides = DEFAULT_HERO_SLIDES }: { slides?: HeroSlide[] }) {
+// Map DB slide format to component format
+function mapDbSlide(s: Record<string, unknown>): HeroSlide {
+  return {
+    id: (s.id as string) || '',
+    headline: (s.headline as string) || '',
+    subtext: (s.subtext as string) || undefined,
+    ctaLabel: (s.ctaLabel as string) || undefined,
+    ctaHref: (s.ctaHref as string) || undefined,
+    secondaryCtaLabel: (s.secondaryCtaLabel as string) || undefined,
+    secondaryCtaHref: (s.secondaryCtaHref as string) || undefined,
+    image: (s.imageUrl as string) || (s.image as string) || undefined,
+    imageAlt: (s.imageAlt as string) || undefined,
+  };
+}
+
+export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlide[] }) {
   const [index, setIndex] = useState(0);
+  const [slides, setSlides] = useState<HeroSlide[]>(propSlides || DEFAULT_HERO_SLIDES);
+
+  // Fetch from API on mount (if no prop slides given)
+  useEffect(() => {
+    if (propSlides) return;
+    fetch('/api/content/hero-slides')
+      .then((r) => r.json())
+      .then((data: Record<string, unknown>[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSlides(data.map(mapDbSlide));
+        }
+      })
+      .catch(() => {/* keep defaults */});
+  }, [propSlides]);
+
   const current = slides[index % slides.length];
 
   useEffect(() => {

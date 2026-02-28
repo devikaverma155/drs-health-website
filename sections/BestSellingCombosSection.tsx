@@ -1,19 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface Combo {
-  id: number;
+  id: number | string;
   title: string;
   description: string;
-  image: string;
+  image?: string;
+  imageUrl?: string;
   price: string;
   originalPrice: string;
   discount: string;
+  ctaLabel?: string;
+  ctaHref?: string;
 }
 
-const combos: Combo[] = [
+const DEFAULT_COMBOS: Combo[] = [
   {
     id: 1,
     title: 'Wellness Combo',
@@ -45,6 +48,28 @@ const combos: Combo[] = [
 
 export function BestSellingCombosSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [combos, setCombos] = useState<Combo[]>(DEFAULT_COMBOS);
+
+  // Fetch from API on mount
+  useEffect(() => {
+    fetch('/api/content/combo-offers')
+      .then((r) => r.json())
+      .then((data: Combo[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setCombos(
+            data.map((c) => ({
+              ...c,
+              image: c.imageUrl || c.image || '',
+              description: c.description || '',
+              price: c.price || '',
+              originalPrice: c.originalPrice || '',
+              discount: c.discount || '',
+            }))
+          );
+        }
+      })
+      .catch(() => {/* keep defaults */});
+  }, []);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % combos.length);
@@ -82,7 +107,7 @@ export function BestSellingCombosSection() {
                 {/* Image with glass effect */}
                 <div className="relative h-96 rounded-2xl overflow-hidden group">
                   <Image
-                    src={combos[currentSlide].image}
+                    src={combos[currentSlide].image || combos[currentSlide].imageUrl || ''}
                     alt={combos[currentSlide].title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"

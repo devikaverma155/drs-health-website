@@ -1,7 +1,9 @@
 import Link from 'next/link';
 
 const SECTIONS = [
-  { href: '/admin/content/website', label: 'Website Content', description: 'Manage website sections and content' },
+  { href: '/admin/content/slideshow', label: '🖼️ Hero Slideshow', description: 'Manage the homepage hero banner slides — images, headlines, buttons' },
+  { href: '/admin/content/combos', label: '🎁 Combo Offers', description: 'Manage the "Best Selling Combos" section — pricing, images, descriptions' },
+  { href: '/admin/content/website', label: '📝 Website Content', description: 'Manage other website sections and content blocks' },
 ];
 
 export default function ContentPage() {
