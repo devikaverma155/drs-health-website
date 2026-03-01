@@ -14,6 +14,9 @@ export async function createHeroSlide(data: {
   secondaryCtaHref?: string;
   imageUrl?: string;
   imageAlt?: string;
+  textColor?: string;
+  headlineBold?: boolean;
+  subtextBold?: boolean;
   sortOrder?: number;
   isActive?: boolean;
 }) {
@@ -35,6 +38,9 @@ export async function createHeroSlide(data: {
       secondaryCtaHref: data.secondaryCtaHref?.trim() || null,
       imageUrl: data.imageUrl?.trim() || null,
       imageAlt: data.imageAlt?.trim() || null,
+      textColor: data.textColor?.trim() || '#FFFFFF',
+      headlineBold: data.headlineBold ?? true,
+      subtextBold: data.subtextBold ?? false,
       sortOrder: data.sortOrder ?? nextSort,
       isActive: data.isActive ?? true,
     },
@@ -54,6 +60,9 @@ export async function updateHeroSlide(id: string, data: {
   secondaryCtaHref?: string;
   imageUrl?: string;
   imageAlt?: string;
+  textColor?: string;
+  headlineBold?: boolean;
+  subtextBold?: boolean;
   sortOrder?: number;
   isActive?: boolean;
 }) {
@@ -71,6 +80,9 @@ export async function updateHeroSlide(id: string, data: {
       secondaryCtaHref: data.secondaryCtaHref?.trim() || null,
       imageUrl: data.imageUrl?.trim() || null,
       imageAlt: data.imageAlt?.trim() || null,
+      textColor: data.textColor?.trim() || '#FFFFFF',
+      headlineBold: data.headlineBold,
+      subtextBold: data.subtextBold,
       sortOrder: data.sortOrder,
       isActive: data.isActive,
     },

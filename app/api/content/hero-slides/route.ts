@@ -24,6 +24,9 @@ export async function GET() {
           secondaryCtaHref: s.secondaryCtaHref || null,
           imageUrl: s.image || null,
           imageAlt: s.imageAlt || null,
+          textColor: s.textColor || '#FFFFFF',
+          headlineBold: s.headlineBold ?? true,
+          subtextBold: s.subtextBold ?? false,
           sortOrder: i,
           isActive: true,
         }))
@@ -44,6 +47,9 @@ export async function GET() {
         secondaryCtaHref: s.secondaryCtaHref || null,
         imageUrl: s.image || null,
         imageAlt: s.imageAlt || null,
+        textColor: s.textColor || '#FFFFFF',
+        headlineBold: s.headlineBold ?? true,
+        subtextBold: s.subtextBold ?? false,
         sortOrder: i,
         isActive: true,
       }))

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 const phoneRegex = /^[6-9]\d{9}$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,16 +43,26 @@ export async function POST(request: Request) {
       );
     }
 
-    // In production: persist to CRM, email, or WooCommerce customer
-    // For now we only validate and return success
+    // Save to clinic_patients table
+    await prisma.clinicPatient.create({
+      data: {
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        phone: digits,
+        condition: message ? String(message).trim() : null,
+        notes: 'Submitted via website free consultation form',
+      },
+    });
+
     return NextResponse.json({
       success: true,
       message: 'Thank you. We will contact you soon.',
     });
-  } catch {
+  } catch (err) {
+    console.error('Consultation form error:', err);
     return NextResponse.json(
-      { error: 'Invalid request body.' },
-      { status: 400 }
+      { error: 'Something went wrong. Please try again.' },
+      { status: 500 }
     );
   }
 }

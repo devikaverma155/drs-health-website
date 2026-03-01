@@ -20,6 +20,9 @@ function mapDbSlide(s: Record<string, unknown>): HeroSlide {
     secondaryCtaHref: (s.secondaryCtaHref as string) || undefined,
     image: (s.imageUrl as string) || (s.image as string) || undefined,
     imageAlt: (s.imageAlt as string) || undefined,
+    textColor: (s.textColor as string) || undefined,
+    headlineBold: typeof s.headlineBold === 'boolean' ? s.headlineBold : undefined,
+    subtextBold: typeof s.subtextBold === 'boolean' ? s.subtextBold : undefined,
   };
 }
 
@@ -69,11 +72,23 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
       </div>
       <div className="container-tight relative z-10 py-16 md:py-24">
         <div className="max-w-2xl">
-          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground tracking-tight">
+          <h1
+            className="font-heading text-3xl sm:text-4xl md:text-5xl tracking-tight"
+            style={{
+              color: current.textColor || undefined,
+              fontWeight: current.headlineBold !== false ? 600 : 400,
+            }}
+          >
             {current.headline}
           </h1>
           {current.subtext && (
-            <p className="mt-6 text-lg text-body-muted leading-relaxed">
+            <p
+              className="mt-6 text-lg leading-relaxed"
+              style={{
+                color: current.textColor ? `${current.textColor}dd` : undefined,
+                fontWeight: current.subtextBold ? 700 : 400,
+              }}
+            >
               {current.subtext}
             </p>
           )}

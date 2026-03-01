@@ -56,7 +56,7 @@ export default function PCDPage() {
           </div>
         </div>
 
-        <div className="bg-soft-bg rounded-2xl p-8 md:p-12 border border-border">
+        <div id="enquiry-form" className="bg-soft-bg rounded-2xl p-8 md:p-12 border border-border scroll-mt-24">
           <h2 className="text-2xl font-semibold text-foreground mb-8">
             Apply for PCD partnership
           </h2>

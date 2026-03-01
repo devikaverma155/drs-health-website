@@ -16,6 +16,9 @@ interface SlideData {
   secondaryCtaHref: string | null;
   imageUrl: string | null;
   imageAlt: string | null;
+  textColor: string | null;
+  headlineBold: boolean;
+  subtextBold: boolean;
   sortOrder: number;
   isActive: boolean;
 }
@@ -33,6 +36,9 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
   const [secondaryCtaHref, setSecondaryCtaHref] = useState(slide?.secondaryCtaHref || '');
   const [imageUrl, setImageUrl] = useState(slide?.imageUrl || '');
   const [imageAlt, setImageAlt] = useState(slide?.imageAlt || '');
+  const [textColor, setTextColor] = useState(slide?.textColor || '#FFFFFF');
+  const [headlineBold, setHeadlineBold] = useState(slide?.headlineBold ?? true);
+  const [subtextBold, setSubtextBold] = useState(slide?.subtextBold ?? false);
   const [sortOrder, setSortOrder] = useState(slide?.sortOrder ?? 0);
   const [isActive, setIsActive] = useState(slide?.isActive ?? true);
 
@@ -45,13 +51,15 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
         await updateHeroSlide(slide.id, {
           headline, subtext, ctaLabel, ctaHref,
           secondaryCtaLabel, secondaryCtaHref,
-          imageUrl, imageAlt, sortOrder, isActive,
+          imageUrl, imageAlt, textColor, headlineBold, subtextBold,
+          sortOrder, isActive,
         });
       } else {
         await createHeroSlide({
           headline, subtext, ctaLabel, ctaHref,
           secondaryCtaLabel, secondaryCtaHref,
-          imageUrl, imageAlt, sortOrder, isActive,
+          imageUrl, imageAlt, textColor, headlineBold, subtextBold,
+          sortOrder, isActive,
         });
       }
       router.push('/admin/content/slideshow');
@@ -75,9 +83,9 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
             unoptimized
           />
           <div className="absolute inset-0 bg-black/30 flex items-end p-4">
-            <div className="text-white">
-              <p className="text-lg font-semibold">{headline || 'Headline Preview'}</p>
-              {subtext && <p className="text-sm opacity-90">{subtext}</p>}
+            <div>
+              <p className="text-lg" style={{ color: textColor, fontWeight: headlineBold ? 700 : 400 }}>{headline || 'Headline Preview'}</p>
+              {subtext && <p className="text-sm opacity-90" style={{ color: textColor, fontWeight: subtextBold ? 700 : 400 }}>{subtext}</p>}
             </div>
           </div>
         </div>
@@ -134,26 +142,95 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
           />
         </div>
 
+        {/* Text Styling Options */}
         <div className="border-t border-slate-100 pt-4">
-          <p className="text-sm font-medium text-slate-600 mb-3">Primary Button</p>
+          <p className="text-sm font-medium text-slate-600 mb-3">🎨 Text Styling</p>
+          <div className="space-y-4">
+            {/* Color Picker */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Text Color</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  value={textColor}
+                  onChange={(e) => setTextColor(e.target.value)}
+                  disabled={loading}
+                  className="w-10 h-10 rounded-lg border border-slate-300 cursor-pointer p-0.5"
+                />
+                <input
+                  type="text"
+                  value={textColor}
+                  onChange={(e) => setTextColor(e.target.value)}
+                  disabled={loading}
+                  placeholder="#FFFFFF"
+                  className="w-28 rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                />
+                <div className="flex gap-2">
+                  {['#FFFFFF', '#000000', '#1B5E20', '#F5F0E1', '#D4AF37'].map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setTextColor(c)}
+                      className={`w-7 h-7 rounded-full border-2 transition-all ${
+                        textColor === c ? 'border-primary scale-110 ring-2 ring-primary/30' : 'border-slate-300 hover:border-slate-400'
+                      }`}
+                      style={{ backgroundColor: c }}
+                      title={c}
+                    />
+                  ))}
+                </div>
+              </div>
+              <p className="mt-1 text-xs text-slate-400">Choose the color for headline and subtitle text on the slide</p>
+            </div>
+            {/* Bold toggles */}
+            <div className="flex flex-wrap gap-6">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={headlineBold}
+                  onChange={(e) => setHeadlineBold(e.target.checked)}
+                  disabled={loading}
+                  className="rounded border-slate-300 text-primary focus:ring-primary/20"
+                />
+                <span className="text-sm font-medium text-slate-700">Headline Bold</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={subtextBold}
+                  onChange={(e) => setSubtextBold(e.target.checked)}
+                  disabled={loading}
+                  className="rounded border-slate-300 text-primary focus:ring-primary/20"
+                />
+                <span className="text-sm font-medium text-slate-700">Subtitle Bold</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-slate-100 pt-4">
+          <p className="text-sm font-medium text-slate-600 mb-3">Primary Button <span className="text-red-500">*</span></p>
+          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">⚠️ Adding a link is compulsory. Every slide must have at least a primary button link.</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Button Text</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Button Text *</label>
               <input
                 type="text"
                 value={ctaLabel}
                 onChange={(e) => setCtaLabel(e.target.value)}
+                required
                 disabled={loading}
                 placeholder="e.g., Shop Products"
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Button Link</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Button Link *</label>
               <input
                 type="text"
                 value={ctaHref}
                 onChange={(e) => setCtaHref(e.target.value)}
+                required
                 disabled={loading}
                 placeholder="e.g., /shop"
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"

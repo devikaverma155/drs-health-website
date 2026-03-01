@@ -56,7 +56,7 @@ export default function B2BPage() {
           </div>
         </div>
 
-        <div className="bg-soft-bg rounded-2xl p-8 md:p-12 border border-border">
+        <div id="enquiry-form" className="bg-soft-bg rounded-2xl p-8 md:p-12 border border-border scroll-mt-24">
           <h2 className="text-2xl font-semibold text-foreground mb-8">
             Tell us about your retail business
           </h2>

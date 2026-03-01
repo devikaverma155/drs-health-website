@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { runNewLeadAutomations } from '@/lib/automations/runNewLeadAutomations';
 
 const phoneRegex = /^[6-9]\d{9}$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -36,15 +38,30 @@ export async function POST(request: Request) {
       );
     }
 
-    // In production: persist to CRM, notify manufacturing/B2B team
+    const fullMessage = [enquiryType ? `Enquiry Type: ${enquiryType}` : '', message || ''].filter(Boolean).join('\n');
+
+    const lead = await prisma.lead.create({
+      data: {
+        name: name.trim(),
+        email: email.trim(),
+        phone: digits,
+        companyName: typeof company === 'string' ? company.trim() || null : null,
+        message: fullMessage || null,
+        source: 'contract-manufacturing',
+      },
+    });
+
+    runNewLeadAutomations(lead).catch((e) => console.error('[api/manufacturer] automation', e));
+
     return NextResponse.json({
       success: true,
       message: 'Thank you. We will get back to you shortly.',
     });
-  } catch {
+  } catch (e) {
+    console.error('[api/manufacturer]', e);
     return NextResponse.json(
-      { error: 'Invalid request body.' },
-      { status: 400 }
+      { error: 'Something went wrong. Please try again.' },
+      { status: 500 }
     );
   }
 }

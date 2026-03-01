@@ -13,6 +13,9 @@ export interface HeroSlideConfig {
   secondaryCtaHref?: string;
   image?: string;
   imageAlt?: string;
+  textColor?: string;
+  headlineBold?: boolean;
+  subtextBold?: boolean;
 }
 
 export interface ShopBannerSlideConfig {

@@ -3,6 +3,10 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
+const WP_ADMIN_URL = process.env.NEXT_PUBLIC_SITE_URL
+  ? `${process.env.NEXT_PUBLIC_SITE_URL}/wp-admin`
+  : 'https://drshealth.in/wp-admin';
+
 async function getDashboardData() {
   const now = new Date();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -57,6 +61,51 @@ export default async function AdminDashboardPage() {
         <div className="rounded-xl bg-white border border-slate-200 p-5">
           <p className="text-sm text-slate-500">Conversion rate</p>
           <p className="text-2xl font-semibold text-slate-900 mt-1">{data.conversionRate}%</p>
+        </div>
+      </div>
+
+      {/* WooCommerce quick-access card */}
+      <div className="rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 p-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-lg">🛍️</span>
+              <h2 className="font-semibold text-slate-900">Orders & Products</h2>
+            </div>
+            <p className="text-sm text-slate-600">
+              Orders, product catalog, inventory, and coupons are managed through WordPress / WooCommerce.
+              Click below to open the WooCommerce dashboard.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 shrink-0">
+            <a
+              href={`${WP_ADMIN_URL}/edit.php?post_type=shop_order`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
+            >
+              <span>🛒</span> View Orders
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+            <a
+              href={`${WP_ADMIN_URL}/edit.php?post_type=product`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white text-blue-700 text-sm font-medium border border-blue-200 hover:bg-blue-50 transition-colors shadow-sm"
+            >
+              <span>📦</span> Manage Products
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+            <a
+              href={WP_ADMIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white text-slate-700 text-sm font-medium border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm"
+            >
+              <span>🌐</span> WP Dashboard
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+          </div>
         </div>
       </div>
 

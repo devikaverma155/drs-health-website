@@ -15,7 +15,7 @@ export function ConsultationFormSection() {
     const formData = new FormData(form);
 
     try {
-      const res = await fetch('/api/consultation', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -38,7 +38,7 @@ export function ConsultationFormSection() {
       id="consultation"
       className="section-padding bg-soft-bg border-y border-border scroll-mt-20 panel-accent-mint"
       style={{
-        backgroundImage: "url('https://drshealth.in/wp-content/uploads/2026/02/image-1771828238429-e1771838894777.png')",
+        backgroundImage: "url('https://drshealth.in/wp-content/uploads/2026/02/image-1771828238429-e1772350773356.png')",
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

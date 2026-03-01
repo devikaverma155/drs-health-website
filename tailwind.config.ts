@@ -18,6 +18,7 @@ const config: Config = {
         'input-border': 'var(--input-border)',
         primary: 'var(--primary)',
         'primary-dark': 'var(--primary-dark)',
+        'gold-soft': 'var(--gold-soft)',
         accent: {
           lime: 'var(--accent-lime)',
           green: 'var(--accent-green)',

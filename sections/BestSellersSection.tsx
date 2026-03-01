@@ -16,7 +16,7 @@ export async function BestSellersSection() {
       <section
         className="section-padding overflow-hidden relative"
         style={{
-      background: 'rgba(163, 40, 26, 0.1)'
+      background: '#FFF5EB',
     }}
       >
         {/* Warm decorative glow */}

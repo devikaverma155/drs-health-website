@@ -56,7 +56,7 @@ const services: Service[] = [
     title: "Ayurvedic Consultation",
     description: "Expert-guided personalized Ayurvedic wellness plans",
     image:
-      "https://images.unsplash.com/photo-1611003229186-80e40cd54966?w=600&q=80",
+      "https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg",
     href: "/consultation",
   },
   {
