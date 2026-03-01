@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { uploadFile, getPublicUrl } from '@/lib/supabase';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File;
     const type = formData.get('type') as string; // 'employee' or 'patient'
     const entityId = formData.get('entityId') as string;
+    const documentName = formData.get('documentName') as string;
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -29,34 +30,42 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File size exceeds 10MB limit' }, { status: 400 });
     }
 
-    // Generate unique file path
-    const timestamp = Date.now();
-    const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const filePath = `${type}/${entityId}/${timestamp}_${sanitizedFileName}`;
+    // Use custom document name if provided, otherwise use original filename
+    const displayName = documentName?.trim()
+      ? `${documentName.trim()} (${file.name})`
+      : file.name;
 
-    // Upload to Supabase Storage
-    const bucket = 'documents';
-    const { data, error } = await uploadFile(bucket, filePath, file);
+    // Read file as buffer and store directly in PostgreSQL
+    const buffer = Buffer.from(await file.arrayBuffer());
 
-    if (error) {
-      console.error('Upload error:', error);
-      return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
+    if (type === 'employee') {
+      const document = await prisma.employeeDocument.create({
+        data: {
+          employeeId: entityId,
+          fileName: displayName,
+          fileSize: file.size,
+          fileData: buffer,
+          mimeType: file.type || 'application/octet-stream',
+        },
+      });
+
+      // Set the fileUrl to our DB-serving endpoint
+      await prisma.employeeDocument.update({
+        where: { id: document.id },
+        data: { fileUrl: `/api/files/${document.id}` },
+      });
+
+      return NextResponse.json({
+        success: true,
+        id: document.id,
+        fileUrl: `/api/files/${document.id}`,
+        fileName: displayName,
+        fileSize: file.size,
+        uploadedAt: document.uploadedAt?.toISOString() ?? new Date().toISOString(),
+      });
     }
 
-    if (!data) {
-      return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
-    }
-
-    // Get public URL
-    const publicUrl = getPublicUrl(bucket, filePath);
-
-    return NextResponse.json({
-      success: true,
-      fileUrl: publicUrl,
-      fileName: file.name,
-      fileSize: file.size,
-      filePath: data.path,
-    });
+    return NextResponse.json({ error: 'Unsupported type' }, { status: 400 });
   } catch (error) {
     console.error('Upload route error:', error);
     return NextResponse.json(

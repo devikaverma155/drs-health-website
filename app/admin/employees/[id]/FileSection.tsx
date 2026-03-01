@@ -3,43 +3,48 @@
 import { useState } from 'react';
 import { FileUpload } from '@/components/ui/FileUpload';
 import { FileList } from '@/components/ui/FileList';
-import { createEmployeeDocument, deleteEmployeeDocument } from '../actions';
-import type { EmployeeDocument } from '@prisma/client';
+import { deleteEmployeeDocument } from '../actions';
+
+interface DocumentMeta {
+  id: string;
+  employeeId: string | null;
+  fileName: string | null;
+  fileUrl: string | null;
+  fileSize: number | null;
+  uploadedAt: Date | null;
+}
 
 interface FileSectionProps {
   employeeId: string;
-  documents: EmployeeDocument[];
+  documents: DocumentMeta[];
 }
 
 export function FileSection({ employeeId, documents: initialDocuments }: FileSectionProps) {
   const [documents, setDocuments] = useState(initialDocuments);
 
-  async function handleUploadSuccess(file: {
+  function handleUploadSuccess(file: {
+    id: string;
     fileUrl: string;
     fileName: string;
     fileSize: number;
-    filePath: string;
+    uploadedAt: string;
   }) {
-    try {
-      const newDoc = await createEmployeeDocument({
+    // Upload API already saved to DB — just update local state
+    setDocuments([
+      {
+        id: file.id,
         employeeId,
         fileName: file.fileName,
         fileUrl: file.fileUrl,
         fileSize: file.fileSize,
-        filePath: file.filePath,
-      });
-      setDocuments([...documents, newDoc]);
-    } catch (error) {
-      console.error('Failed to save document:', error);
-      alert('Failed to save document record');
-    }
+        uploadedAt: new Date(file.uploadedAt),
+      },
+      ...documents,
+    ]);
   }
 
   async function handleDelete(fileId: string) {
-    const doc = documents.find((d) => d.id === fileId);
-    if (!doc) return;
-
-    await deleteEmployeeDocument(fileId, doc.fileUrl || '');
+    await deleteEmployeeDocument(fileId);
     setDocuments(documents.filter((d) => d.id !== fileId));
   }
 

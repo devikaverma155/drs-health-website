@@ -16,12 +16,23 @@ export default async function EmployeeDetailPage({
   const { id } = await params;
   const employee = await prisma.employee.findUnique({
     where: { id },
-    include: {
-      documents: { orderBy: { uploadedAt: 'desc' } },
-    },
   });
 
   if (!employee) notFound();
+
+  // Query documents separately, excluding fileData (binary) for performance
+  const documents = await prisma.employeeDocument.findMany({
+    where: { employeeId: id },
+    orderBy: { uploadedAt: 'desc' },
+    select: {
+      id: true,
+      employeeId: true,
+      fileName: true,
+      fileUrl: true,
+      fileSize: true,
+      uploadedAt: true,
+    },
+  });
 
   return (
     <div className="space-y-6">
@@ -41,7 +52,7 @@ export default async function EmployeeDetailPage({
 
         <div>
           <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6">
-            <FileSection employeeId={employee.id} documents={employee.documents} />
+            <FileSection employeeId={employee.id} documents={documents} />
             <div className="mt-6 pt-6 border-t border-slate-200">
               <DeleteButton
                 action={deleteEmployee.bind(null, employee.id)}

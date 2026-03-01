@@ -53,6 +53,8 @@ model EmployeeDocument {
   fileName      String?   @map("file_name")
   fileUrl      String?   @map("file_url")
   fileSize     Int?      @map("file_size")
+  fileData     Bytes?    @map("file_data")
+  mimeType     String?   @map("mime_type")
   uploadedAt   DateTime? @default(now()) @map("uploaded_at") @db.Timestamp(6)
 
   @@index([employeeId])
