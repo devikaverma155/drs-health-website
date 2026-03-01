@@ -5,85 +5,51 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
-export async function createRawMaterialBuyer(data: {
-  companyName: string;
+// Vendor functions
+export async function createVendor(data: {
+  name: string;
   contactPerson?: string;
   phone?: string;
   email?: string;
-  materialRequired?: string;
-  quantity?: string;
-  location?: string;
+  address?: string;
   notes?: string;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
   
-  if (!data.companyName?.trim()) throw new Error('Company name is required.');
+  if (!data.name?.trim()) throw new Error('Vendor name is required.');
 
-  const buyer = await prisma.rawMaterialBuyer.create({
+  const vendor = await prisma.vendor.create({
     data: {
-      companyName: data.companyName.trim(),
+      name: data.name.trim(),
       contactPerson: data.contactPerson?.trim() || null,
       phone: data.phone?.trim() || null,
       email: data.email?.trim() || null,
-      materialRequired: data.materialRequired?.trim() || null,
-      quantity: data.quantity?.trim() || null,
-      location: data.location?.trim() || null,
+      address: data.address?.trim() || null,
       notes: data.notes?.trim() || null,
     },
   });
 
   revalidatePath('/admin/raw-materials');
-  return buyer.id;
+  return vendor;
 }
 
-export async function updateRawMaterialBuyer(id: string, data: {
-  companyName?: string;
-  contactPerson?: string;
-  phone?: string;
-  email?: string;
-  materialRequired?: string;
-  quantity?: string;
-  location?: string;
-  notes?: string;
-}) {
+export async function getAllVendors() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
 
-  await prisma.rawMaterialBuyer.update({
-    where: { id },
-    data: {
-      companyName: data.companyName?.trim(),
-      contactPerson: data.contactPerson?.trim() || null,
-      phone: data.phone?.trim() || null,
-      email: data.email?.trim() || null,
-      materialRequired: data.materialRequired?.trim() || null,
-      quantity: data.quantity?.trim() || null,
-      location: data.location?.trim() || null,
-      notes: data.notes?.trim() || null,
-    },
+  return await prisma.vendor.findMany({
+    orderBy: { name: 'asc' },
   });
-
-  revalidatePath('/admin/raw-materials');
-  revalidatePath(`/admin/raw-materials/${id}`);
 }
 
-export async function deleteRawMaterialBuyer(id: string) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error('Unauthorized');
-
-  await prisma.rawMaterialBuyer.delete({ where: { id } });
-  revalidatePath('/admin/raw-materials');
-}
-
+// Raw Material Order functions
 export async function createRawMaterialOrder(data: {
-  buyerId: string;
+  vendorId: string;
   materialType?: string;
   quantity?: string;
   unit?: string;
   price?: string;
-  supplierName?: string;
-  supplierContact?: string;
   deliveryDate?: string;
   status?: string;
   notes?: string;
@@ -91,32 +57,31 @@ export async function createRawMaterialOrder(data: {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
 
+  if (!data.vendorId) throw new Error('Vendor is required.');
+
   const order = await prisma.rawMaterialOrder.create({
     data: {
-      buyerId: data.buyerId,
+      vendorId: data.vendorId,
       materialType: data.materialType?.trim() || null,
       quantity: data.quantity?.trim() || null,
       unit: data.unit?.trim() || null,
       price: data.price ? parseFloat(data.price) : null,
-      supplierName: data.supplierName?.trim() || null,
-      supplierContact: data.supplierContact?.trim() || null,
       deliveryDate: data.deliveryDate ? new Date(data.deliveryDate) : null,
       status: data.status || 'pending',
       notes: data.notes?.trim() || null,
     },
   });
 
-  revalidatePath(`/admin/raw-materials/${data.buyerId}`);
+  revalidatePath('/admin/raw-materials');
   return order.id;
 }
 
 export async function updateRawMaterialOrder(id: string, data: {
+  vendorId?: string;
   materialType?: string;
   quantity?: string;
   unit?: string;
   price?: string;
-  supplierName?: string;
-  supplierContact?: string;
   deliveryDate?: string;
   status?: string;
   notes?: string;
@@ -127,17 +92,24 @@ export async function updateRawMaterialOrder(id: string, data: {
   await prisma.rawMaterialOrder.update({
     where: { id },
     data: {
+      vendorId: data.vendorId,
       materialType: data.materialType?.trim() || null,
       quantity: data.quantity?.trim() || null,
       unit: data.unit?.trim() || null,
       price: data.price ? parseFloat(data.price) : null,
-      supplierName: data.supplierName?.trim() || null,
-      supplierContact: data.supplierContact?.trim() || null,
       deliveryDate: data.deliveryDate ? new Date(data.deliveryDate) : null,
       status: data.status,
       notes: data.notes?.trim() || null,
     },
   });
 
+  revalidatePath('/admin/raw-materials');
+}
+
+export async function deleteRawMaterialOrder(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error('Unauthorized');
+
+  await prisma.rawMaterialOrder.delete({ where: { id } });
   revalidatePath('/admin/raw-materials');
 }

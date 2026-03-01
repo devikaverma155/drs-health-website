@@ -54,38 +54,38 @@ model EmployeeDocument {
   @@map("employee_documents")
 }
 
-model RawMaterialBuyer {
-  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  companyName      String?   @map("company_name")
-  contactPerson    String?   @map("contact_person")
-  phone            String?
-  email            String?
-  materialRequired String?   @map("material_required")
-  quantity         String?
-  location         String?
-  notes            String?
-  createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+model Vendor {
+  id            String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name          String
+  contactPerson String?           @map("contact_person")
+  phone         String?
+  email         String?
+  address       String?
+  notes         String?
+  createdAt     DateTime?         @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime?         @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  
+  orders        RawMaterialOrder[]
 
-  @@map("raw_material_buyers")
+  @@map("vendors")
 }
 
 model RawMaterialOrder {
   id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  buyerId         String?   @map("buyer_id") @db.Uuid
+  vendorId        String?   @map("vendor_id") @db.Uuid
+  vendor          Vendor?   @relation(fields: [vendorId], references: [id])
   orderDate       DateTime? @default(now()) @map("order_date") @db.Timestamp(6)
   materialType    String?   @map("material_type")
   quantity        String?
   unit            String?
   price           Decimal?  @db.Decimal(10, 2)
-  supplierName    String?   @map("supplier_name")
-  supplierContact String?   @map("supplier_contact")
   deliveryDate    DateTime? @map("delivery_date") @db.Date
   status          String?   @default("pending")
   notes           String?
   createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt       DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  @@index([buyerId], map: "idx_raw_material_orders_buyer_id")
+  @@index([vendorId], map: "idx_raw_material_orders_vendor_id")
   @@index([orderDate], map: "idx_raw_material_orders_order_date")
   @@index([status], map: "idx_raw_material_orders_status")
   @@map("raw_material_orders")

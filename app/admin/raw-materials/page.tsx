@@ -1,83 +1,88 @@
 import { prisma } from '@/lib/prisma';
-import Link from 'next/link';
+import { RawMaterialOrderForm } from './RawMaterialOrderForm';
 
 export const dynamic = 'force-dynamic';
 
 export default async function RawMaterialsPage() {
-  const buyers = await prisma.rawMaterialBuyer.findMany({
-    orderBy: { createdAt: 'desc' },
+  const orders = await prisma.rawMaterialOrder.findMany({
+    include: {
+      vendor: true,
+    },
+    orderBy: { orderDate: 'desc' },
   });
-
-  // Get order counts for each buyer
-  const buyerIds = buyers.map(b => b.id).filter((id): id is string => id !== null);
-  const orderCounts = buyerIds.length > 0
-    ? await prisma.rawMaterialOrder.groupBy({
-        by: ['buyerId'],
-        _count: { id: true },
-        where: {
-          buyerId: { in: buyerIds },
-        },
-      })
-    : [];
-
-  const orderCountByBuyer = new Map<string, number>();
-  for (const row of orderCounts) {
-    if (row.buyerId) {
-      orderCountByBuyer.set(row.buyerId, row._count.id);
-    }
-  }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-900">Raw Material Buyers</h1>
-        <Link
-          href="/admin/raw-materials/new"
-          className="rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark"
-        >
-          Add Buyer
-        </Link>
+        <h1 className="text-2xl font-semibold text-slate-900">Raw Material Orders</h1>
+      </div>
+
+      <div className="rounded-xl bg-white border border-slate-200 p-6">
+        <RawMaterialOrderForm />
       </div>
 
       <div className="rounded-xl bg-white border border-slate-200 overflow-hidden">
-        {buyers.length === 0 ? (
+        {orders.length === 0 ? (
           <div className="p-8 text-center text-slate-500 text-sm">
-            No buyers yet.
+            No orders yet. Add your first raw material order above.
           </div>
         ) : (
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-slate-500 border-b border-slate-200 bg-slate-50/50">
-                <th className="px-4 py-3 font-medium">Company</th>
-                <th className="px-4 py-3 font-medium">Contact Person</th>
-                <th className="px-4 py-3 font-medium">Phone</th>
-                <th className="px-4 py-3 font-medium">Email</th>
-                <th className="px-4 py-3 font-medium">Material</th>
-                <th className="px-4 py-3 font-medium">Orders</th>
-                <th className="px-4 py-3 font-medium">Location</th>
-                <th className="px-4 py-3 font-medium">Created</th>
-                <th className="px-4 py-3 font-medium">Actions</th>
+                <th className="px-4 py-3 font-medium">Order Date</th>
+                <th className="px-4 py-3 font-medium">Vendor</th>
+                <th className="px-4 py-3 font-medium">Material Type</th>
+                <th className="px-4 py-3 font-medium">Quantity</th>
+                <th className="px-4 py-3 font-medium">Price</th>
+                <th className="px-4 py-3 font-medium">Delivery Date</th>
+                <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium">Notes</th>
               </tr>
             </thead>
             <tbody>
-              {buyers.map((buyer) => (
-                <tr key={buyer.id} className="border-b border-slate-100 hover:bg-slate-50/50">
-                  <td className="px-4 py-3">
-                    <Link href={`/admin/raw-materials/${buyer.id}`} className="font-medium text-primary hover:underline">
-                      {buyer.companyName || '-'}
-                    </Link>
+              {orders.map((order) => (
+                <tr key={order.id} className="border-b border-slate-100 hover:bg-slate-50/50">
+                  <td className="px-4 py-3 text-slate-600">
+                    {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : '-'}
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{buyer.contactPerson || '-'}</td>
-                  <td className="px-4 py-3 text-slate-600">{buyer.phone || '-'}</td>
-                  <td className="px-4 py-3 text-slate-600">{buyer.email || '-'}</td>
-                  <td className="px-4 py-3 text-slate-600">{buyer.materialRequired || '-'}</td>
-                  <td className="px-4 py-3 text-slate-600">{orderCountByBuyer.get(buyer.id) ?? 0}</td>
-                  <td className="px-4 py-3 text-slate-600">{buyer.location || '-'}</td>
-                  <td className="px-4 py-3 text-slate-500">{buyer.createdAt ? new Date(buyer.createdAt).toLocaleDateString() : '-'}</td>
                   <td className="px-4 py-3">
-                    <Link href={`/admin/raw-materials/${buyer.id}`} className="text-sm text-primary hover:underline">
-                      Edit
-                    </Link>
+                    {order.vendor ? (
+                      <div>
+                        <div className="font-medium text-slate-900">{order.vendor.name}</div>
+                        {order.vendor.contactPerson && (
+                          <div className="text-xs text-slate-500">{order.vendor.contactPerson}</div>
+                        )}
+                        {order.vendor.phone && (
+                          <div className="text-xs text-slate-500">{order.vendor.phone}</div>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-slate-400">-</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">{order.materialType || '-'}</td>
+                  <td className="px-4 py-3 text-slate-600">
+                    {order.quantity && order.unit ? `${order.quantity} ${order.unit}` : order.quantity || '-'}
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">
+                    {order.price ? `₹${parseFloat(order.price.toString()).toLocaleString('en-IN')}` : '-'}
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">
+                    {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : '-'}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      order.status === 'delivered' ? 'bg-green-100 text-green-700' :
+                      order.status === 'ordered' ? 'bg-blue-100 text-blue-700' :
+                      order.status === 'cancelled' ? 'bg-red-100 text-red-700' :
+                      'bg-slate-100 text-slate-700'
+                    }`}>
+                      {order.status || 'pending'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-slate-600 max-w-xs truncate" title={order.notes || ''}>
+                    {order.notes || '-'}
                   </td>
                 </tr>
               ))}
