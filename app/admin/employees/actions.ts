@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { deleteFile } from '@/lib/supabase';
 
 export async function createEmployee(data: {
   name: string;
@@ -74,4 +75,54 @@ export async function deleteEmployee(id: string) {
 
   await prisma.employee.delete({ where: { id } });
   revalidatePath('/admin/employees');
+}
+
+export async function createEmployeeDocument(data: {
+  employeeId: string;
+  fileName: string;
+  fileUrl: string;
+  fileSize?: number;
+  filePath?: string;
+}) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error('Unauthorized');
+
+  const document = await prisma.employeeDocument.create({
+    data: {
+      employeeId: data.employeeId,
+      fileName: data.fileName,
+      fileUrl: data.fileUrl,
+      fileSize: data.fileSize || null,
+    },
+  });
+
+  revalidatePath(`/admin/employees/${data.employeeId}`);
+  return document;
+}
+
+export async function deleteEmployeeDocument(id: string, fileUrl: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error('Unauthorized');
+
+  // Delete from database
+  const document = await prisma.employeeDocument.findUnique({ where: { id } });
+  if (!document) throw new Error('Document not found');
+
+  await prisma.employeeDocument.delete({ where: { id } });
+
+  // Delete from Supabase Storage
+  try {
+    const bucket = 'documents';
+    // Extract path from URL if it's a full URL
+    const path = fileUrl.includes('/storage/v1/object/public/')
+      ? fileUrl.split('/storage/v1/object/public/documents/')[1]
+      : fileUrl.replace(`/${bucket}/`, '');
+    
+    await deleteFile(bucket, path);
+  } catch (error) {
+    console.error('Error deleting file from storage:', error);
+    // Don't throw - file might already be deleted
+  }
+
+  revalidatePath(`/admin/employees/${document.employeeId}`);
 }

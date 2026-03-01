@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { EmployeeForm } from '../EmployeeForm';
 import { deleteEmployee } from '../actions';
 import { DeleteButton } from '@/components/ui/DeleteButton';
+import { FileSection } from './FileSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,20 +41,7 @@ export default async function EmployeeDetailPage({
 
         <div>
           <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6">
-            <h2 className="font-medium text-slate-900 mb-4">Documents</h2>
-            {employee.documents.length === 0 ? (
-              <p className="text-sm text-slate-500">No documents yet.</p>
-            ) : (
-              <ul className="space-y-2">
-                {employee.documents.map((doc) => (
-                  <li key={doc.id} className="text-sm">
-                    <a href={doc.fileUrl || '#'} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                      {doc.documentType || 'Document'}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <FileSection employeeId={employee.id} documents={employee.documents} />
             <div className="mt-6 pt-6 border-t border-slate-200">
               <DeleteButton
                 action={deleteEmployee.bind(null, employee.id)}

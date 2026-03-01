@@ -30,16 +30,18 @@ model User {
 }
 
 model Employee {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name        String?
   email       String?
   phone       String?
   designation String?
   department  String?
-  joiningDate DateTime? @map("joining_date") @db.Date
-  salary      Decimal?  @db.Decimal
-  status      String?   @default("active")
-  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  joiningDate DateTime?         @map("joining_date") @db.Date
+  salary      Decimal?           @db.Decimal
+  status      String?            @default("active")
+  createdAt   DateTime?          @default(now()) @map("created_at") @db.Timestamp(6)
+  
+  documents   EmployeeDocument[]
 
   @@map("employees")
 }
@@ -47,10 +49,13 @@ model Employee {
 model EmployeeDocument {
   id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   employeeId   String?   @map("employee_id") @db.Uuid
-  documentType String?   @map("document_type")
+  employee     Employee? @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  fileName      String?   @map("file_name")
   fileUrl      String?   @map("file_url")
+  fileSize     Int?      @map("file_size")
   uploadedAt   DateTime? @default(now()) @map("uploaded_at") @db.Timestamp(6)
 
+  @@index([employeeId])
   @@map("employee_documents")
 }
 
@@ -136,18 +141,33 @@ model LeadActivity {
 }
 
 model ClinicPatient {
-  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id             String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           String?
   phone          String?
   email          String?
   age            Int?
   gender         String?
   condition      String?
-  assignedDoctor String?   @map("assigned_doctor")
+  assignedDoctor String?           @map("assigned_doctor")
   notes          String?
-  createdAt      DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt      DateTime?         @default(now()) @map("created_at") @db.Timestamp(6)
+  
+  documents      PatientDocument[]
 
   @@map("clinic_patients")
+}
+
+model PatientDocument {
+  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  patientId    String?        @map("patient_id") @db.Uuid
+  patient      ClinicPatient?  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  fileName      String?        @map("file_name")
+  fileUrl      String?        @map("file_url")
+  fileSize     Int?           @map("file_size")
+  uploadedAt   DateTime?      @default(now()) @map("uploaded_at") @db.Timestamp(6)
+
+  @@index([patientId])
+  @@map("patient_documents")
 }
 
 model WhatsAppMessage {
