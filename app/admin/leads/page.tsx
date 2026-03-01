@@ -7,11 +7,10 @@ import { LeadFilters } from './LeadFilters';
 export const dynamic = 'force-dynamic';
 
 const SOURCES: string[] = [
-  'contact_form',
-  'consultation',
+  'contact',
   'b2b',
-  'private_labelling',
-  'manufacturer',
+  'private-labelling',
+  'contract-manufacturing',
   'pcd',
   'whatsapp',
   'ads',

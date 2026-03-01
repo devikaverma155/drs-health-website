@@ -4,11 +4,10 @@ import { AddLeadForm } from '../AddLeadForm';
 export const dynamic = 'force-dynamic';
 
 const SOURCES = [
-  'contact_form',
-  'consultation',
+  'contact',
   'b2b',
-  'private_labelling',
-  'manufacturer',
+  'private-labelling',
+  'contract-manufacturing',
   'pcd',
   'whatsapp',
   'ads',

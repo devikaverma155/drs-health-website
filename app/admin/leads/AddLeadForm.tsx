@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createLead } from './actions';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
-type Source = 'contact_form' | 'consultation' | 'b2b' | 'private_labelling' | 'manufacturer' | 'pcd' | 'whatsapp' | 'ads';
+type Source = 'contact' | 'b2b' | 'private-labelling' | 'contract-manufacturing' | 'pcd' | 'whatsapp' | 'ads';
 
 export function AddLeadForm({
   sources,
@@ -81,7 +81,7 @@ export function AddLeadForm({
           className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
         >
           {sources.map((s) => (
-            <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
+            <option key={s} value={s}>{s.replace(/-/g, ' ')}</option>
           ))}
         </select>
       </div>

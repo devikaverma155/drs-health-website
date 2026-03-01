@@ -47,7 +47,7 @@ export function LeadFilters({
       >
         <option value="">All sources</option>
         {sources.map((s) => (
-          <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
+          <option key={s} value={s}>{s.replace(/-/g, ' ')}</option>
         ))}
       </select>
       <select
