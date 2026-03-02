@@ -1,6 +1,12 @@
 'use client';
 
-import { ImageAutoSlider } from '@/components/ui/image-auto-slider';
+import { useState, useEffect } from 'react';
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
 
 const certificationImages = [
   {
@@ -51,6 +57,23 @@ const certifications = [
 ];
 
 export function CertificationsSection() {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    const timeout = setTimeout(() => {
+      if (api.selectedScrollSnap() + 1 === api.scrollSnapList().length) {
+        setCurrent(0);
+        api.scrollTo(0);
+      } else {
+        api.scrollNext();
+        setCurrent(current + 1);
+      }
+    }, 1500);
+    return () => clearTimeout(timeout);
+  }, [api, current]);
+
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-white">
       {/* Subtle organic background */}
@@ -73,13 +96,35 @@ export function CertificationsSection() {
           </p>
         </div>
 
-        {/* Auto-scrolling image slider */}
+        {/* Auto-scrolling certification carousel */}
         <div className="mb-14">
-          <ImageAutoSlider
-            images={certificationImages}
-            speed={25}
-            imageSize="md"
-          />
+          <Carousel
+            setApi={setApi}
+            opts={{ loop: true, align: 'start' }}
+            className="w-full"
+          >
+            <CarouselContent>
+              {certificationImages.map((cert, index) => (
+                <CarouselItem
+                  key={index}
+                  className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
+                >
+                  <div className="flex flex-col items-center justify-center rounded-xl bg-white border border-border shadow-sm p-4 aspect-square hover:border-primary/30 hover:shadow-md transition-all group">
+                    <div className="w-full h-24 relative mb-3">
+                      <img
+                        src={cert.src}
+                        alt={cert.alt}
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <span className="text-xs font-semibold text-foreground text-center leading-tight">
+                      {cert.alt}
+                    </span>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
 
         {/* Certification badges grid */}

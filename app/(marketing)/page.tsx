@@ -25,11 +25,11 @@ export default function HomePage() {
       <BestSellersSection />
       <BrandStorySection />
       <BestSellingCombosSection />
+      <CertificationsLogoSection />
       {/* <NewLaunchesSection /> */}
       <ServicesCarouselSection />
 
       <ManufacturingQualitySection />
-      <CertificationsLogoSection />
       <TestimonialsSection />
       <ReelsSection />
       <ConsultationFormSection />

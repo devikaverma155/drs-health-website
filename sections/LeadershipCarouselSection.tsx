@@ -14,11 +14,11 @@ interface Leader {
 const leaders: Leader[] = [
   {
     id: 1,
-    name: 'Bimbsar Jain',
-    title: 'Director – DRS Health Solutions Pvt. Ltd.',
+    name: 'स्व. डॉ. राजेन्द्र कुमार जैन (B.I.M.S., H.P.A.)',
+    title: 'पूर्व परामर्शदाता चिकित्सक – धन्यरसशाला',
     description:
-      'At just 22 years of age, Bimbsar Jain represents the dynamic new generation leading the expansion of DRS Health Solutions Pvt. Ltd., the evolution of Dhanya Ras Shala. Carrying forward his father\'s rich Ayurvedic legacy, he is driven by innovation, growth, and a modern vision to take the brand to greater heights while preserving its authentic roots. His leadership reflects youthful energy combined with deep respect for tradition.',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-15-23-12-e1772191735849.jpg',
+      'श्रेष्ठ आयुर्वेदज्ञ, आयुर्वेद विशेषज्ञ आदि विभिन्न उपाधियों से सुशोभित। महाऔषधि रुदंती को शोष (लगभग एड्स के समान) नाशक औषधि एवं रोग प्रतिरोधक क्षमता बढ़ाने वाली औषधि के रूप में स्थापित करना। अपनी विशेषज्ञता से AIIMS (दिल्ली) को अपनी चिकित्सा क्षमता का लोहा मनवाना। हाइड्रोफोबिया (स्वानदंश) जैसी आज लाइलाज मानी जाने वाली व्याधि को स्वस्थ कर आश्चर्य उत्पन्न करना। मूत्र परीक्षण को रोगों के सटीक निदान में अत्यंत उपयोगी सिद्ध कर इस प्राचीन विद्या को पुनः प्रतिष्ठित करना। कैंसर, कुष्ठ, हृदय रोग, खंज (लिथेरिज्म) इत्यादि असाध्य रोगों के अनेक रोगियों को स्वस्थ कर नवजीवन प्रदान करना। ऐसे व्यक्तित्व का धन्यरसशाला से जुड़ना हमारे लिए गौरव की बात है।',
+    image: 'https://drshealth.in/wp-content/uploads/2026/03/Screenshot-2026-03-02-at-3.18.19 PM.png',
   },
   {
     id: 2,
@@ -30,11 +30,11 @@ const leaders: Leader[] = [
   },
   {
     id: 3,
-    name: 'Vd. Dr. Manoj Jain (BAMS)',
-    title: 'Ayurvedacharya',
+    name: 'Bimbsar Jain',
+    title: 'Director – DRS Health Solutions Pvt. Ltd.',
     description:
-      'Dr. Manoj Jain (BAMS) is an experienced Ayurvedic physician with 20+ years of expertise in holistic healing. He focuses on treating the root cause of health concerns through personalized Ayurvedic treatments, combining classical wisdom with modern clinical understanding.',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-00-16.jpg',
+      'At just 22 years of age, Bimbsar Jain represents the dynamic new generation leading the expansion of DRS Health Solutions Pvt. Ltd., the evolution of Dhanya Ras Shala. Carrying forward his father\'s rich Ayurvedic legacy, he is driven by innovation, growth, and a modern vision to take the brand to greater heights while preserving its authentic roots. His leadership reflects youthful energy combined with deep respect for tradition.',
+    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-15-23-12-e1772191735849.jpg',
   },
 ];
 

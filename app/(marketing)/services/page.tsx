@@ -56,6 +56,8 @@ const BUSINESS_SERVICES = [
     cta: 'B2B Enquiry',
     emoji: '🏪',
     accentColor: 'border-l-accent-green',
+    image: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?w=600&q=80',
+    imageAlt: 'Retail store with shelves of health and wellness products',
   },
   {
     id: 'private-labelling',
@@ -66,6 +68,8 @@ const BUSINESS_SERVICES = [
     cta: 'Enquire for Private Labelling',
     emoji: '🎨',
     accentColor: 'border-l-accent-blue',
+    image: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=600&q=80',
+    imageAlt: 'Private label herbal supplement bottles',
   },
   {
     id: 'contract-manufacturing',
@@ -76,6 +80,8 @@ const BUSINESS_SERVICES = [
     cta: 'Enquire for Contract Manufacturing',
     emoji: '🏭',
     accentColor: 'border-l-primary',
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80',
+    imageAlt: 'Manufacturing production line in a factory',
   },
   {
     id: 'pcd',
@@ -86,6 +92,8 @@ const BUSINESS_SERVICES = [
     cta: 'Enquire for PCD',
     emoji: '🤝',
     accentColor: 'border-l-gold-soft',
+    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80',
+    imageAlt: 'Distribution and logistics network',
   },
 ];
 
@@ -230,27 +238,36 @@ export default function ServicesPage() {
             {BUSINESS_SERVICES.map((service) => (
               <div
                 key={service.id}
-                className={`rounded-2xl border border-border border-l-4 ${service.accentColor} bg-white/80 backdrop-blur-sm p-8 shadow-card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1`}
+                className={`rounded-2xl border border-border border-l-4 ${service.accentColor} bg-white/80 backdrop-blur-sm overflow-hidden shadow-card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1`}
               >
-                <div className="flex items-start gap-4">
-                  <span className="text-3xl flex-shrink-0">{service.emoji}</span>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-foreground">
-                      {service.title}
-                    </h3>
-                    <p className="mt-1 text-sm font-medium text-primary">
-                      {service.tagline}
-                    </p>
-                    <p className="mt-3 text-body-muted text-sm leading-relaxed">
-                      {service.description}
-                    </p>
-                    <Link
-                      href={service.href}
-                      className="mt-5 inline-flex items-center justify-center rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-semibold hover:bg-primary-dark transition-colors shadow-sm"
-                    >
-                      {service.cta}
-                    </Link>
-                  </div>
+                {/* Photo */}
+                <div className="relative w-full h-44 overflow-hidden">
+                  <Image
+                    src={service.image}
+                    alt={service.imageAlt}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <span className="absolute bottom-3 left-4 text-2xl drop-shadow-md">{service.emoji}</span>
+                </div>
+                {/* Content */}
+                <div className="p-8">
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {service.title}
+                  </h3>
+                  <p className="mt-1 text-sm font-medium text-primary">
+                    {service.tagline}
+                  </p>
+                  <p className="mt-3 text-body-muted text-sm leading-relaxed">
+                    {service.description}
+                  </p>
+                  <Link
+                    href={service.href}
+                    className="mt-5 inline-flex items-center justify-center rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-semibold hover:bg-primary-dark transition-colors shadow-sm"
+                  >
+                    {service.cta}
+                  </Link>
                 </div>
               </div>
             ))}
