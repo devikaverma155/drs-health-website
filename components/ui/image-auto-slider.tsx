@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 interface ImageAutoSliderProps {
   images: { src: string; alt: string }[];
@@ -53,13 +54,14 @@ export function ImageAutoSlider({
         {duplicated.map((image, index) => (
           <div
             key={index}
-            className={`slider-image-item flex-shrink-0 ${sizeClasses[imageSize]} rounded-xl overflow-hidden shadow-lg`}
+            className={`slider-image-item flex-shrink-0 ${sizeClasses[imageSize]} rounded-xl overflow-hidden shadow-lg relative`}
           >
-            <img
+            <Image
               src={image.src}
               alt={image.alt}
               className="w-full h-full object-cover"
-              loading="lazy"
+              fill
+              sizes="(max-width: 768px) 192px, 256px"
             />
           </div>
         ))}
