@@ -30,7 +30,13 @@ export async function POST(request: Request) {
         source: 'manufacturer',
       },
     });
-    runNewLeadAutomations(lead).catch((e) => console.error('[api/forms/manufacturer] automation', e));
+    runNewLeadAutomations({
+      id: lead.id,
+      name: lead.name!,
+      phone: lead.phone!,
+      email: lead.email!,
+      source: lead.source!,
+    }).catch((e) => console.error('[api/forms/manufacturer] automation', e));
     return NextResponse.json({ success: true });
   } catch (e) {
     console.error('[api/forms/manufacturer]', e);

@@ -59,7 +59,7 @@ export function LeadNotesTimeline({
             <li key={note.id} className="border-l-2 border-slate-200 pl-3 py-1 text-sm">
               <p className="text-slate-700 whitespace-pre-wrap">{note.note || note.action}</p>
               <p className="text-slate-400 text-xs mt-1">
-                {note.createdBy ? `User ${note.createdBy}` : 'System'} · {new Date(note.createdAt).toLocaleString()}
+                {note.createdBy ? `User ${note.createdBy}` : 'System'} · {note.createdAt ? new Date(note.createdAt).toLocaleString() : '-'}
               </p>
             </li>
           ))

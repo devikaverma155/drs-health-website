@@ -17,7 +17,7 @@ export default async function LeadDetailPage({
   const [lead, activities] = await Promise.all([
     prisma.lead.findUnique({ where: { id } }),
     // Separate query: works even when Prisma client doesn't expose Lead.activities relation
-    (prisma as unknown as { leadActivity: { findMany: (args: { where: { leadId: string }; orderBy: { createdAt: 'desc' } }) => Promise<Array<{ id: string; note: string | null; action: string | null; createdBy: string | null; createdAt: Date | null }>> } }).leadActivity.findMany({
+    (prisma as unknown as { leadActivity: { findMany: (args: { where: { leadId: string }; orderBy: { createdAt: 'desc' } }) => Promise<Array<{ id: string; leadId: string; note: string | null; action: string | null; createdBy: string | null; createdAt: Date | null }>> } }).leadActivity.findMany({
       where: { leadId: id },
       orderBy: { createdAt: 'desc' },
     }),

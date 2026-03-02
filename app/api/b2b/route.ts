@@ -49,7 +49,13 @@ export async function POST(request: Request) {
       },
     });
 
-    runNewLeadAutomations(lead).catch((e) => console.error('[api/b2b] automation', e));
+    runNewLeadAutomations({
+      id: lead.id,
+      name: lead.name!,
+      phone: lead.phone!,
+      email: lead.email!,
+      source: lead.source!,
+    }).catch((e) => console.error('[api/b2b] automation', e));
 
     return NextResponse.json({
       success: true,

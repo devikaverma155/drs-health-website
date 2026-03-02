@@ -109,7 +109,7 @@ export function OrdersSection({ email }: OrdersSectionProps) {
             <div className="flex items-start justify-between mb-4 pb-4 border-b border-gray-200">
               <div>
                 <p className="text-sm text-gray-600">Order #{order.orderNumber}</p>
-                <h3 className="text-lg font-semibold text-gray-900">{new Date(order.date).toLocaleDateString()}</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{order.date ? new Date(order.date).toLocaleDateString() : '-'}</h3>
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold text-gray-900">₹{order.total}</p>

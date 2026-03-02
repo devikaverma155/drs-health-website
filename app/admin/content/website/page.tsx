@@ -54,7 +54,7 @@ export default async function WebsiteContentPage() {
                       {content.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-500">{new Date(content.updatedAt).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 text-slate-500">{content.updatedAt ? new Date(content.updatedAt).toLocaleDateString() : '-'}</td>
                   <td className="px-4 py-3">
                     <Link href={`/admin/content/website/${content.id}`} className="text-sm text-primary hover:underline">
                       Edit

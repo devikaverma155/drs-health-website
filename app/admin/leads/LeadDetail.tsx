@@ -16,7 +16,7 @@ export function LeadDetail({ lead }: { lead: Lead }) {
       {lead.priority && (
         <p><span className="text-slate-500">Priority</span> {lead.priority}</p>
       )}
-      <p><span className="text-slate-500">Created</span> {new Date(lead.createdAt).toLocaleString()}</p>
+      <p><span className="text-slate-500">Created</span> {lead.createdAt ? new Date(lead.createdAt).toLocaleString() : '-'}</p>
       {lead.message && (
         <div className="pt-2">
           <p className="text-slate-500 mb-1">Message</p>

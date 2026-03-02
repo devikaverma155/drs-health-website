@@ -22,7 +22,7 @@ export function LeadStatusDropdown({
     try {
       await updateLeadStatus(leadId, newStatus);
     } catch {
-      setStatus(currentStatus);
+      setStatus(currentStatus ?? 'new');
     } finally {
       setLoading(false);
     }

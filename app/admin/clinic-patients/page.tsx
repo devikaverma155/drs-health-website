@@ -52,7 +52,7 @@ export default async function ClinicPatientsPage() {
                   <td className="px-4 py-3 text-slate-600">{patient.age || '-'}</td>
                   <td className="px-4 py-3 text-slate-600">{patient.condition || '-'}</td>
                   <td className="px-4 py-3 text-slate-600">{patient.assignedDoctor || '-'}</td>
-                  <td className="px-4 py-3 text-slate-500">{new Date(patient.createdAt).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 text-slate-500">{patient.createdAt ? new Date(patient.createdAt).toLocaleDateString() : '-'}</td>
                   <td className="px-4 py-3">
                     <Link href={`/admin/clinic-patients/${patient.id}`} className="text-sm text-primary hover:underline">
                       Edit
