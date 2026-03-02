@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface Leader {
   id: number;
@@ -13,12 +14,20 @@ interface Leader {
 
 const leaders: Leader[] = [
   {
+    id: 0,
+    name: 'Pandit Barelal Ji Jain',
+    title: 'Founder – Syadwad Jain Aushadhalay (170-Year Ayurvedic Legacy)',
+    description:
+      'A visionary healer and custodian of Ayurvedic wisdom, Pandit Barelal Ji Jain established the Syadwad Jain Aushadhalay in the historic village of Patha, Tikamgarh, laying the foundation of a 170-year legacy. Honored as "Raj Vaidya" by the King of Tikamgarh, he earned international recognition and was invited to lecture at Washington University. Beyond medicine, he served as the first administrator of Aharji, a 1000-year-old Jain temple town, transforming it into a hub of education and community services. His dedication to holistic healing and cultural preservation continues to inspire.',
+    image: 'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-02-at-15.45.56.jpeg',
+  },
+  {
     id: 1,
     name: 'स्व. डॉ. राजेन्द्र कुमार जैन (B.I.M.S., H.P.A.)',
     title: 'पूर्व परामर्शदाता चिकित्सक – धन्यरसशाला',
     description:
       'श्रेष्ठ आयुर्वेदज्ञ, आयुर्वेद विशेषज्ञ आदि विभिन्न उपाधियों से सुशोभित। महाऔषधि रुदंती को शोष (लगभग एड्स के समान) नाशक औषधि एवं रोग प्रतिरोधक क्षमता बढ़ाने वाली औषधि के रूप में स्थापित करना। अपनी विशेषज्ञता से AIIMS (दिल्ली) को अपनी चिकित्सा क्षमता का लोहा मनवाना। हाइड्रोफोबिया (स्वानदंश) जैसी आज लाइलाज मानी जाने वाली व्याधि को स्वस्थ कर आश्चर्य उत्पन्न करना। मूत्र परीक्षण को रोगों के सटीक निदान में अत्यंत उपयोगी सिद्ध कर इस प्राचीन विद्या को पुनः प्रतिष्ठित करना। कैंसर, कुष्ठ, हृदय रोग, खंज (लिथेरिज्म) इत्यादि असाध्य रोगों के अनेक रोगियों को स्वस्थ कर नवजीवन प्रदान करना। ऐसे व्यक्तित्व का धन्यरसशाला से जुड़ना हमारे लिए गौरव की बात है।',
-    image: 'https://drshealth.in/wp-content/uploads/2026/03/Screenshot-2026-03-02-at-3.18.19 PM.png',
+    image: 'https://drshealth.in/wp-content/uploads/2026/03/Screenshot-2026-03-02-at-3.18.19 PM.png',
   },
   {
     id: 2,
@@ -89,6 +98,15 @@ export function LeadershipCarouselSection() {
               <p className="text-body-muted text-base lg:text-lg leading-relaxed mb-8">
                 {currentLeader.description}
               </p>
+
+              {currentLeader.id === 0 && (
+                <Link href="/legacy/pandit-barelal-ji" className="inline-flex items-center text-primary font-semibold hover:text-primary/80 transition-colors mb-8 gap-2">
+                  Read Full Story
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              )}
 
               {/* Carousel Controls */}
               <div className="flex items-center gap-4">

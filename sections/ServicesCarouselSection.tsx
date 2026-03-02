@@ -24,7 +24,7 @@ const services: Service[] = [
     title: "PCD Pharma",
     description: "Professional Cooperation Distributor rights across India",
     image:
-      "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=600&q=80",
+      "https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-02-16-08-38.jpg",
     href: "/for-business/pcd",
   },
   {
@@ -40,7 +40,7 @@ const services: Service[] = [
     title: "Contract Manufacturing",
     description: "Custom formulation and manufacturing services",
     image:
-      "https://images.unsplash.com/photo-1563213126-a4273aed2016?w=600&q=80",
+      "https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-02-15-59-08.jpg",
     href: "/for-business/contract-manufacturing",
   },
   {

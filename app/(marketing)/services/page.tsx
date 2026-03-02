@@ -80,7 +80,7 @@ const BUSINESS_SERVICES = [
     cta: 'Enquire for Contract Manufacturing',
     emoji: '🏭',
     accentColor: 'border-l-primary',
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80',
+    image: 'https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-02-15-59-08.jpg',
     imageAlt: 'Manufacturing production line in a factory',
   },
   {
@@ -92,7 +92,7 @@ const BUSINESS_SERVICES = [
     cta: 'Enquire for PCD',
     emoji: '🤝',
     accentColor: 'border-l-gold-soft',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80',
+    image: 'https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-02-16-08-38.jpg',
     imageAlt: 'Distribution and logistics network',
   },
 ];
