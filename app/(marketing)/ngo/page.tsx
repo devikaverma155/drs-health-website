@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { NGOProductsSection } from '@/sections/NGOProductsSection';
 
 export const metadata: Metadata = {
   title: 'NGO',
@@ -116,8 +117,27 @@ export default function NGOPage() {
         </div>
       </section>
 
+      {/* Image + quote divider */}
+      <section className="relative py-16 overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="https://drshealth.in/wp-content/uploads/2026/03/ngo.jpg"
+            alt="NGO community work"
+            fill
+            className="object-cover scale-110"
+          />
+          <div className="absolute inset-0 bg-black/65" />
+        </div>
+        <div className="container-tight relative z-10 text-center text-white max-w-3xl mx-auto">
+          <p className="text-3xl md:text-4xl font-bold leading-snug mb-4">
+            &ldquo;Compassion is the foundation of true wellness.&rdquo;
+          </p>
+          <p className="text-white/70 text-sm">— Jeev Daya Parmarth Jan Kalyan Samiti</p>
+        </div>
+      </section>
+
       {/* About the NGO */}
-      <section className="section-padding">
+      <section className="py-12 md:py-16">
         <div className="container-tight max-w-5xl">
           <div className="grid md:grid-cols-5 gap-10 items-start">
             {/* Decorative sidebar accent */}
@@ -155,25 +175,6 @@ export default function NGOPage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Image + quote divider */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-12-48-07.jpg"
-            alt="NGO community work"
-            fill
-            className="object-cover scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/92 via-primary/88 to-primary-dark/92" />
-        </div>
-        <div className="container-tight relative z-10 text-center text-white max-w-3xl mx-auto">
-          <p className="text-3xl md:text-4xl font-bold leading-snug mb-4">
-            &ldquo;Compassion is the foundation of true wellness.&rdquo;
-          </p>
-          <p className="text-white/70 text-sm">— Jeev Daya Parmarth Jan Kalyan Samiti</p>
         </div>
       </section>
 
@@ -255,6 +256,9 @@ export default function NGOPage() {
           </div>
         </div>
       </section>
+
+      {/* NGO Products Section */}
+      <NGOProductsSection />
 
       {/* CTA */}
       <section className="section-padding">

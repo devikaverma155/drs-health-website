@@ -1,29 +1,48 @@
-import {
-  ShieldCheck,
-  Award,
-  Leaf,
-  FlaskConical,
-  HeartPulse,
-  Microscope,
-  BadgeCheck,
-  Sparkles,
-} from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type Partner = {
   name: string;
-  icon: React.ReactNode;
+  image: string;
 };
 
 const partners: Partner[] = [
-  { name: "WHO GMP Certified", icon: <ShieldCheck className="h-5 w-5" /> },
-  { name: "ISO 9001:2015", icon: <Award className="h-5 w-5" /> },
-  { name: "Ayush Approved", icon: <Leaf className="h-5 w-5" /> },
-  { name: "FSSAI Certified", icon: <FlaskConical className="h-5 w-5" /> },
-  { name: "ISO 13485", icon: <HeartPulse className="h-5 w-5" /> },
-  { name: "Lab Tested", icon: <Microscope className="h-5 w-5" /> },
-  { name: "GMP Standards", icon: <BadgeCheck className="h-5 w-5" /> },
-  { name: "100% Natural", icon: <Sparkles className="h-5 w-5" /> },
+  {
+    name: "GMP Certified",
+    image: "https://drshealth.in/wp-content/uploads/2026/03/1772255367424-removebg-preview.png",
+  },
+  {
+    name: "Ayush Approved",
+    image: "https://drshealth.in/wp-content/uploads/2026/03/1772256665743.png",
+  },
+  {
+    name: "FSSAI Approved",
+    image: "https://drshealth.in/wp-content/uploads/2026/03/WA_1772256180628-removebg-preview.png",
+  },
+  {
+    name: "Lab Tested",
+    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_t6c8yct6c8yct6c8-removebg-preview.png",
+  },
+  {
+    name: "100% Natural",
+    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_oh6rweoh6rweoh6r-removebg-preview.png",
+  },
+  {
+    name: "No Chemicals",
+    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_c9oloec9oloec9ol.png",
+  },
+  {
+    name: "Trusted Seller",
+    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_ukhv5qukhv5qukhv-removebg-preview.png",
+  },
+  {
+    name: "Formulation by Vaidya",
+    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_gpzntmgpzntmgpzn__1_-removebg-preview.png",
+  },
+  {
+    name: "Decades of Experience",
+    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_tq67tptq67tptq67-1.png",
+  },
 ];
 
 type LogoCloudProps = React.ComponentProps<"div">;
@@ -32,7 +51,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
   return (
     <div
       className={cn(
-        "relative grid grid-cols-2 md:grid-cols-4 border border-border/40 rounded-xl overflow-hidden",
+        "relative grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 border border-border/40 rounded-xl overflow-hidden",
         className
       )}
       {...props}
@@ -50,28 +69,31 @@ type LogoCardProps = React.ComponentProps<"div"> & {
 };
 
 function LogoCard({ partner, index, className, ...props }: LogoCardProps) {
-  const isEvenRow = Math.floor(index / 2) % 2 === 0;
-  const isEvenCol = index % 2 === 0;
-  const isAccented =
-    (isEvenRow && isEvenCol) || (!isEvenRow && !isEvenCol);
+  const isAccented = index % 2 === 0;
 
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-3 px-4 py-7 md:py-8 border-b border-r border-border/30 last:border-r-0 transition-colors hover:bg-primary/5",
+        "flex flex-col items-center justify-center gap-2 px-3 py-5 md:py-6 border-b border-r border-border/30 transition-colors hover:bg-primary/5",
         isAccented ? "bg-primary/[0.03]" : "bg-background",
-        // Remove right border on last column
-        (index + 1) % 4 === 0 && "md:border-r-0",
-        (index + 1) % 2 === 0 && "border-r-0 md:border-r",
+        // Remove right border on last column (3 cols)
+        (index + 1) % 3 === 0 && "border-r-0",
         // Remove bottom border on last row
-        index >= partners.length - 4 && "md:border-b-0",
-        index >= partners.length - 2 && "border-b-0",
+        index >= partners.length - 3 && "border-b-0",
         className
       )}
       {...props}
     >
-      <span className="text-primary">{partner.icon}</span>
-      <span className="text-sm font-medium text-foreground/80 select-none">
+      <div className="relative w-12 h-12 md:w-14 md:h-14">
+        <Image
+          src={partner.image}
+          alt={partner.name}
+          fill
+          className="object-contain"
+          sizes="56px"
+        />
+      </div>
+      <span className="text-[11px] md:text-xs font-medium text-foreground/80 select-none text-center leading-tight">
         {partner.name}
       </span>
     </div>

@@ -17,15 +17,15 @@ const leaders: Leader[] = [
     name: 'Bimbsar Jain',
     title: 'Director – DRS Health Solutions Pvt. Ltd.',
     description:
-      'Driving the strategic vision and business growth of DRS Health Solutions, Bimbsar Jain brings leadership, innovation, and a commitment to taking authentic Ayurveda to every home across India and beyond.',
+      'At just 22 years of age, Bimbsar Jain represents the dynamic new generation leading the expansion of DRS Health Solutions Pvt. Ltd., the evolution of Dhanya Ras Shala. Carrying forward his father\'s rich Ayurvedic legacy, he is driven by innovation, growth, and a modern vision to take the brand to greater heights while preserving its authentic roots. His leadership reflects youthful energy combined with deep respect for tradition.',
     image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-15-23-12-e1772191735849.jpg',
   },
   {
     id: 2,
-    name: 'Vd. Dr. Dhanyakumar Jain (DNYS)',
-    title: 'Ayurvedacharya & Founder',
+    name: 'Vaidya Dhanya Kumar Jain (DNYS, Ayurvedacharya)',
+    title: 'Founder – DRS Health Solutions',
     description:
-      'With 25+ years of experience in Ayurveda, Vaidya Dhanya Kumar Jain founded DRS Health Solutions (Dhanya Ras Shala) in 2003 in Tikamgarh (M.P.) to carry forward the rich legacy of his grandfather, Rajvaidya Pandit Barelal Ji. A dedicated practitioner and formulation expert who creates authentic and result-oriented Ayurvedic medicines.',
+      'With 25+ years of experience in Ayurveda, Vaidya Dhanya Kumar Jain founded DRS Health Solutions (Dhanya Ras Shala) in 2003 in Tikamgarh (M.P.) to carry forward the rich legacy of his grandfather, Rajvaidya Pandit Barelal Ji. With a powerful vision to take Ayurveda to every home across the world, he is a dedicated practitioner and formulation expert who creates authentic and result-oriented Ayurvedic medicines while actively treating patients at his clinic with holistic care. He has also been serving Jeev Daya Parmarth Jan Kalyan Samiti (NGO) for several years as the Secretary of the community, actively contributing towards social welfare and humanitarian service.',
     image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-01-10-e1772191818188.jpg',
   },
   {
@@ -86,7 +86,7 @@ export function LeadershipCarouselSection() {
               <p className="text-lg text-primary font-semibold mb-4">
                 {currentLeader.title}
               </p>
-              <p className="text-body-muted text-base lg:text-lg leading-relaxed mb-8 line-clamp-6">
+              <p className="text-body-muted text-base lg:text-lg leading-relaxed mb-8">
                 {currentLeader.description}
               </p>
 

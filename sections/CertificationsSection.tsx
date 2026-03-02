@@ -4,46 +4,50 @@ import { ImageAutoSlider } from '@/components/ui/image-auto-slider';
 
 const certificationImages = [
   {
-    src: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80',
-    alt: 'ISO 9001:2015 — Quality Management System',
+    src: 'https://drshealth.in/wp-content/uploads/2026/03/1772255367424-removebg-preview.png',
+    alt: 'GMP Certification',
   },
   {
-    src: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80',
-    alt: 'WHO GMP — World Health Organization GMP',
+    src: 'https://drshealth.in/wp-content/uploads/2026/03/1772256665743.png',
+    alt: 'Ayush Approved',
   },
   {
-    src: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=600&q=80',
-    alt: 'ISO 13485:2016 — Medical Devices Quality',
+    src: 'https://drshealth.in/wp-content/uploads/2026/03/WA_1772256180628-removebg-preview.png',
+    alt: 'FSSAI Approved',
   },
   {
-    src: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=600&q=80',
-    alt: 'FSSAI — Food Safety & Standards',
+    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_t6c8yct6c8yct6c8-removebg-preview.png',
+    alt: 'Lab Tested',
   },
   {
-    src: 'https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=600&q=80',
-    alt: 'EIC Certification — Environment Protection',
+    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_oh6rweoh6rweoh6r-removebg-preview.png',
+    alt: '100% Natural',
   },
   {
-    src: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=600&q=80',
-    alt: 'ISO 14001:2015 — Environmental Management',
+    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_c9oloec9oloec9ol.png',
+    alt: 'No Chemicals',
   },
   {
-    src: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=600&q=80',
-    alt: 'Ayurvedic Herbal Standards',
+    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_ukhv5qukhv5qukhv-removebg-preview.png',
+    alt: 'Trusted Seller',
   },
   {
-    src: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80',
-    alt: 'Pharmaceutical Quality Control',
+    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_gpzntmgpzntmgpzn__1_-removebg-preview.png',
+    alt: 'Formulation by Vaidya',
+  },
+  {
+    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_tq67tptq67tptq67-1.png',
+    alt: 'Decades of Experience',
   },
 ];
 
 const certifications = [
-  { name: 'ISO 9001:2015', description: 'Quality Management System' },
-  { name: 'WHO GMP', description: 'World Health Organization GMP' },
-  { name: 'ISO 13485:2016', description: 'Medical Devices Quality' },
+  { name: 'GMP Certified', description: 'Good Manufacturing Practice' },
+  { name: 'Ayush Approved', description: 'Govt. of India Approved' },
   { name: 'FSSAI', description: 'Food Safety & Standards' },
-  { name: 'EIC Certification', description: 'Environment Protection' },
-  { name: 'ISO 14001:2015', description: 'Environmental Management' },
+  { name: 'Lab Tested', description: 'Quality Assured Products' },
+  { name: '100% Natural', description: 'Pure Natural Ingredients' },
+  { name: 'Trusted Seller', description: 'Verified & Trusted Brand' },
 ];
 
 export function CertificationsSection() {
