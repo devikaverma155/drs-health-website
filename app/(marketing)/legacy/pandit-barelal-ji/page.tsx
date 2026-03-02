@@ -49,7 +49,7 @@ export default function PanditBarelaJiPage() {
                 The Foundation: Syadwad Jain Aushadhalay
               </h3>
               <p>
-                The roots of Syadwad Wellness trace back to the establishment of <strong>Syadwad Jain Aushadhalay</strong> in the historic village of Patha, Tikamgarh district. Pandit Barelal Ji, honored with the prestigious title of <strong>"Raj Vaidya"</strong> by the King of Tikamgarh for his unparalleled contributions to Ayurveda, was a revered figure in his time.
+                The roots of Syadwad Wellness trace back to the establishment of <strong>Syadwad Jain Aushadhalay</strong> in the historic village of Patha, Tikamgarh district. Pandit Barelal Ji, honored with the prestigious title of <strong>&quot;Raj Vaidya&quot;</strong> by the King of Tikamgarh for his unparalleled contributions to Ayurveda, was a revered figure in his time.
               </p>
               <p>
                 His expertise earned him international recognition, and he was invited to deliver guest lectures at <strong>Washington University</strong> on two occasions, where he shared his profound knowledge of Ayurveda and holistic healing with a global audience. This remarkable achievement demonstrated the universal relevance and efficacy of Ayurvedic wisdom.

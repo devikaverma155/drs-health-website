@@ -89,7 +89,7 @@ export function OrdersSection({ email }: OrdersSectionProps) {
       <div className="p-8">
         <div className="text-center py-12">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">No Orders Yet</h3>
-          <p className="text-gray-600 mb-6">You haven't placed any orders yet.</p>
+          <p className="text-gray-600 mb-6">You haven&apos;t placed any orders yet.</p>
           <Link href="/shop">
             <Button>Start Shopping</Button>
           </Link>

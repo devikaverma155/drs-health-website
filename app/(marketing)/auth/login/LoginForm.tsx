@@ -116,7 +116,7 @@ export function LoginForm() {
               placeholder="••••••••"
               className="w-full px-4 py-2.5 border border-input-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
             />
-            <p className="text-xs text-body-muted mt-1">Leave empty if you didn't set a password</p>
+            <p className="text-xs text-body-muted mt-1">Leave empty if you didn&apos;t set a password</p>
           </div>
 
           <button
@@ -133,7 +133,7 @@ export function LoginForm() {
             <div className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-background text-body-muted">Don't have an account?</span>
+            <span className="px-2 bg-background text-body-muted">Don&apos;t have an account?</span>
           </div>
         </div>
 
