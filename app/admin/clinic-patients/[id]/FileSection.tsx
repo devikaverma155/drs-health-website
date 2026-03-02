@@ -15,10 +15,11 @@ export function FileSection({ patientId, documents: initialDocuments }: FileSect
   const [documents, setDocuments] = useState(initialDocuments);
 
   async function handleUploadSuccess(file: {
+    id: string;
     fileUrl: string;
     fileName: string;
     fileSize: number;
-    filePath: string;
+    uploadedAt: string;
   }) {
     try {
       const newDoc = await createPatientDocument({
@@ -26,7 +27,6 @@ export function FileSection({ patientId, documents: initialDocuments }: FileSect
         fileName: file.fileName,
         fileUrl: file.fileUrl,
         fileSize: file.fileSize,
-        filePath: file.filePath,
       });
       setDocuments([...documents, newDoc]);
     } catch (error) {
