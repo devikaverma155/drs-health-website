@@ -7,16 +7,21 @@ import { LeadFilters } from './LeadFilters';
 export const dynamic = 'force-dynamic';
 
 const SOURCES: string[] = [
-  'contact',
+  'meta_ads',
+  'website',
+  'referral',
+  'contact_form',
+  'consultation',
   'b2b',
-  'private-labelling',
-  'contract-manufacturing',
+  'private_labelling',
+  'manufacturer',
   'pcd',
   'whatsapp',
   'ads',
 ];
 
-const STATUSES: string[] = ['new', 'contacted', 'qualified', 'converted', 'closed'];
+// Pipeline: New → Contacted → Interested → Quotation Sent → Converted → Closed
+const STATUSES: string[] = ['new', 'contacted', 'interested', 'quotation_sent', 'converted', 'closed'];
 
 type SearchParams = { source?: string; status?: string; q?: string };
 

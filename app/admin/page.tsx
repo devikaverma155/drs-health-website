@@ -12,29 +12,63 @@ async function getDashboardData() {
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const startOfWeek = new Date(startOfToday);
   startOfWeek.setDate(startOfWeek.getDate() - 7);
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  const [leadsToday, leadsThisWeek, allLeads, converted] = await Promise.all([
+  const [leadsToday, leadsThisWeek, leadsThisMonth, allLeads, converted, recentLeads] = await Promise.all([
     prisma.lead.count({ where: { createdAt: { gte: startOfToday } } }),
     prisma.lead.count({ where: { createdAt: { gte: startOfWeek } } }),
+    prisma.lead.count({ where: { createdAt: { gte: startOfMonth } } }),
     prisma.lead.groupBy({ by: ['source'], _count: { id: true } }),
     prisma.lead.count({ where: { status: 'converted' } }),
+    prisma.lead.findMany({
+      take: 10,
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, name: true, email: true, source: true, status: true, createdAt: true },
+    }),
   ]);
 
   const total = await prisma.lead.count();
   const conversionRate = total > 0 ? ((converted / total) * 100).toFixed(1) : '0';
 
-  const recentLeads = await prisma.lead.findMany({
-    take: 10,
-    orderBy: { createdAt: 'desc' },
-    select: { id: true, name: true, email: true, source: true, status: true, createdAt: true },
-  });
+  // Production, inventory & low-stock (may fail if tables not yet created)
+  let productionRunning = 0;
+  let finishedGoodsBatches = 0;
+  let lowStockRawCount = 0;
+  let lowStockItems: { name: string | null; materialCode: string | null }[] = [];
+  let recentProduction: { id: string; batchNumber: string | null; status: string | null; productId: string | null }[] = [];
+  try {
+    [productionRunning, finishedGoodsBatches, recentProduction] = await Promise.all([
+      prisma.productionBatch.count({ where: { status: 'running' } }),
+      prisma.finishedGoodsBatch.count(),
+      prisma.productionBatch.findMany({ take: 5, orderBy: { createdAt: 'desc' }, select: { id: true, batchNumber: true, status: true, productId: true } }),
+    ]);
+    // Low stock: raw materials where total batch quantity < min_stock (simplified: count materials with min_stock set and at least one batch)
+    const rawMaterials = await prisma.rawMaterial.findMany({ where: { minStock: { not: null } }, include: { batches: true } });
+    for (const rm of rawMaterials) {
+      const totalQty = rm.batches.reduce((s, b) => s + Number(b.quantity ?? 0), 0);
+      const min = Number(rm.minStock ?? 0);
+      if (min > 0 && totalQty < min) {
+        lowStockRawCount += 1;
+        lowStockItems.push({ name: rm.name, materialCode: rm.materialCode });
+      }
+    }
+    if (lowStockItems.length > 5) lowStockItems = lowStockItems.slice(0, 5);
+  } catch {
+    // Tables may not exist yet
+  }
 
   return {
     leadsToday,
     leadsThisWeek,
+    leadsThisMonth,
     bySource: allLeads,
     conversionRate,
     recentLeads,
+    productionRunning,
+    finishedGoodsBatches,
+    lowStockRawCount,
+    lowStockItems,
+    recentProduction,
   };
 }
 
@@ -51,16 +85,35 @@ export default async function AdminDashboardPage() {
           <p className="text-2xl font-semibold text-slate-900 mt-1">{data.leadsToday}</p>
         </div>
         <div className="rounded-xl bg-white border border-slate-200 p-5">
+          <p className="text-sm text-slate-500">Leads this month</p>
+          <p className="text-2xl font-semibold text-slate-900 mt-1">{data.leadsThisMonth}</p>
+        </div>
+        <div className="rounded-xl bg-white border border-slate-200 p-5">
           <p className="text-sm text-slate-500">Leads this week</p>
           <p className="text-2xl font-semibold text-slate-900 mt-1">{data.leadsThisWeek}</p>
         </div>
         <div className="rounded-xl bg-white border border-slate-200 p-5">
-          <p className="text-sm text-slate-500">Leads by source</p>
-          <p className="text-2xl font-semibold text-slate-900 mt-1">{data.bySource.reduce((s, x) => s + x._count.id, 0)}</p>
-        </div>
-        <div className="rounded-xl bg-white border border-slate-200 p-5">
           <p className="text-sm text-slate-500">Conversion rate</p>
           <p className="text-2xl font-semibold text-slate-900 mt-1">{data.conversionRate}%</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="rounded-xl bg-white border border-slate-200 p-5">
+          <p className="text-sm text-slate-500">Production batches running</p>
+          <p className="text-2xl font-semibold text-slate-900 mt-1">{data.productionRunning}</p>
+        </div>
+        <div className="rounded-xl bg-white border border-slate-200 p-5">
+          <p className="text-sm text-slate-500">Finished goods batches</p>
+          <p className="text-2xl font-semibold text-slate-900 mt-1">{data.finishedGoodsBatches}</p>
+        </div>
+        <div className="rounded-xl bg-white border border-slate-200 p-5">
+          <p className="text-sm text-slate-500">Raw materials (low stock)</p>
+          <p className="text-2xl font-semibold text-slate-900 mt-1">{data.lowStockRawCount}</p>
+        </div>
+        <div className="rounded-xl bg-white border border-slate-200 p-5">
+          <p className="text-sm text-slate-500">Leads by source</p>
+          <p className="text-2xl font-semibold text-slate-900 mt-1">{data.bySource.reduce((s, x) => s + x._count.id, 0)}</p>
         </div>
       </div>
 
@@ -106,6 +159,38 @@ export default async function AdminDashboardPage() {
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
           </div>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-6">
+        <div className="rounded-xl bg-white border border-slate-200 p-5">
+          <h2 className="font-medium text-slate-900 mb-4">Low stock alerts (raw materials)</h2>
+          {data.lowStockItems.length === 0 ? (
+            <p className="text-sm text-slate-500">No low stock items</p>
+          ) : (
+            <ul className="space-y-2">
+              {data.lowStockItems.map((item, i) => (
+                <li key={i} className="text-sm text-amber-700">
+                  {item.materialCode || item.name || 'Unknown'}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="rounded-xl bg-white border border-slate-200 p-5">
+          <h2 className="font-medium text-slate-900 mb-4">Production activity (recent batches)</h2>
+          {data.recentProduction.length === 0 ? (
+            <p className="text-sm text-slate-500">No production batches yet</p>
+          ) : (
+            <ul className="space-y-2">
+              {data.recentProduction.map((b) => (
+                <li key={b.id} className="text-sm text-slate-700 flex justify-between">
+                  <span>Batch {b.batchNumber || b.id.slice(0, 8)}</span>
+                  <span className="text-slate-500">{b.status || '-'}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 

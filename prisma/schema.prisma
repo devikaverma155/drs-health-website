@@ -26,6 +26,8 @@ model User {
   role      String?   @default("employee")
   createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
 
+  userRoles UserRole[]
+
   @@map("users")
 }
 
@@ -71,8 +73,10 @@ model Vendor {
   notes         String?
   createdAt     DateTime?         @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt     DateTime?         @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  
-  orders        RawMaterialOrder[]
+
+  orders                    RawMaterialOrder[]
+  suppliedRawMaterials      RawMaterial[]       @relation("RawMaterialSupplier")
+  suppliedPackagingMaterials PackagingMaterial[] @relation("PackagingSupplier")
 
   @@map("vendors")
 }
@@ -248,4 +252,298 @@ model ComboOffer {
   updatedAt     DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@map("combo_offers")
+}
+
+// ---------------------------------------------------------------------------
+// CLIENT MANAGEMENT (requirement 3)
+// ---------------------------------------------------------------------------
+model Client {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  companyName   String    @map("company_name")
+  contactPerson String?   @map("contact_person")
+  phone         String?
+  email         String?
+  address       String?
+  city          String?
+  state         String?
+  gstNumber     String?   @map("gst_number")
+  createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  orders Order[]
+
+  @@map("clients")
+}
+
+// ---------------------------------------------------------------------------
+// RAW MATERIAL INVENTORY (requirement 4)
+// ---------------------------------------------------------------------------
+model RawMaterial {
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  materialCode String?   @unique @map("material_code")
+  name         String?
+  unit         String?
+  purchaseRate Decimal?  @map("purchase_rate") @db.Decimal
+  supplierId   String?   @map("supplier_id") @db.Uuid
+  minStock     Decimal?  @map("min_stock") @db.Decimal
+  createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  supplier Vendor?           @relation("RawMaterialSupplier", fields: [supplierId], references: [id])
+  batches  RawMaterialBatch[]
+  bomRawItems BomRawItem[]
+
+  @@map("raw_materials")
+}
+
+model RawMaterialBatch {
+  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  materialId       String?   @map("material_id") @db.Uuid
+  batchNumber      String?   @map("batch_number")
+  manufacturingDate DateTime? @map("manufacturing_date") @db.Date
+  expiryDate       DateTime? @map("expiry_date") @db.Date
+  quantity         Decimal?  @db.Decimal
+  createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  material RawMaterial? @relation(fields: [materialId], references: [id])
+
+  @@map("raw_material_batches")
+}
+
+// ---------------------------------------------------------------------------
+// PACKAGING MATERIAL INVENTORY (requirement 5)
+// ---------------------------------------------------------------------------
+model PackagingMaterial {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  packagingCode String?   @map("packaging_code")
+  name          String?
+  supplierId    String?   @map("supplier_id") @db.Uuid
+  quantity      Decimal?  @db.Decimal
+  unit          String?
+  minStock      Decimal?  @map("min_stock") @db.Decimal
+  createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  supplier Vendor?            @relation("PackagingSupplier", fields: [supplierId], references: [id])
+  batches  PackagingBatch[]
+  bomPackagingItems BomPackagingItem[]
+
+  @@map("packaging_materials")
+}
+
+model PackagingBatch {
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  packagingId  String?   @map("packaging_id") @db.Uuid
+  batchNumber  String?   @map("batch_number")
+  quantity     Decimal?  @db.Decimal
+  purchaseDate DateTime? @map("purchase_date") @db.Date
+  createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  packaging PackagingMaterial? @relation(fields: [packagingId], references: [id])
+
+  @@map("packaging_batches")
+}
+
+// ---------------------------------------------------------------------------
+// PRODUCT MASTER (requirement 6)
+// ---------------------------------------------------------------------------
+model ProductCategory {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String
+  description String?
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  products Product[]
+
+  @@map("product_categories")
+}
+
+model Product {
+  id                 String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name               String
+  categoryId         String?   @map("category_id") @db.Uuid
+  packSize           String?   @map("pack_size")
+  mrp                Decimal?  @db.Decimal
+  standardBatchSize  Int?      @map("standard_batch_size")
+  createdAt          DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt          DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  category           ProductCategory?   @relation(fields: [categoryId], references: [id])
+  billOfMaterials    BillOfMaterial[]
+  productionBatches   ProductionBatch[]
+  finishedGoodsBatches FinishedGoodsBatch[]
+  orderItems         OrderItem[]
+
+  @@map("products")
+}
+
+// ---------------------------------------------------------------------------
+// BILL OF MATERIAL (requirement 7)
+// ---------------------------------------------------------------------------
+model BillOfMaterial {
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  productId String?   @map("product_id") @db.Uuid
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  product   Product?         @relation(fields: [productId], references: [id])
+  rawItems  BomRawItem[]
+  packagingItems BomPackagingItem[]
+
+  @@map("bill_of_materials")
+}
+
+model BomRawItem {
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  bomId          String?  @map("bom_id") @db.Uuid
+  rawMaterialId  String?  @map("raw_material_id") @db.Uuid
+  quantity       Decimal? @db.Decimal
+
+  bom         BillOfMaterial? @relation(fields: [bomId], references: [id])
+  rawMaterial RawMaterial?    @relation(fields: [rawMaterialId], references: [id])
+
+  @@map("bom_raw_items")
+}
+
+model BomPackagingItem {
+  id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  bomId        String?  @map("bom_id") @db.Uuid
+  packagingId  String?  @map("packaging_id") @db.Uuid
+  quantity     Decimal? @db.Decimal
+
+  bom        BillOfMaterial?   @relation(fields: [bomId], references: [id])
+  packaging  PackagingMaterial? @relation(fields: [packagingId], references: [id])
+
+  @@map("bom_packaging_items")
+}
+
+// ---------------------------------------------------------------------------
+// PRODUCTION & FINISHED GOODS (requirements 8, 9)
+// ---------------------------------------------------------------------------
+model ProductionBatch {
+  id                 String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  productId          String?   @map("product_id") @db.Uuid
+  batchNumber        String?   @map("batch_number")
+  manufacturingDate  DateTime? @map("manufacturing_date") @db.Date
+  expiryDate         DateTime? @map("expiry_date") @db.Date
+  quantityProduced   Decimal?  @map("quantity_produced") @db.Decimal
+  status             String?   @default("running")
+  createdAt          DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  product Product? @relation(fields: [productId], references: [id])
+
+  @@map("production_batches")
+}
+
+model FinishedGoodsBatch {
+  id                String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  productId         String?   @map("product_id") @db.Uuid
+  batchNumber       String?   @map("batch_number")
+  manufacturingDate DateTime? @map("manufacturing_date") @db.Date
+  expiryDate        DateTime? @map("expiry_date") @db.Date
+  quantityAvailable Decimal?  @map("quantity_available") @db.Decimal
+  createdAt         DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  product Product? @relation(fields: [productId], references: [id])
+
+  @@map("finished_goods_batches")
+}
+
+// ---------------------------------------------------------------------------
+// ORDERS & DISPATCH (requirement 10)
+// ---------------------------------------------------------------------------
+model Order {
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  clientId  String?   @map("client_id") @db.Uuid
+  orderDate DateTime? @map("order_date") @db.Date
+  status    String?   @default("pending")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  client     Client?      @relation(fields: [clientId], references: [id])
+  orderItems OrderItem[]
+  dispatches Dispatch[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  orderId   String?  @map("order_id") @db.Uuid
+  productId String?  @map("product_id") @db.Uuid
+  quantity  Decimal? @db.Decimal
+
+  order   Order?   @relation(fields: [orderId], references: [id])
+  product Product? @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model Dispatch {
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  orderId      String?   @map("order_id") @db.Uuid
+  dispatchDate DateTime? @map("dispatch_date") @db.Date
+  notes        String?
+  createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  order Order? @relation(fields: [orderId], references: [id])
+
+  @@map("dispatches")
+}
+
+// ---------------------------------------------------------------------------
+// LEAD FOLLOW-UP & PIPELINE (requirement 2)
+// ---------------------------------------------------------------------------
+model LeadFollowup {
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  leadId       String?   @map("lead_id") @db.Uuid
+  followupDate DateTime? @map("followup_date") @db.Timestamp(6)
+  reminder     String?
+  createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("lead_followups")
+}
+
+model LeadPipelineHistory {
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  leadId    String?   @map("lead_id") @db.Uuid
+  oldStage  String?   @map("old_stage")
+  newStage  String?   @map("new_stage")
+  changedAt DateTime? @default(now()) @map("changed_at") @db.Timestamp(6)
+
+  @@map("lead_pipeline_history")
+}
+
+// ---------------------------------------------------------------------------
+// USER ROLES (requirement 13)
+// ---------------------------------------------------------------------------
+model Role {
+  id       String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  roleName String   @unique @map("role_name")
+
+  userRoles UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id     String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId String? @map("user_id") @db.Uuid
+  roleId String? @map("role_id") @db.Uuid
+
+  user User? @relation(fields: [userId], references: [id])
+  role Role? @relation(fields: [roleId], references: [id])
+
+  @@map("user_roles")
+}
+
+model StockMovement {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  itemType      String?   @map("item_type")
+  itemId        String?   @map("item_id") @db.Uuid
+  movementType  String?   @map("movement_type")
+  quantity      Decimal?  @db.Decimal
+  referenceType String?   @map("reference_type")
+  referenceId   String?   @map("reference_id") @db.Uuid
+  createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("stock_movements")
 }

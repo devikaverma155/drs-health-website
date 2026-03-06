@@ -6,10 +6,21 @@ const WP_ADMIN_URL = process.env.NEXT_PUBLIC_SITE_URL
 
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/leads', label: 'Leads', icon: '📋' },
+  { href: '/admin/leads', label: 'Leads (CRM)', icon: '📋' },
+  { href: '/admin/clients', label: 'Clients', icon: '🏢' },
   { href: '/admin/clinic-patients', label: 'Clinic Patients', icon: '🩺' },
   { href: '/admin/employees', label: 'Employees', icon: '👥' },
-  { href: '/admin/raw-materials', label: 'Raw Materials', icon: '🧪' },
+  { href: '/admin/raw-materials', label: 'Raw Materials (Vendors)', icon: '🧪' },
+  { href: '/admin/raw-material-inventory', label: 'Raw Material Inventory', icon: '📦' },
+  { href: '/admin/packaging', label: 'Packaging Materials', icon: '📦' },
+  { href: '/admin/products', label: 'Product Master', icon: '🏷️' },
+  { href: '/admin/product-categories', label: 'Product Categories', icon: '📂' },
+  { href: '/admin/bom', label: 'Bill of Material (BOM)', icon: '📄' },
+  { href: '/admin/production', label: 'Production', icon: '⚙️' },
+  { href: '/admin/finished-goods', label: 'Finished Goods', icon: '✅' },
+  { href: '/admin/orders', label: 'Orders & Dispatch', icon: '🚚' },
+  { href: '/admin/reports', label: 'Reports', icon: '📈' },
+  { href: '/admin/roles', label: 'User Roles', icon: '🔐' },
   { href: '/admin/content', label: 'Content', icon: '📝' },
   { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
 ];
