@@ -52,9 +52,9 @@ const VALUES = [
 
 const SERVICES = [
   { title: 'Ask Dr. DRS Health', description: 'Get prompt, research-backed answers to all your health-related queries.', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg' },
-  { title: 'Disease Information', description: 'Comprehensive insights about various health conditions and their management.', image: 'https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp' },
+  { title: 'Disease Information', description: 'Comprehensive insights about various health conditions and their management.', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg' },
   { title: 'Herbal Efficacy', description: 'Latest research-backed information about herbs and their therapeutic benefits.', image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp' },
-  { title: 'Lifestyle Guidance', description: 'Learn about dietary and lifestyle changes to improve your wellbeing.', image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp' },
+  { title: 'Lifestyle Guidance', description: 'Learn about dietary and lifestyle changes to improve your wellbeing.', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg' },
 ];
 
 const QUALITY_ITEMS = [
@@ -101,9 +101,9 @@ export default function AboutPage() {
       {/* Quick stats bar */}
       <section className="py-6 bg-gradient-to-r from-primary via-primary-dark to-primary text-white">
         <div className="container-tight">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
             <div>
-              <p className="text-2xl md:text-3xl font-bold">90+</p>
+              <p className="text-2xl md:text-3xl font-bold">170+</p>
               <p className="text-xs md:text-sm text-white/80">Years of Legacy</p>
             </div>
             <div>
@@ -117,6 +117,14 @@ export default function AboutPage() {
             <div>
               <p className="text-2xl md:text-3xl font-bold">GMP</p>
               <p className="text-xs md:text-sm text-white/80">Certified Facilities</p>
+            </div>
+            <div>
+              <p className="text-2xl md:text-3xl font-bold">Fassai</p>
+              <p className="text-xs md:text-sm text-white/80">Certified</p>
+            </div>
+            <div>
+              <p className="text-2xl md:text-3xl font-bold">Ayush</p>
+              <p className="text-xs md:text-sm text-white/80">Approved</p>
             </div>
           </div>
         </div>
@@ -215,11 +223,8 @@ export default function AboutPage() {
                   </div>
                   <h3 className="text-2xl font-bold text-foreground">Our Mission</h3>
                 </div>
-                <p className="text-body-muted leading-relaxed text-[15px] mb-3">
-                  Establish DRS Health as a science-based, problem-solving, head-to-heel brand, harnessed from nature&apos;s wealth and characterized by trust and healthy lives.
-                </p>
-                <p className="text-body-muted leading-relaxed text-sm">
-                  Develop markets worldwide with an in-depth approach, maintaining the highest ethical standards at each step.
+                <p className="text-body-muted leading-relaxed text-[15px]">
+                  To develop high-quality Ayurvedic formulations that promote natural healing and long-term well-being. We are committed to the highest standards of purity, quality, and authenticity in every product. By empowering healthcare professionals, partners, and communities, we aim to expand the reach of Ayurveda across India and the world. At DRS Health Solutions, we work with dedication to build trust, improve lives, and carry forward our legacy of holistic healthcare.
                 </p>
               </div>
             </div>

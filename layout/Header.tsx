@@ -12,7 +12,7 @@ const CUSTOMER_STORAGE_KEYS = ['customer-email', 'customer-id', 'customer-first-
 
 function getIsCustomerLoggedIn(): boolean {
   if (typeof window === 'undefined') return false;
-  return !!localStorage.getItem('customer-email') || !!localStorage.getItem('customer-id');
+  return !!(localStorage.getItem('customer-email') && localStorage.getItem('customer-id'));
 }
 
 function clearCustomerSession(): void {
@@ -35,8 +35,10 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isCustomerLoggedIn, setIsCustomerLoggedIn] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   // Sync customer login state from localStorage (WooCommerce auth); re-check on route change so it updates after login
   useEffect(() => {
@@ -48,7 +50,9 @@ export function Header() {
     return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
-  const isLoggedIn = !!session?.user || isCustomerLoggedIn;
+  // Only show as logged in when NextAuth is authenticated (not loading) or customer has both email and id
+  const isLoggedIn =
+    (status === 'authenticated' && !!session?.user) || isCustomerLoggedIn;
 
   const handleLogout = () => {
     setMobileOpen(false);
@@ -89,14 +93,55 @@ export function Header() {
             ))}
           </nav>
           {/* Right - Search, Account/Auth, Cart - tight to nav */}
-          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 ml-1">
-          <button
-            type="button"
-            aria-label="Search"
-            className="p-2 text-foreground hover:opacity-70 transition-opacity"
-          >
-            <SearchIcon className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 ml-1 relative">
+          <div className="relative">
+            <button
+              type="button"
+              aria-label="Search"
+              aria-expanded={searchOpen}
+              className="p-2 text-foreground hover:opacity-70 transition-opacity"
+              onClick={() => setSearchOpen((o) => !o)}
+            >
+              <SearchIcon className="w-5 h-5" />
+            </button>
+            {searchOpen && (
+              <>
+                <div className="absolute right-0 top-full mt-1 z-50 min-w-[280px] sm:min-w-[320px] bg-white rounded-xl border border-border shadow-lg overflow-hidden">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const q = searchQuery.trim();
+                      setSearchOpen(false);
+                      setSearchQuery('');
+                      if (q) router.push(`/shop?q=${encodeURIComponent(q)}`);
+                    }}
+                    className="flex"
+                  >
+                    <input
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search products..."
+                      className="flex-1 px-3 py-2.5 text-sm text-foreground placeholder:text-body-muted focus:outline-none border-0"
+                      autoFocus
+                      aria-label="Search products"
+                    />
+                    <button
+                      type="submit"
+                      className="px-3 py-2.5 bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors shrink-0"
+                    >
+                      Search
+                    </button>
+                  </form>
+                </div>
+                <div
+                  className="fixed inset-0 z-40"
+                  aria-hidden
+                  onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
+                />
+              </>
+            )}
+          </div>
 
           {/* Not logged in: Login + Sign up */}
           {!isLoggedIn && (
@@ -226,6 +271,8 @@ export function Header() {
           </nav>
         </div>
       )}
+
+      {/* Search dropdown is inline under the search icon above */}
     </header>
   );
 }

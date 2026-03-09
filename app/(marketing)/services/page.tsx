@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { ThirdPartyClientsCarousel } from './ThirdPartyClientsCarousel';
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -98,9 +99,11 @@ const BUSINESS_SERVICES = [
 ];
 
 const TRUST_STATS = [
-  { value: '90+', label: 'Years of Legacy' },
+  { value: '170+', label: 'Years of Legacy' },
   { value: '500+', label: 'Products' },
   { value: 'GMP', label: 'Certified Manufacturing' },
+  { value: 'Ayush', label: 'Approved' },
+  { value: 'Fassai', label: 'Certified' },
   { value: '24/7', label: 'Expert Support' },
 ];
 
@@ -138,7 +141,7 @@ export default function ServicesPage() {
       {/* Trust Stats Bar */}
       <section className="py-6 bg-gradient-to-r from-primary via-primary-dark to-primary text-white">
         <div className="container-tight">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
             {TRUST_STATS.map((stat) => (
               <div key={stat.label}>
                 <p className="text-2xl md:text-3xl font-bold">{stat.value}</p>
@@ -238,33 +241,31 @@ export default function ServicesPage() {
             {BUSINESS_SERVICES.map((service) => (
               <div
                 key={service.id}
-                className={`rounded-2xl border border-border border-l-4 ${service.accentColor} bg-white/80 backdrop-blur-sm overflow-hidden shadow-card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1`}
+                className={`group relative rounded-2xl border border-border border-l-4 ${service.accentColor} overflow-hidden shadow-card transition-all duration-300 hover:shadow-card-hover min-h-[320px] flex flex-col`}
               >
-                {/* Photo */}
-                <div className="relative w-full h-44 overflow-hidden">
+                <div className="absolute inset-0">
                   <Image
                     src={service.image}
                     alt={service.imageAlt}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                  <span className="absolute bottom-3 left-4 text-2xl drop-shadow-md">{service.emoji}</span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
                 </div>
-                {/* Content */}
-                <div className="p-8">
-                  <h3 className="text-lg font-semibold text-foreground">
+                <div className="relative flex flex-col flex-1 p-8 justify-end">
+                  <span className="absolute top-4 left-4 text-2xl drop-shadow-md">{service.emoji}</span>
+                  <h3 className="text-lg font-semibold text-white drop-shadow-sm">
                     {service.title}
                   </h3>
-                  <p className="mt-1 text-sm font-medium text-primary">
+                  <p className="mt-1 text-sm font-medium text-white/90">
                     {service.tagline}
                   </p>
-                  <p className="mt-3 text-body-muted text-sm leading-relaxed">
+                  <p className="mt-3 text-white/90 text-sm leading-relaxed line-clamp-2">
                     {service.description}
                   </p>
                   <Link
                     href={service.href}
-                    className="mt-5 inline-flex items-center justify-center rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-semibold hover:bg-primary-dark transition-colors shadow-sm"
+                    className="mt-5 inline-flex items-center justify-center rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-semibold hover:bg-primary-dark transition-colors shadow-sm w-fit"
                   >
                     {service.cta}
                   </Link>
@@ -277,6 +278,8 @@ export default function ServicesPage() {
           </p>
         </div>
       </section>
+
+      <ThirdPartyClientsCarousel />
 
       {/* Single CTA strip */}
       <section className="py-14 md:py-20 border-t border-border">

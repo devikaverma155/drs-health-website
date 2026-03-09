@@ -1,9 +1,10 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const POSTS = [
-  { slug: 'ayurveda-daily-routine', title: 'Ayurveda and Your Daily Routine', date: '2024-01-15' },
-  { slug: 'liver-care-herbs', title: 'Herbs for Liver Care and Detox', date: '2024-01-08' },
-  { slug: 'immunity-winter', title: 'Building Immunity in Winter', date: '2024-01-01' },
+  { slug: 'ayurveda-daily-routine', title: 'Ayurveda and Your Daily Routine', date: '2024-01-15', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg' },
+  { slug: 'liver-care-herbs', title: 'Herbs for Liver Care and Detox', date: '2024-01-08', image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp' },
+  { slug: 'immunity-winter', title: 'Building Immunity in Winter', date: '2024-01-01', image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp' },
 ];
 
 export function BlogPreviewSection() {
@@ -28,9 +29,18 @@ export function BlogPreviewSection() {
           </Link>
         </div>
         <ul className="grid md:grid-cols-3 gap-8">
-          {POSTS.map(({ slug, title, date }) => (
+          {POSTS.map(({ slug, title, date, image }) => (
             <li key={slug}>
               <Link href={`/blog/${slug}`} className="group block">
+                <div className="relative aspect-video rounded-xl overflow-hidden border border-white/20 mb-4 bg-white/10">
+                  <Image
+                    src={image}
+                    alt={title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
                 <span className="text-sm text-white/80">{date}</span>
                 <h3 className="font-heading mt-1 font-semibold text-white group-hover:text-white/90">
                   {title}

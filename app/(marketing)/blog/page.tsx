@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getPublishedBlogPosts } from '@/lib/blog';
 
 export const metadata: Metadata = {
   title: 'Ayurveda & Wellness Blog | DRS Health',
@@ -12,76 +13,36 @@ export const metadata: Metadata = {
   },
 };
 
-const POSTS = [
-  {
-    slug: 'advantages-of-milk-thistle',
-    title: 'Advantage Of Milk Thistle: Key Benefits You Need To Know',
-    date: '2024-12-26',
-    excerpt: 'Discover the powerful benefits of milk thistle for liver health, detoxification, and overall wellness. Learn why this ancient herb is trusted by healthcare practitioners worldwide.',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp',
-    category: 'Herbal Remedies',
-    readTime: '8 min read',
-  },
-  {
-    slug: 'apple-cider-vinegar-tablets-benefits',
-    title: 'Apple Cider Vinegar Tablets Benefits: A Comprehensive Guide',
-    date: '2024-12-26',
-    excerpt: 'Explore the scientifically-backed health benefits of apple cider vinegar tablets. From digestive health to weight management, understand why this supplement is gaining popularity.',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png',
-    category: 'Supplements',
-    readTime: '10 min read',
-  },
-  {
-    slug: 'understanding-apple-cider-vinegar-sore-throat-remedy',
-    title: 'Understanding Apple Cider Vinegar: A Natural Sore Throat Remedy',
-    date: '2024-11-12',
-    excerpt: 'Learn how apple cider vinegar can soothe sore throats naturally. This comprehensive guide covers usage methods, scientific evidence, and safety considerations.',
-    image: 'https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp',
-    category: 'Natural Remedies',
-    readTime: '6 min read',
-  },
-  {
-    slug: 'shilajit-for-hair-benefits-and-usage-tips',
-    title: 'Shilajit For Hair: Key Benefits And Simple Usage Tips',
-    date: '2024-11-12',
-    excerpt: 'Unlock the secrets of shilajit for hair health. Discover how this mineral-rich substance can strengthen hair, promote growth, and improve scalp health with easy usage tips.',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp',
-    category: 'Hair Care',
-    readTime: '7 min read',
-  },
-  {
-    slug: 'ayurveda-daily-routine',
-    title: 'Ayurveda and Your Daily Routine: Align Your Day with Ancient Wisdom',
-    date: '2024-01-15',
-    excerpt: 'How to align your day with Ayurvedic principles for better energy and balance. Learn the daily practices that support optimal health and wellness.',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg',
-    category: 'Lifestyle',
-    readTime: '9 min read',
-  },
-  {
-    slug: 'liver-care-herbs',
-    title: 'Herbs for Liver Care and Detox: Traditional Wisdom Meets Modern Science',
-    date: '2024-01-08',
-    excerpt: 'Traditional herbs that support liver function and natural detoxification. Explore powerful Ayurvedic formulations for liver health and wellness.',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp',
-    category: 'Herbal Remedies',
-    readTime: '8 min read',
-  },
-  {
-    slug: 'immunity-winter',
-    title: 'Building Immunity in Winter: Ayurvedic Practices for Cold Season',
-    date: '2024-01-01',
-    excerpt: 'Simple Ayurvedic practices to stay healthy through the cold season. Learn warming foods, herbs, and lifestyle tips to boost immunity naturally.',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png',
-    category: 'Wellness',
-    readTime: '7 min read',
-  },
+const STATIC_POSTS = [
+  { slug: 'advantages-of-milk-thistle', title: 'Advantage Of Milk Thistle: Key Benefits You Need To Know', date: '2024-12-26', excerpt: 'Discover the powerful benefits of milk thistle for liver health, detoxification, and overall wellness. Learn why this ancient herb is trusted by healthcare practitioners worldwide.', image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp', category: 'Herbal Remedies', readTime: '8 min read' },
+  { slug: 'apple-cider-vinegar-tablets-benefits', title: 'Apple Cider Vinegar Tablets Benefits: A Comprehensive Guide', date: '2024-12-26', excerpt: 'Explore the scientifically-backed health benefits of apple cider vinegar tablets. From digestive health to weight management, understand why this supplement is gaining popularity.', image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png', category: 'Supplements', readTime: '10 min read' },
+  { slug: 'understanding-apple-cider-vinegar-sore-throat-remedy', title: 'Understanding Apple Cider Vinegar: A Natural Sore Throat Remedy', date: '2024-11-12', excerpt: 'Learn how apple cider vinegar can soothe sore throats naturally. This comprehensive guide covers usage methods, scientific evidence, and safety considerations.', image: 'https://drshealth.in/wp-content/uploads/2026/02/image-1771828228498-e1771838762263.png', category: 'Natural Remedies', readTime: '6 min read' },
+  { slug: 'shilajit-for-hair-benefits-and-usage-tips', title: 'Shilajit For Hair: Key Benefits And Simple Usage Tips', date: '2024-11-12', excerpt: 'Unlock the secrets of shilajit for hair health. Discover how this mineral-rich substance can strengthen hair, promote growth, and improve scalp health with easy usage tips.', image: 'https://drshealth.in/wp-content/uploads/2024/11/Haircare-2.webp', category: 'Hair Care', readTime: '7 min read' },
+  { slug: 'ayurveda-daily-routine', title: 'Ayurveda and Your Daily Routine: Align Your Day with Ancient Wisdom', date: '2024-01-15', excerpt: 'How to align your day with Ayurvedic principles for better energy and balance. Learn the daily practices that support optimal health and wellness.', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg', category: 'Lifestyle', readTime: '9 min read' },
+  { slug: 'liver-care-herbs', title: 'Herbs for Liver Care and Detox: Traditional Wisdom Meets Modern Science', date: '2024-01-08', excerpt: 'Traditional herbs that support liver function and natural detoxification. Explore powerful Ayurvedic formulations for liver health and wellness.', image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp', category: 'Herbal Remedies', readTime: '8 min read' },
+  { slug: 'immunity-winter', title: 'Building Immunity in Winter: Ayurvedic Practices for Cold Season', date: '2024-01-01', excerpt: 'Simple Ayurvedic practices to stay healthy through the cold season. Learn warming foods, herbs, and lifestyle tips to boost immunity naturally.', image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp', category: 'Wellness', readTime: '7 min read' },
 ];
 
-export default function BlogPage() {
-  const categories = Array.from(new Set(POSTS.map((p) => p.category)));
+export default async function BlogPage() {
+  const dbPosts = await getPublishedBlogPosts();
+  const dbSlugs = new Set(dbPosts.map((p) => p.slug));
+  const staticFallback = STATIC_POSTS.filter((p) => !dbSlugs.has(p.slug));
+  const POSTS = dbPosts.length > 0 ? dbPosts : staticFallback.length > 0 ? staticFallback : STATIC_POSTS;
+
+  const categories = Array.from(new Set(POSTS.map((p) => p.category).filter(Boolean)));
   const featuredPost = POSTS[0];
   const otherPosts = POSTS.slice(1);
+
+  if (!featuredPost) {
+    return (
+      <div className="bg-background section-padding">
+        <div className="container-tight text-center">
+          <h1 className="text-3xl font-semibold text-foreground mb-4">Blog</h1>
+          <p className="text-body-muted">No posts yet. Check back soon.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-background">
@@ -103,12 +64,16 @@ export default function BlogPage() {
           <Link href={`/blog/${featuredPost.slug}`} className="group block mb-16">
             <div className="grid md:grid-cols-2 gap-8 items-center bg-white rounded-2xl border border-border overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-200">
               <div className="relative h-80 md:h-96 overflow-hidden bg-slate-100">
-                <Image
-                  src={featuredPost.image}
-                  alt={featuredPost.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                {featuredPost.image ? (
+                  <Image
+                    src={featuredPost.image}
+                    alt={featuredPost.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-slate-400">No image</div>
+                )}
               </div>
               <div className="p-8">
                 <div className="flex gap-2 mb-3">
@@ -154,12 +119,16 @@ export default function BlogPage() {
                 <Link key={slug} href={`/blog/${slug}`} className="group">
                   <div className="bg-white rounded-2xl border border-border overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-200 h-full flex flex-col">
                     <div className="relative h-48 overflow-hidden bg-slate-100">
-                      <Image
-                        src={image}
-                        alt={title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                      {image ? (
+                        <Image
+                          src={image}
+                          alt={title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">No image</div>
+                      )}
                     </div>
                     <div className="p-6 flex flex-col flex-1">
                       <div className="flex gap-2 mb-3">

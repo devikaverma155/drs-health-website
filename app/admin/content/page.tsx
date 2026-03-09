@@ -3,6 +3,7 @@ import Link from 'next/link';
 const SECTIONS = [
   { href: '/admin/content/slideshow', label: '🖼️ Hero Slideshow', description: 'Manage the homepage hero banner slides — images, headlines, buttons' },
   { href: '/admin/content/combos', label: '🎁 Combo Offers', description: 'Manage the "Best Selling Combos" section — pricing, images, descriptions' },
+  { href: '/admin/content/blogs', label: '📰 Blog Posts', description: 'Add and edit blog articles — they appear at /blog and on the homepage' },
   { href: '/admin/content/website', label: '📝 Website Content', description: 'Manage other website sections and content blocks' },
 ];
 

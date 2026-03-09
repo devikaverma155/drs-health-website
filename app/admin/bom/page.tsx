@@ -34,8 +34,10 @@ export default async function BOMPage() {
             <thead>
               <tr className="text-left text-slate-500 border-b border-slate-200 bg-slate-50/50">
                 <th className="px-4 py-3 font-medium">Product</th>
+                <th className="px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3 font-medium">Raw items</th>
                 <th className="px-4 py-3 font-medium">Packaging items</th>
+                <th className="px-4 py-3 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -46,8 +48,19 @@ export default async function BOMPage() {
                       {bom.product?.name ?? 'Unknown product'}
                     </Link>
                   </td>
+                  <td className="px-4 py-3">
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${bom.status === 'complete' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'}`}>
+                      {bom.status || 'draft'}
+                    </span>
+                  </td>
                   <td className="px-4 py-3 text-slate-600">{bom.rawItems.length}</td>
                   <td className="px-4 py-3 text-slate-600">{bom.packagingItems.length}</td>
+                  <td className="px-4 py-3">
+                    <Link href={`/admin/bom/${bom.id}`} className="text-primary hover:underline mr-2">Edit</Link>
+                    {bom.status === 'complete' && bom.productId && (
+                      <Link href={`/admin/production/new?productId=${bom.productId}`} className="text-green-600 hover:underline">Add to Production</Link>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

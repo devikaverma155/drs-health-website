@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { BOMForm } from '../BOMForm';
+import { BOMRawItemsSection } from '../BOMRawItemsSection';
+import { BOMPackagingItemsSection } from '../BOMPackagingItemsSection';
 import { deleteBOM } from '../actions';
 import { DeleteButton } from '@/components/ui/DeleteButton';
 
@@ -18,7 +20,11 @@ export default async function BOMDetailPage({ params }: { params: Promise<{ id: 
     },
   });
   if (!bom) notFound();
-  const products = await prisma.product.findMany({ orderBy: { name: 'asc' }, select: { id: true, name: true } });
+  const [products, rawMaterials, packagingMaterials] = await Promise.all([
+    prisma.product.findMany({ orderBy: { name: 'asc' }, select: { id: true, name: true } }),
+    prisma.rawMaterial.findMany({ orderBy: { name: 'asc' }, select: { id: true, name: true, unit: true } }),
+    prisma.packagingMaterial.findMany({ orderBy: { name: 'asc' }, select: { id: true, name: true, unit: true } }),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -29,30 +35,16 @@ export default async function BOMDetailPage({ params }: { params: Promise<{ id: 
             <h1 className="text-xl font-semibold text-slate-900 mb-6">Edit BOM</h1>
             <BOMForm bom={bom} products={products} />
           </div>
-          <div className="rounded-xl bg-white border border-slate-200 p-6">
-            <h2 className="font-medium text-slate-900 mb-4">Raw materials</h2>
-            {bom.rawItems.length === 0 ? (
-              <p className="text-sm text-slate-500">No raw materials in this BOM.</p>
-            ) : (
-              <ul className="space-y-2 text-sm">
-                {bom.rawItems.map((item) => (
-                  <li key={item.id}>{item.rawMaterial?.name ?? 'Material'} — qty: {item.quantity != null ? String(item.quantity) : 0}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div className="rounded-xl bg-white border border-slate-200 p-6">
-            <h2 className="font-medium text-slate-900 mb-4">Packaging items</h2>
-            {bom.packagingItems.length === 0 ? (
-              <p className="text-sm text-slate-500">No packaging items in this BOM.</p>
-            ) : (
-              <ul className="space-y-2 text-sm">
-                {bom.packagingItems.map((item) => (
-                  <li key={item.id}>{item.packaging?.name ?? 'Packaging'} — qty: {item.quantity != null ? String(item.quantity) : 0}</li>
-                ))}
-              </ul>
-            )}
-          </div>
+          {bom.status === 'complete' && bom.productId && (
+            <div className="rounded-xl bg-white border border-slate-200 p-6">
+              <p className="text-sm text-slate-600 mb-2">BOM is complete. Add to Production to produce units; RM & PM will be deducted when you mark the batch completed.</p>
+              <Link href={`/admin/production/new?productId=${bom.productId}`} className="rounded-lg bg-green-600 text-white px-4 py-2 text-sm font-medium hover:bg-green-700 inline-block">
+                Add to Production
+              </Link>
+            </div>
+          )}
+          <BOMRawItemsSection bomId={bom.id} items={bom.rawItems} rawMaterials={rawMaterials} />
+          <BOMPackagingItemsSection bomId={bom.id} items={bom.packagingItems} packagingMaterials={packagingMaterials} />
         </div>
         <div>
           <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6">

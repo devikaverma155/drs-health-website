@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getProducts, getCategories } from '@/lib/woocommerce';
+import { getProducts, getCategories, searchProducts } from '@/lib/woocommerce';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ShopFilters } from './ShopFilters';
 import { ShopBannerSlideshow } from '@/sections/ShopBannerSlideshow';
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-type SearchParams = { category?: string; minPrice?: string; maxPrice?: string; new?: string };
+type SearchParams = { category?: string; minPrice?: string; maxPrice?: string; new?: string; q?: string };
 
 export default async function ShopPage({
   searchParams,
@@ -32,15 +32,18 @@ export default async function ShopPage({
   const minPrice = params.minPrice ? parseInt(params.minPrice, 10) : undefined;
   const maxPrice = params.maxPrice ? parseInt(params.maxPrice, 10) : undefined;
   const newOnly = params.new === '1';
+  const searchQuery = params.q?.trim() || undefined;
 
   const [products, categories] = await Promise.all([
-    getProducts({
-      limit: 1000,
-      category,
-      minPrice,
-      maxPrice,
-      newOnly,
-    }),
+    searchQuery
+      ? searchProducts(searchQuery, 200)
+      : getProducts({
+          limit: 1000,
+          category,
+          minPrice,
+          maxPrice,
+          newOnly,
+        }),
     getCategories(),
   ]);
 
@@ -51,14 +54,18 @@ export default async function ShopPage({
         <div className="container-tight">
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-semibold text-foreground mb-2">
-              {category
-                ? categories.find((c) => c.slug === category)?.label ?? category
-                : 'All Products'}
+              {searchQuery
+                ? `Search results for “${searchQuery}”`
+                : category
+                  ? categories.find((c) => c.slug === category)?.label ?? category
+                  : 'All Products'}
             </h1>
             <p className="text-body-muted">
-              {category
-                ? `Showing products in ${categories.find((c) => c.slug === category)?.label ?? category}`
-                : 'Authentic Ayurvedic formulations for wellness.'}
+              {searchQuery
+                ? `${products.length} product${products.length === 1 ? '' : 's'} found`
+                : category
+                  ? `Showing products in ${categories.find((c) => c.slug === category)?.label ?? category}`
+                  : 'Authentic Ayurvedic formulations for wellness.'}
             </p>
           </div>
 

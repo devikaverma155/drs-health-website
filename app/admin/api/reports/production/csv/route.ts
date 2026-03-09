@@ -18,7 +18,7 @@ export async function GET() {
   const rows = batches.map((b) => [
     b.batchNumber ?? b.id.slice(0, 8),
     b.product?.name ?? '',
-    b.quantityProduced ?? '',
+    b.quantityProduced != null ? String(b.quantityProduced) : '',
     b.status ?? '',
     b.manufacturingDate ? new Date(b.manufacturingDate).toISOString().slice(0, 10) : '',
     b.createdAt ? new Date(b.createdAt).toISOString().slice(0, 10) : '',

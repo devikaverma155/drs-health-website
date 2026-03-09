@@ -15,7 +15,7 @@ export default async function PackagingDetailPage({ params }: { params: Promise<
 
   return (
     <div className="space-y-6">
-      <Link href="/admin/packaging" className="text-sm text-slate-500 hover:text-slate-900">← Packaging Materials</Link>
+      <Link href="/admin/materials" className="text-sm text-slate-500 hover:text-slate-900">← Packaging Materials</Link>
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="rounded-xl bg-white border border-slate-200 p-6">
@@ -25,7 +25,7 @@ export default async function PackagingDetailPage({ params }: { params: Promise<
         </div>
         <div>
           <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6">
-            <DeleteButton action={deletePackagingMaterial.bind(null, packaging.id)} label="Delete Packaging" redirectPath="/admin/packaging" />
+            <DeleteButton action={deletePackagingMaterial.bind(null, packaging.id)} label="Delete Packaging" redirectPath="/admin/materials" />
           </div>
         </div>
       </div>

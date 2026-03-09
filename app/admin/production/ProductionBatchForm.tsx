@@ -9,14 +9,16 @@ import type { ProductionBatch } from '@prisma/client';
 export function ProductionBatchForm({
   batch,
   products,
+  initialProductId,
 }: {
   batch?: ProductionBatch | null;
   products: { id: string; name: string }[];
+  initialProductId?: string | null;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [productId, setProductId] = useState(batch?.productId ?? '');
+  const [productId, setProductId] = useState(batch?.productId ?? initialProductId ?? '');
   const [batchNumber, setBatchNumber] = useState(batch?.batchNumber ?? '');
   const [manufacturingDate, setManufacturingDate] = useState(batch?.manufacturingDate ? new Date(batch.manufacturingDate).toISOString().split('T')[0] : '');
   const [expiryDate, setExpiryDate] = useState(batch?.expiryDate ? new Date(batch.expiryDate).toISOString().split('T')[0] : '');
@@ -75,6 +77,7 @@ export function ProductionBatchForm({
             <option value="running">Running</option>
             <option value="completed">Completed</option>
           </select>
+          <p className="text-xs text-slate-500 mt-1">When set to Completed: RM &amp; PM (from BOM × quantity) are deducted from inventory and added to Finished Goods. Stock is checked first.</p>
         </div>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}

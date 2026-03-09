@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { OrderForm } from '../OrderForm';
+import { OrderItemsSection } from '../OrderItemsSection';
+import { DispatchesSection } from '../DispatchesSection';
 import { deleteOrder } from '../actions';
 import { DeleteButton } from '@/components/ui/DeleteButton';
 
@@ -15,6 +17,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   });
   if (!order) notFound();
   const clients = await prisma.client.findMany({ orderBy: { companyName: 'asc' }, select: { id: true, companyName: true } });
+  const products = await prisma.product.findMany({ orderBy: { name: 'asc' }, select: { id: true, name: true } });
 
   return (
     <div className="space-y-6">
@@ -25,30 +28,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <h1 className="text-xl font-semibold text-slate-900 mb-6">Edit Order</h1>
             <OrderForm order={order} clients={clients} />
           </div>
-          <div className="rounded-xl bg-white border border-slate-200 p-6">
-            <h2 className="font-medium text-slate-900 mb-4">Order items</h2>
-            {order.orderItems.length === 0 ? (
-              <p className="text-sm text-slate-500">No items yet.</p>
-            ) : (
-              <ul className="space-y-2 text-sm">
-                {order.orderItems.map((item) => (
-                  <li key={item.id}>{item.product?.name ?? 'Product'} × {item.quantity != null ? String(item.quantity) : 0}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div className="rounded-xl bg-white border border-slate-200 p-6">
-            <h2 className="font-medium text-slate-900 mb-4">Dispatches</h2>
-            {order.dispatches.length === 0 ? (
-              <p className="text-sm text-slate-500">No dispatches yet.</p>
-            ) : (
-              <ul className="space-y-2 text-sm">
-                {order.dispatches.map((d) => (
-                  <li key={d.id}>{d.dispatchDate ? new Date(d.dispatchDate).toLocaleDateString() : '-'} {d.notes && `— ${d.notes}`}</li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <OrderItemsSection orderId={order.id} items={order.orderItems} products={products} />
+          <DispatchesSection orderId={order.id} dispatches={order.dispatches} />
         </div>
         <div>
           <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6">

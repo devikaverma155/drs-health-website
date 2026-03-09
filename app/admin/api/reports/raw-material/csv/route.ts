@@ -28,7 +28,7 @@ export async function GET() {
     m.unit ?? '',
     m.supplier?.name ?? '',
     m.totalQty,
-    m.minStock ?? '',
+    m.minStock != null ? String(m.minStock) : '',
     m.status,
   ]);
   const csv = buildCsv([header, ...rows]);

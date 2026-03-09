@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import Link from 'next/link';
 import { RawMaterialOrderForm } from './RawMaterialOrderForm';
 
 export const dynamic = 'force-dynamic';
@@ -7,6 +8,7 @@ export default async function RawMaterialsPage() {
   const orders = await prisma.rawMaterialOrder.findMany({
     include: {
       vendor: true,
+      rawMaterial: true,
     },
     orderBy: { orderDate: 'desc' },
   });
@@ -15,6 +17,7 @@ export default async function RawMaterialsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-slate-900">Raw Material Orders</h1>
+        <Link href="/admin/vendor-orders" className="text-sm text-slate-500 hover:text-slate-900">← RM & PM Vendor Orders</Link>
       </div>
 
       <div className="rounded-xl bg-white border border-slate-200 p-6">
@@ -38,6 +41,7 @@ export default async function RawMaterialsPage() {
                 <th className="px-4 py-3 font-medium">Delivery Date</th>
                 <th className="px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3 font-medium">Notes</th>
+                <th className="px-4 py-3 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -61,7 +65,7 @@ export default async function RawMaterialsPage() {
                       <span className="text-slate-400">-</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{order.materialType || '-'}</td>
+                  <td className="px-4 py-3 text-slate-600">{order.rawMaterial?.name || order.materialType || '-'}</td>
                   <td className="px-4 py-3 text-slate-600">
                     {order.quantity && order.unit ? `${order.quantity} ${order.unit}` : order.quantity || '-'}
                   </td>
@@ -73,7 +77,7 @@ export default async function RawMaterialsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      order.status === 'delivered' ? 'bg-green-100 text-green-700' :
+                      order.status === 'delivered' || order.status === 'complete' ? 'bg-green-100 text-green-700' :
                       order.status === 'ordered' ? 'bg-blue-100 text-blue-700' :
                       order.status === 'cancelled' ? 'bg-red-100 text-red-700' :
                       'bg-slate-100 text-slate-700'
@@ -83,6 +87,9 @@ export default async function RawMaterialsPage() {
                   </td>
                   <td className="px-4 py-3 text-slate-600 max-w-xs truncate" title={order.notes || ''}>
                     {order.notes || '-'}
+                  </td>
+                  <td className="px-4 py-3">
+                    <Link href={`/admin/raw-materials/${order.id}`} className="text-primary font-medium hover:underline">Edit</Link>
                   </td>
                 </tr>
               ))}

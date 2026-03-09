@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { getPublishedBlogPostBySlug, getPublishedBlogPosts } from '@/lib/blog';
 
-const POSTS: Record<
+const STATIC_POSTS: Record<
   string,
   {
     title: string;
@@ -76,7 +77,7 @@ For best results, ACV tablets should be taken consistently as part of a balanced
     date: '2024-11-12',
     category: 'Natural Remedies',
     readTime: '6 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp',
+    image: 'https://drshealth.in/wp-content/uploads/2026/02/image-1771828228498-e1771838762263.png',
     excerpt: 'Learn how apple cider vinegar can soothe sore throats naturally.',
     content: `A sore throat can be uncomfortable and disruptive to daily life. While there are many over-the-counter options, natural remedies like apple cider vinegar have been used traditionally to soothe throat discomfort.
 
@@ -109,7 +110,7 @@ While traditional use is extensive, modern scientific studies on ACV for sore th
     date: '2024-11-12',
     category: 'Hair Care',
     readTime: '7 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp',
+    image: 'https://drshealth.in/wp-content/uploads/2024/11/Haircare-2.webp',
     excerpt: 'Unlock the secrets of shilajit for hair health and discover how to use it effectively.',
     content: `Shilajit, a mineral-rich substance formed over centuries in the Himalayan mountains, has been a cornerstone of Ayurvedic medicine for thousands of years. It's increasingly recognized for its powerful benefits for hair health.
 
@@ -249,7 +250,7 @@ Always consult with an Ayurvedic practitioner before starting new herbs, especia
     date: '2024-01-01',
     category: 'Wellness',
     readTime: '7 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png',
+    image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp',
     excerpt: 'Simple Ayurvedic practices to stay healthy through the cold season.',
     content: `Winter is when the body's digestive fire naturally weakens, making it important to take extra care of your immunity. Ayurveda offers time-tested practices to maintain strong immunity through the colder months.
 
@@ -319,7 +320,8 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = POSTS[slug];
+  const dbPost = await getPublishedBlogPostBySlug(slug);
+  const post = dbPost ?? STATIC_POSTS[slug];
   if (!post) return { title: 'Post not found' };
   return {
     title: `${post.title} | DRS Health Blog`,
@@ -327,32 +329,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${post.title} | DRS Health Blog`,
       description: post.excerpt,
-      images: [{ url: post.image }],
+      images: post.image ? [{ url: post.image }] : undefined,
     },
   };
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = POSTS[slug];
+  const dbPost = await getPublishedBlogPostBySlug(slug);
+  const post = dbPost ?? STATIC_POSTS[slug];
   if (!post) notFound();
 
-  const relatedPosts = Object.entries(POSTS)
-    .filter(([s]) => s !== slug && POSTS[s].category === post.category)
-    .slice(0, 3)
+  const dbPosts = await getPublishedBlogPosts();
+  const dbSlugs = new Set(dbPosts.map((p) => p.slug));
+  const staticOnly = Object.entries(STATIC_POSTS)
+    .filter(([s]) => !dbSlugs.has(s))
     .map(([s, p]) => ({ slug: s, ...p }));
+  const allPosts = [...dbPosts, ...staticOnly];
+  const relatedPosts = allPosts
+    .filter((p) => p.slug !== slug && p.category === post.category)
+    .slice(0, 3);
 
   return (
     <article className="bg-background">
       {/* Hero Image */}
       <div className="relative w-full h-96 md:h-[500px] bg-slate-100 overflow-hidden">
-        <Image
-          src={post.image}
-          alt={post.title}
-          fill
-          className="object-cover"
-          priority
-        />
+        {post.image ? (
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-slate-400">No image</div>
+        )}
       </div>
 
       {/* Article Content */}
@@ -379,7 +391,7 @@ export default async function BlogPostPage({ params }: Props) {
 
           {/* Article Body */}
           <div className="prose prose-neutral max-w-none">
-            {post.content.split('\n\n').map((paragraph, idx) => (
+            {(post.content || '').split(/\n\n+/).map((paragraph, idx) => (
               <p
                 key={idx}
                 className="text-body-muted leading-relaxed mb-6 whitespace-pre-wrap"
@@ -396,22 +408,26 @@ export default async function BlogPostPage({ params }: Props) {
                 Related Articles
               </h3>
               <div className="grid md:grid-cols-3 gap-6">
-                {relatedPosts.map((post) => (
-                  <Link key={post.slug} href={`/blog/${post.slug}`} className="group">
+                {relatedPosts.map((rel) => (
+                  <Link key={rel.slug} href={`/blog/${rel.slug}`} className="group">
                     <div className="bg-white rounded-xl border border-border overflow-hidden shadow-card hover:shadow-card-hover transition-all h-full">
                       <div className="relative h-40 bg-slate-100 overflow-hidden">
-                        <Image
-                          src={post.image}
-                          alt={post.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform"
-                        />
+                        {rel.image ? (
+                          <Image
+                            src={rel.image}
+                            alt={rel.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">No image</div>
+                        )}
                       </div>
                       <div className="p-4">
                         <h4 className="font-semibold text-foreground group-hover:text-primary line-clamp-2 mb-2">
-                          {post.title}
+                          {rel.title}
                         </h4>
-                        <time className="text-xs text-body-muted">{post.date}</time>
+                        <time className="text-xs text-body-muted">{rel.date}</time>
                       </div>
                     </div>
                   </Link>
