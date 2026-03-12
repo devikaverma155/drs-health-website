@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Return static pages only if API fails - don't crash the build
   }
 
-  const blogSlugs = ['ayurveda-daily-routine', 'liver-care-herbs', 'immunity-winter'];
+  const blogSlugs = ['ayurveda-daily-routine', 'liver-care-herbs', 'immunity-winter', 'advantages-of-milk-thistle', 'apple-cider-vinegar-tablets-benefits', 'understanding-apple-cider-vinegar-sore-throat-remedy', 'shilajit-for-hair-benefits-and-usage-tips'];
   const blogUrls: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
     url: `${BASE}/blog/${slug}`,
     lastModified: new Date(),

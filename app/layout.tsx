@@ -16,19 +16,28 @@ const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700
 export const metadata: Metadata = {
   metadataBase: new URL('https://drshealth.in'),
   title: {
-    default: 'DRS Health – Authentic Ayurvedic Wellness',
+    default: 'DRS Health – Authentic Ayurvedic Wellness Products & Expert Consultation',
     template: '%s | DRS Health',
   },
   description:
-    'Trusted Ayurvedic formulations for wellness. Weight management, liver care, immunity, diabetes support and more. Free consultation with our experts.',
+    'Premium Ayurvedic products for holistic wellness. Explore herbal remedies for weight management, liver care, immunity, hair health, and more. Get free expert consultation today.',
+  keywords: 'Ayurvedic products, herbal remedies, natural supplements, liver care, weight management, immunity booster, Ayurveda, traditional medicine, wellness',
   openGraph: {
     type: 'website',
     locale: 'en_IN',
     siteName: 'DRS Health',
+    title: 'DRS Health – Authentic Ayurvedic Wellness Products',
+    description: 'Trusted Ayurvedic formulations and natural wellness solutions for better health.',
   },
   robots: {
     index: true,
     follow: true,
+    'max-image-preview': 'large',
+    'max-snippet': -1,
+    'max-video-preview': -1,
+  },
+  alternates: {
+    canonical: 'https://drshealth.in',
   },
 };
 

@@ -4,23 +4,26 @@ import Link from 'next/link';
 import { getPublishedBlogPosts } from '@/lib/blog';
 
 export const metadata: Metadata = {
-  title: 'Ayurveda & Wellness Blog | DRS Health',
+  title: 'Ayurveda & Wellness Blog | Herbal Remedies & Health Tips | DRS Health',
   description:
-    'Expert articles on Ayurveda, herbal remedies, wellness tips, and traditional medicine. Learn about liver care, immunity, weight management and more.',
+    'Expert Ayurveda and wellness blog featuring herbal remedies, natural supplements, liver care, hair health, immunity boosters, and traditional medicine. Learn science-backed wellness tips from DRS Health.',
+  keywords: 'Ayurveda, herbal remedies, wellness, liver care, immunity, natural health, Ayurvedic medicine, herbal supplements',
   openGraph: {
-    title: 'Blog | DRS Health',
-    description: 'Ayurveda and wellness articles from DRS Health.',
+    title: 'Ayurveda & Wellness Blog | DRS Health',
+    description: 'Expert Ayurvedic articles on natural health remedies, herbal supplements, and wellness practices.',
+    type: 'website',
+    locale: 'en_IN',
   },
 };
 
 const STATIC_POSTS = [
-  { slug: 'advantages-of-milk-thistle', title: 'Advantage Of Milk Thistle: Key Benefits You Need To Know', date: '2024-12-26', excerpt: 'Discover the powerful benefits of milk thistle for liver health, detoxification, and overall wellness. Learn why this ancient herb is trusted by healthcare practitioners worldwide.', image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp', category: 'Herbal Remedies', readTime: '8 min read' },
-  { slug: 'apple-cider-vinegar-tablets-benefits', title: 'Apple Cider Vinegar Tablets Benefits: A Comprehensive Guide', date: '2024-12-26', excerpt: 'Explore the scientifically-backed health benefits of apple cider vinegar tablets. From digestive health to weight management, understand why this supplement is gaining popularity.', image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png', category: 'Supplements', readTime: '10 min read' },
-  { slug: 'understanding-apple-cider-vinegar-sore-throat-remedy', title: 'Understanding Apple Cider Vinegar: A Natural Sore Throat Remedy', date: '2024-11-12', excerpt: 'Learn how apple cider vinegar can soothe sore throats naturally. This comprehensive guide covers usage methods, scientific evidence, and safety considerations.', image: 'https://drshealth.in/wp-content/uploads/2026/02/image-1771828228498-e1771838762263.png', category: 'Natural Remedies', readTime: '6 min read' },
-  { slug: 'shilajit-for-hair-benefits-and-usage-tips', title: 'Shilajit For Hair: Key Benefits And Simple Usage Tips', date: '2024-11-12', excerpt: 'Unlock the secrets of shilajit for hair health. Discover how this mineral-rich substance can strengthen hair, promote growth, and improve scalp health with easy usage tips.', image: 'https://drshealth.in/wp-content/uploads/2024/11/Haircare-2.webp', category: 'Hair Care', readTime: '7 min read' },
-  { slug: 'ayurveda-daily-routine', title: 'Ayurveda and Your Daily Routine: Align Your Day with Ancient Wisdom', date: '2024-01-15', excerpt: 'How to align your day with Ayurvedic principles for better energy and balance. Learn the daily practices that support optimal health and wellness.', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg', category: 'Lifestyle', readTime: '9 min read' },
-  { slug: 'liver-care-herbs', title: 'Herbs for Liver Care and Detox: Traditional Wisdom Meets Modern Science', date: '2024-01-08', excerpt: 'Traditional herbs that support liver function and natural detoxification. Explore powerful Ayurvedic formulations for liver health and wellness.', image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp', category: 'Herbal Remedies', readTime: '8 min read' },
-  { slug: 'immunity-winter', title: 'Building Immunity in Winter: Ayurvedic Practices for Cold Season', date: '2024-01-01', excerpt: 'Simple Ayurvedic practices to stay healthy through the cold season. Learn warming foods, herbs, and lifestyle tips to boost immunity naturally.', image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp', category: 'Wellness', readTime: '7 min read' },
+  { slug: 'advantages-of-milk-thistle', title: 'Advantage Of Milk Thistle: Key Benefits You Need To Know', date: '2024-12-26', excerpt: 'Discover the powerful benefits of milk thistle for liver health, detoxification, and overall wellness. Learn why this ancient herb is trusted by healthcare practitioners worldwide.', image: 'https://drshealth.in/wp-content/uploads/2026/03/thistel.webp', category: 'Herbal Remedies', readTime: '8 min read' },
+  { slug: 'apple-cider-vinegar-tablets-benefits', title: 'Apple Cider Vinegar Tablets Benefits: A Comprehensive Guide', date: '2024-12-26', excerpt: 'Explore the scientifically-backed health benefits of apple cider vinegar tablets. From digestive health to weight management, understand why this supplement is gaining popularity.', image: 'https://drshealth.in/wp-content/uploads/2026/03/cider-tablets.webp', category: 'Supplements', readTime: '10 min read' },
+  { slug: 'understanding-apple-cider-vinegar-sore-throat-remedy', title: 'Understanding Apple Cider Vinegar: A Natural Sore Throat Remedy', date: '2024-11-12', excerpt: 'Learn how apple cider vinegar can soothe sore throats naturally. This comprehensive guide covers usage methods, scientific evidence, and safety considerations.', image: 'https://drshealth.in/wp-content/uploads/2026/03/apple-cider.webp', category: 'Natural Remedies', readTime: '6 min read' },
+  { slug: 'shilajit-for-hair-benefits-and-usage-tips', title: 'Shilajit For Hair: Key Benefits And Simple Usage Tips', date: '2024-11-12', excerpt: 'Unlock the secrets of shilajit for hair health. Discover how this mineral-rich substance can strengthen hair, promote growth, and improve scalp health with easy usage tips.', image: 'https://drshealth.in/wp-content/uploads/2026/03/hairs.jpg', category: 'Hair Care', readTime: '7 min read' },
+  { slug: 'ayurveda-daily-routine', title: 'Ayurveda and Your Daily Routine: Align Your Day with Ancient Wisdom', date: '2024-01-15', excerpt: 'How to align your day with Ayurvedic principles for better energy and balance. Learn the daily practices that support optimal health and wellness.', image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80', category: 'Lifestyle', readTime: '9 min read' },
+  { slug: 'liver-care-herbs', title: 'Herbs for Liver Care and Detox: Traditional Wisdom Meets Modern Science', date: '2024-01-08', excerpt: 'Traditional herbs that support liver function and natural detoxification. Explore powerful Ayurvedic formulations for liver health and wellness.', image: 'https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=800&q=80', category: 'Herbal Remedies', readTime: '8 min read' },
+  { slug: 'immunity-winter', title: 'Building Immunity in Winter: Ayurvedic Practices for Cold Season', date: '2024-01-01', excerpt: 'Simple Ayurvedic practices to stay healthy through the cold season. Learn warming foods, herbs, and lifestyle tips to boost immunity naturally.', image: 'https://drshealth.in/wp-content/uploads/2026/03/immunity-.avif', category: 'Wellness', readTime: '7 min read' },
 ];
 
 export default async function BlogPage() {

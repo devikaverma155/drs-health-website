@@ -44,10 +44,10 @@ export function ProfileSection({ email }: ProfileSectionProps) {
     <div className="p-8">
       <div className="max-w-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <h2 className="text-2xl font-bold text-gray-900">Profile Information</h2>
           {!isEditing && (
-            <Button variant="secondary" onClick={() => setIsEditing(true)}>
+            <Button variant="secondary" onClick={() => setIsEditing(true)} className="w-full md:w-auto">
               Edit Profile
             </Button>
           )}
@@ -118,12 +118,13 @@ export function ProfileSection({ email }: ProfileSectionProps) {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-4 pt-6 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
             {isEditing && (
               <>
                 <Button
                   onClick={handleSave}
                   disabled={isSaving}
+                  className="w-full sm:w-auto"
                 >
                   {isSaving ? 'Saving...' : 'Save Changes'}
                 </Button>
@@ -138,6 +139,7 @@ export function ProfileSection({ email }: ProfileSectionProps) {
                       email: email,
                     });
                   }}
+                  className="w-full sm:w-auto"
                 >
                   Cancel
                 </Button>

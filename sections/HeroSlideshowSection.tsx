@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/Button';
 import { DEFAULT_HERO_SLIDES } from '@/lib/heroSlides';
 import type { HeroSlideConfig } from '@/lib/heroSlides';
 
@@ -51,60 +50,20 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
   }, []);
 
   return (
-    <section className="relative min-h-[520px] md:min-h-[680px] flex items-center bg-[#F7F6F1] overflow-hidden">
-      {/* Organic shape backgrounds (wellness premium) */}
-      <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-green-200 blur-[120px] opacity-20 pointer-events-none" aria-hidden />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-amber-100 blur-[140px] opacity-25 pointer-events-none" aria-hidden />
+    <section className="relative min-h-[400px] md:min-h-[520px] flex items-center bg-[#F7F6F1] overflow-hidden">
       <div className="absolute inset-0">
         {current.image ? (
           <Image
             src={current.image}
             alt={current.imageAlt ?? current.headline}
             fill
-            className="object-cover opacity-90"
+            className="object-cover"
             priority
             sizes="100vw"
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-soft-bg to-accent-mint/20" />
         )}
-        <div className="absolute inset-0 bg-black/20" />
-      </div>
-      <div className="container-tight relative z-10 py-16 md:py-24">
-        <div className="max-w-2xl">
-          <h1
-            className="font-heading text-3xl sm:text-4xl md:text-5xl tracking-tight"
-            style={{
-              color: current.textColor || undefined,
-              fontWeight: current.headlineBold !== false ? 600 : 400,
-            }}
-          >
-            {current.headline}
-          </h1>
-          {current.subtext && (
-            <p
-              className="mt-6 text-lg leading-relaxed"
-              style={{
-                color: current.textColor ? `${current.textColor}dd` : undefined,
-                fontWeight: current.subtextBold ? 700 : 400,
-              }}
-            >
-              {current.subtext}
-            </p>
-          )}
-          <div className="mt-10 flex flex-wrap gap-4">
-            {current.ctaHref && (
-              <Button href={current.ctaHref} variant="primary">
-                {current.ctaLabel ?? 'Learn more'}
-              </Button>
-            )}
-            {current.secondaryCtaHref && (
-              <Button href={current.secondaryCtaHref} variant="secondary">
-                {current.secondaryCtaLabel ?? 'Learn more'}
-              </Button>
-            )}
-          </div>
-        </div>
       </div>
       <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10" aria-label="Slide navigation">
         {slides.map((_, i) => (

@@ -50,6 +50,16 @@ export async function POST(request: Request) {
       },
     });
 
+    // Create a notification for the admin dashboard
+    try {
+      // Store notification in activity log or create a notification table entry
+      // For now, we'll use console.log that can be picked up by the admin dashboard
+      // You can implement a real notification table if needed
+      console.log(`🔔 NEW LEAD: ${name} (${phone}) - ${email}`);
+    } catch (notificationError) {
+      console.error('Failed to create notification:', notificationError);
+    }
+
     // Fire-and-forget automations
     runNewLeadAutomations({
       id: lead.id,
@@ -61,7 +71,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Thank you. We will contact you soon.',
+      message: 'Query received. Our expert team will contact you shortly.',
     });
   } catch (err) {
     console.error('Contact form error:', err);

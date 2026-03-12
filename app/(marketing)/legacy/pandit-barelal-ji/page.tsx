@@ -26,7 +26,7 @@ export default function PanditBarelaJiPage() {
           {/* Featured Image */}
           <div className="relative h-96 md:h-[28rem] w-full mb-12 rounded-xl overflow-hidden shadow-card">
             <Image
-              src="https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-02-at-15.45.56.jpeg"
+              src="https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-09-14-08-09-e1773333343158.jpg"
               alt="Pandit Barelal Ji Jain - Founder of Ayurvedic Legacy"
               fill
               className="object-cover"

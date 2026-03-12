@@ -110,10 +110,10 @@ export function AddToCartForm({ product }: { product: Product }) {
           disabled={isAdding}
           className="h-11 px-7 bg-primary text-white font-semibold text-sm uppercase tracking-wide rounded-lg
             hover:bg-primary-dark active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed
-            shadow-sm hover:shadow-md"
+            shadow-sm hover:shadow-md flex-1 sm:flex-initial"
         >
           {isAdding ? (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center justify-center gap-2">
               <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -129,8 +129,8 @@ export function AddToCartForm({ product }: { product: Product }) {
         <button
           type="button"
           onClick={handleBuyNow}
-          className="h-11 px-7 bg-foreground text-white font-semibold text-sm uppercase tracking-wide rounded-lg
-            hover:bg-foreground/90 active:scale-[0.98] transition-all shadow-sm hover:shadow-md"
+          className="h-11 px-7 bg-accent-lime text-white font-semibold text-sm uppercase tracking-wide rounded-lg
+            hover:opacity-90 active:scale-[0.98] transition-all shadow-sm hover:shadow-md flex-1 sm:flex-initial"
         >
           Buy Now
         </button>

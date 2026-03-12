@@ -88,7 +88,7 @@ export function CategoryCarouselAnimated({
   if (!categories.length) return null;
 
   return (
-    <div className="w-full py-16 lg:py-24">
+    <div className="w-full py-8 lg:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-10">
           {/* Section header — matching site typography */}

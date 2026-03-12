@@ -75,20 +75,20 @@ export default async function ShopPage({
             <p className="text-sm text-body-muted">{products.length} products</p>
           </div>
 
-          <div className="flex gap-8">
+          <div className="flex gap-6 md:gap-8">
             {/* Desktop Sidebar — hidden on mobile */}
-            <div className="hidden md:block">
+            <div className="hidden md:block flex-shrink-0 w-56">
               <ShopFilters categories={categories} />
             </div>
 
             {/* Product Grid */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 w-full">
               {products.length === 0 ? (
-                <p className="text-body-muted py-12">No products found. Try adjusting filters.</p>
+                <p className="text-body-muted py-12 text-center">No products found. Try adjusting filters.</p>
               ) : (
                 <>
-                  <p className="text-sm text-body-muted mb-4 hidden md:block">{products.length} products</p>
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+                  <p className="text-sm text-body-muted mb-6 hidden md:block">{products.length} products</p>
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
                     {products.map((product) => (
                       <ProductCard key={product.id} product={product} />
                     ))}
