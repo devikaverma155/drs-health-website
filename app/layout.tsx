@@ -13,6 +13,7 @@ import { AuthSessionProvider } from '@/lib/SessionProvider';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-heading' });
 
+//adding favicon logo url
 const LOGO_URL = 'https://drshealth.in/wp-content/uploads/2025/01/DRS-Logo.png';
 
 export const metadata: Metadata = {
