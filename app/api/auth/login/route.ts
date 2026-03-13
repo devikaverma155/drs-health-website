@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     if (!baseUrl || !consumerKey || !consumerSecret) {
       return NextResponse.json(
-        { error: 'WooCommerce API not configured' },
+        { error: 'Service temporarily unavailable' },
         { status: 500 }
       );
     }
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to login' },
+      { error: 'Login failed. Please try again.' },
       { status: 500 }
     );
   }

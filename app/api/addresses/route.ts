@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
     if (!baseUrl || !consumerKey || !consumerSecret) {
       return NextResponse.json(
-        { error: 'WooCommerce API not configured' },
+        { error: 'Service temporarily unavailable' },
         { status: 500 }
       );
     }
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     if (!baseUrl || !consumerKey || !consumerSecret) {
       return NextResponse.json(
-        { error: 'WooCommerce API not configured' },
+        { error: 'Service temporarily unavailable' },
         { status: 500 }
       );
     }

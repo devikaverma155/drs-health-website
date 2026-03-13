@@ -65,7 +65,7 @@ export function AddToCartForm({ product }: { product: Product }) {
             id="variant"
             value={selectedVariantId}
             onChange={(e) => setSelectedVariantId(e.target.value)}
-            className="w-full rounded-lg border border-input-border bg-white px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            className="w-full border border-input-border bg-white px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
           >
             {product.variants.map((v) => (
               <option key={v.id} value={v.id}>{v.title}</option>
@@ -74,10 +74,10 @@ export function AddToCartForm({ product }: { product: Product }) {
         </div>
       )}
 
-      {/* Quantity + Add to Cart + Buy Now */}
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Quantity selector */}
-        <div className="flex items-center border border-border rounded-lg overflow-hidden">
+      {/* Quantity + Add to Cart + Buy Now — rectangular, mobile-friendly */}
+      <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
+        {/* Quantity selector — rectangular */}
+        <div className="flex items-center border border-border overflow-hidden w-fit">
           <button
             type="button"
             aria-label="Decrease quantity"
@@ -103,37 +103,39 @@ export function AddToCartForm({ product }: { product: Product }) {
           </button>
         </div>
 
-        {/* Add to Cart */}
-        <button
-          type="button"
-          onClick={handleAddToCart}
-          disabled={isAdding}
-          className="h-11 px-7 bg-primary text-white font-semibold text-sm uppercase tracking-wide rounded-lg
-            hover:bg-primary-dark active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed
-            shadow-sm hover:shadow-md flex-1 sm:flex-initial"
-        >
-          {isAdding ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-              Adding…
-            </span>
-          ) : (
-            'Add to Cart'
-          )}
-        </button>
+        <div className="flex flex-col xs:flex-row gap-3 flex-1 sm:flex-initial">
+          {/* Add to Cart — rectangular, full width on mobile */}
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={isAdding}
+            className="h-11 px-5 sm:px-7 bg-primary text-white font-semibold text-sm uppercase tracking-wide rounded-none
+              hover:bg-primary-dark active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed
+              shadow-sm hover:shadow-md min-w-0 whitespace-nowrap"
+          >
+            {isAdding ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Adding…
+              </span>
+            ) : (
+              'Add to Cart'
+            )}
+          </button>
 
-        {/* Buy Now */}
-        <button
-          type="button"
-          onClick={handleBuyNow}
-          className="h-11 px-7 bg-accent-lime text-white font-semibold text-sm uppercase tracking-wide rounded-lg
-            hover:opacity-90 active:scale-[0.98] transition-all shadow-sm hover:shadow-md flex-1 sm:flex-initial"
-        >
-          Buy Now
-        </button>
+          {/* Buy Now — rectangular */}
+          <button
+            type="button"
+            onClick={handleBuyNow}
+            className="h-11 px-5 sm:px-7 bg-accent-lime text-white font-semibold text-sm uppercase tracking-wide rounded-none
+              hover:opacity-90 active:scale-[0.98] transition-all shadow-sm hover:shadow-md min-w-0 whitespace-nowrap"
+          >
+            Buy Now
+          </button>
+        </div>
       </div>
 
       {/* Min quantity notice */}

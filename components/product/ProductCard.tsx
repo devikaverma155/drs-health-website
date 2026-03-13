@@ -188,7 +188,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="flex-1 min-h-2" />
 
         {/* ── QUANTITY STEPPER ── */}
-        <div className="mt-4 flex items-center justify-between rounded-full border-2 border-gray-200 bg-white">
+        <div className="mt-4 flex items-center justify-between border-2 border-gray-200 bg-white">
           <button
             type="button"
             aria-label="Decrease quantity"
@@ -221,7 +221,7 @@ export function ProductCard({ product }: ProductCardProps) {
           onClick={handleAddToCart}
           disabled={isSoldOut}
           className={`
-            mt-3 w-full rounded-xl py-3
+            mt-3 w-full  py-3
             text-xs sm:text-sm font-extrabold tracking-widest uppercase
             transition-all duration-200 active:scale-[0.97]
             ${isSoldOut

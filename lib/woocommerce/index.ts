@@ -10,6 +10,8 @@ export {
   searchProducts,
   getCategories,
   getCheckoutUrl,
+  getProductReviews,
+  createProductReview,
   commerceProvider,
 } from './woocommerce';
 
@@ -21,4 +23,4 @@ export async function getNewLaunches(limit = 10) {
 
 export { mapWooProduct, normalizedToProduct } from './mapProduct';
 
-export type { Product, ProductVariant, NormalizedProduct } from './types';
+export type { Product, ProductVariant, NormalizedProduct, ProductReview } from './types';

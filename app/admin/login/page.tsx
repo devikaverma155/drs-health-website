@@ -72,17 +72,7 @@ export default function AdminLoginPage() {
             />
           </div>
           {error && (
-            <>
-              <p className="text-sm text-red-600">{error}</p>
-              <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800">
-                <p className="font-medium mb-1">If email is correct, try:</p>
-                <ol className="list-decimal list-inside space-y-0.5">
-                  <li>Password is exactly <strong>admin123</strong> (all lowercase, no spaces)</li>
-                  <li>Re-create the admin user: run <code className="bg-amber-100 px-1 rounded">npm run db:seed</code> in your project folder</li>
-                  <li>Restart the dev server after seeding</li>
-                </ol>
-              </div>
-            </>
+            <p className="text-sm text-red-600" role="alert">{error}</p>
           )}
           <button
             type="submit"
@@ -92,9 +82,6 @@ export default function AdminLoginPage() {
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
-        <p className="mt-4 text-xs text-slate-500 text-center">
-          Default: admin@drs<strong>health</strong>.com / admin<strong>123</strong> (after running npm run db:seed)
-        </p>
       </div>
     </div>
   );

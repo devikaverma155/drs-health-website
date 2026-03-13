@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Review {
   id: string;
@@ -17,48 +17,74 @@ interface ProductReviewsProps {
 }
 
 export function ProductReviews({ productId, productTitle }: ProductReviewsProps) {
-  const [reviews, setReviews] = useState<Review[]>([
-    {
-      id: '1',
-      name: 'Rajesh Kumar',
-      rating: 5,
-      comment: 'Excellent product! Quality is outstanding and delivery was very fast.',
-      date: '2 weeks ago',
-      verified: true,
-    },
-    {
-      id: '2',
-      name: 'Priya Singh',
-      rating: 4,
-      comment: 'Good product. Worth the price. Customer service was helpful.',
-      date: '1 month ago',
-      verified: true,
-    },
-  ]);
-
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
     rating: 5,
     comment: '',
   });
 
-  const handleSubmitReview = (e: React.FormEvent) => {
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchReviews() {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await fetch(`/api/reviews?productId=${encodeURIComponent(productId)}`);
+        if (!res.ok) throw new Error('Failed to load reviews');
+        const data = await res.json();
+        if (!cancelled) setReviews(Array.isArray(data) ? data : []);
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : 'Could not load reviews');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    fetchReviews();
+    return () => { cancelled = true; };
+  }, [productId]);
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.comment.trim()) return;
-
-    const newReview: Review = {
-      id: Date.now().toString(),
-      name: formData.name,
-      rating: formData.rating,
-      comment: formData.comment,
-      date: 'Just now',
-      verified: false,
-    };
-
-    setReviews([newReview, ...reviews]);
-    setFormData({ name: '', rating: 5, comment: '' });
-    setShowForm(false);
+    if (!formData.name.trim() || !formData.email.trim() || !formData.comment.trim()) return;
+    setSubmitError(null);
+    setSubmitLoading(true);
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          rating: formData.rating,
+          comment: formData.comment.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Failed to submit review');
+      const newReview: Review = {
+        id: data.id,
+        name: data.name,
+        rating: data.rating,
+        comment: data.comment,
+        date: data.date || 'Just now',
+        verified: data.verified ?? false,
+      };
+      setReviews((prev) => [newReview, ...prev]);
+      setFormData({ name: '', email: '', rating: 5, comment: '' });
+      setShowForm(false);
+    } catch (e) {
+      setSubmitError(e instanceof Error ? e.message : 'Could not submit review');
+    } finally {
+      setSubmitLoading(false);
+    }
   };
 
   const averageRating =
@@ -74,9 +100,21 @@ export function ProductReviews({ productId, productTitle }: ProductReviewsProps)
       : 0,
   }));
 
+  if (loading) {
+    return (
+      <div className="mt-16 pt-8 border-t border-gray-200">
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8">Customer Reviews</h2>
+        <p className="text-body-muted">Loading reviews…</p>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-16 pt-8 border-t border-gray-200">
       <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8">Customer Reviews</h2>
+      {error && (
+        <p className="text-amber-600 mb-4">{error}</p>
+      )}
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Rating Summary */}
@@ -88,7 +126,7 @@ export function ProductReviews({ productId, productTitle }: ProductReviewsProps)
                 <svg
                   key={i}
                   className={`w-5 h-5 ${
-                    i < Math.round(parseFloat(averageRating as any)) ? 'text-yellow-400' : 'text-gray-300'
+                    i < Math.round(parseFloat(averageRating as string)) ? 'text-yellow-400' : 'text-gray-300'
                   }`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
@@ -116,10 +154,10 @@ export function ProductReviews({ productId, productTitle }: ProductReviewsProps)
             ))}
           </div>
 
-          {/* Submit Review Button */}
+          {/* Write a Review / Submit Review button */}
           <button
             onClick={() => setShowForm(!showForm)}
-            className="w-full mt-6 px-4 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary-dark transition-colors"
+            className="w-full mt-6 px-4 py-3 bg-primary text-white rounded-none font-semibold hover:bg-primary-dark transition-colors"
           >
             {showForm ? 'Cancel' : 'Write a Review'}
           </button>
@@ -131,6 +169,9 @@ export function ProductReviews({ productId, productTitle }: ProductReviewsProps)
           {showForm && (
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 mb-6">
               <h3 className="font-bold text-foreground mb-4">Share Your Experience</h3>
+              {submitError && (
+                <p className="text-amber-600 text-sm mb-4">{submitError}</p>
+              )}
               <form onSubmit={handleSubmitReview} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">Your Name</label>
@@ -140,6 +181,17 @@ export function ProductReviews({ productId, productTitle }: ProductReviewsProps)
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary"
                     placeholder="Enter your name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Your Email</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                    placeholder="Enter your email"
                     required
                   />
                 </div>
@@ -180,12 +232,15 @@ export function ProductReviews({ productId, productTitle }: ProductReviewsProps)
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full px-4 py-3 bg-accent-lime text-white rounded-lg font-semibold hover:opacity-90 transition-opacity"
-                >
-                  Submit Review
-                </button>
+                <div className="pt-4 pb-2">
+                  <button
+                    type="submit"
+                    disabled={submitLoading}
+                    className="w-full px-6 py-3.5 bg-primary text-white rounded-none font-semibold text-base hover:bg-primary-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed border-0"
+                  >
+                    {submitLoading ? 'Submitting…' : 'Submit Review'}
+                  </button>
+                </div>
               </form>
             </div>
           )}

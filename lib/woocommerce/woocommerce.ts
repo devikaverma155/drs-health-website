@@ -3,7 +3,7 @@
  * Server-side only; never expose consumer key/secret to client.
  */
 
-import type { WooProductRaw } from './types';
+import type { WooProductRaw, WooProductReviewRaw, ProductReview } from './types';
 import { mapWooProduct, normalizedToProduct } from './mapProduct';
 import type { NormalizedProduct, Product } from './types';
 
@@ -59,6 +59,26 @@ async function wcFetch<T>(path: string, params?: Record<string, string>): Promis
     console.error(`wcFetch error at ${path}:`, error instanceof Error ? error.message : String(error));
     throw error;
   }
+}
+
+async function wcPost<T>(path: string, body: Record<string, unknown>): Promise<T> {
+  const base = requireBaseUrl();
+  const auth = getAuth();
+  const url = `${base}${path}`;
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...(auth ? { Authorization: `Basic ${auth}` } : {}),
+  };
+  const res = await fetch(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`WooCommerce API error ${res.status}: ${text}`);
+  }
+  return res.json() as Promise<T>;
 }
 
 /**
@@ -284,6 +304,88 @@ export async function searchProducts(query: string, limit = 50): Promise<Product
   const raw = await fetchWooProducts({ search: query, per_page: limit });
   const normalized = raw.map(mapWooProduct);
   return normalized.map((n) => normalizedToProduct(n));
+}
+
+/**
+ * Map WooCommerce raw review to UI ProductReview.
+ */
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function mapWooReview(raw: WooProductReviewRaw): ProductReview {
+  const dateStr = raw.date_created ?? raw.date_created_gmt ?? '';
+  const date = dateStr
+    ? (() => {
+        try {
+          const d = new Date(dateStr);
+          return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+        } catch {
+          return dateStr;
+        }
+      })()
+    : '';
+
+  const reviewText = (raw.review as string) ?? '';
+  return {
+    id: String(raw.id),
+    name: (raw.reviewer as string) ?? 'Anonymous',
+    rating: typeof raw.rating === 'number' ? raw.rating : 0,
+    comment: stripHtml(reviewText) || reviewText,
+    date,
+    verified: !!raw.verified,
+  };
+}
+
+/**
+ * Fetch product reviews from WooCommerce (same data as in WP admin → Comments / product reviews).
+ * Returns empty array if API is unavailable or product has no reviews.
+ */
+export async function getProductReviews(productId: string): Promise<ProductReview[]> {
+  if (!getBaseUrl() || !getAuth()) return [];
+  try {
+    const { data } = await wcFetch<WooProductReviewRaw[]>('/products/reviews', {
+      product_id: productId,
+      per_page: '50',
+      orderby: 'date',
+      order: 'desc',
+      status: 'approved',
+    });
+    const arr = Array.isArray(data) ? data : [];
+    return arr.map(mapWooReview);
+  } catch (error) {
+    console.error('getProductReviews error:', error instanceof Error ? error.message : String(error));
+    return [];
+  }
+}
+
+/**
+ * Create a product review in WooCommerce (stored as comment; appears in WP admin product reviews).
+ * Requires WC API credentials. Reviewer name, email, review text and rating are saved.
+ */
+export async function createProductReview(params: {
+  product_id: number | string;
+  reviewer: string;
+  reviewer_email: string;
+  review: string;
+  rating: number;
+}): Promise<ProductReview | null> {
+  if (!getBaseUrl() || !getAuth()) return null;
+  try {
+    const body = {
+      product_id: typeof params.product_id === 'string' ? parseInt(params.product_id, 10) : params.product_id,
+      reviewer: params.reviewer.trim(),
+      reviewer_email: params.reviewer_email.trim(),
+      review: params.review.trim(),
+      rating: Math.min(5, Math.max(1, Math.round(params.rating))),
+    };
+    const raw = await wcPost<WooProductReviewRaw>('/products/reviews', body);
+    return mapWooReview(raw as WooProductReviewRaw);
+  } catch (error) {
+    console.error('createProductReview error:', error instanceof Error ? error.message : String(error));
+    throw error;
+  }
 }
 
 /**

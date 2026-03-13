@@ -58,10 +58,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     if (!wcUrl || !consumerKey || !consumerSecret) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'WooCommerce API credentials not configured',
-        },
+        { success: false, error: 'Store is not configured. Please try again later.' },
         { status: 500 }
       );
     }
@@ -101,7 +98,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
       const isAuthError = response.status === 401 || response.status === 403 || /authentication|unauthorized|forbidden|not allowed/i.test(userMessage);
       if (isAuthError) {
-        userMessage = `WooCommerce authentication failed: ${userMessage} Check WC_CONSUMER_KEY and WC_CONSUMER_SECRET in .env (from WordPress → WooCommerce → Settings → Advanced → REST API).`;
+        userMessage = 'Store is temporarily unavailable. Please try again later.';
       }
       return NextResponse.json(
         { success: false, error: userMessage },
@@ -171,7 +168,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
       const isAuthError = rzpRes.status === 401 || rzpRes.status === 403 || /authentication|invalid.*key|unauthorized/i.test(errMessage);
       if (isAuthError) {
-        errMessage = `Razorpay authentication failed: ${errMessage} Check NEXT_PUBLIC_RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env (use same mode: both Test or both Live).`;
+        errMessage = 'Payment service is temporarily unavailable. Please try again later.';
       }
       console.error('Razorpay order create error:', rzpRes.status, rzpBody);
       return NextResponse.json(

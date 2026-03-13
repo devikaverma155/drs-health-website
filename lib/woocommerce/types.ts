@@ -74,3 +74,32 @@ export interface Product {
   permalink?: string;
   minQuantity?: number;
 }
+
+/**
+ * WooCommerce product review (raw from API).
+ * Stored as comments on the product in WordPress/WooCommerce.
+ */
+export interface WooProductReviewRaw {
+  id: number;
+  date_created?: string;
+  date_created_gmt?: string;
+  product_id?: number;
+  product_name?: string;
+  reviewer?: string;
+  reviewer_email?: string;
+  review?: string;
+  rating?: number;
+  verified?: boolean;
+  status?: string;
+  [key: string]: unknown;
+}
+
+/** Normalized product review for UI. */
+export interface ProductReview {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  date: string;
+  verified: boolean;
+}

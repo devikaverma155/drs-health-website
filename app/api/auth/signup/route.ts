@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     if (!baseUrl || !consumerKey || !consumerSecret) {
       return NextResponse.json(
-        { error: 'WooCommerce API not configured' },
+        { error: 'Service temporarily unavailable' },
         { status: 500 }
       );
     }
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Sign up error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to create account' },
+      { error: 'Sign up failed. Please try again.' },
       { status: 500 }
     );
   }
