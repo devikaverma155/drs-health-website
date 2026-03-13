@@ -13,8 +13,15 @@ import { AuthSessionProvider } from '@/lib/SessionProvider';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-heading' });
 
+const LOGO_URL = 'https://drshealth.in/wp-content/uploads/2025/01/DRS-Logo.png';
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://drshealth.in'),
+  icons: {
+    icon: LOGO_URL,
+    shortcut: LOGO_URL,
+    apple: LOGO_URL,
+  },
   title: {
     default: 'DRS Health – Authentic Ayurvedic Wellness Products & Expert Consultation',
     template: '%s | DRS Health',
