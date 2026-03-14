@@ -162,7 +162,7 @@ export default async function BlogPage() {
             <p className="text-body-muted text-base sm:text-lg mb-6 max-w-2xl mx-auto leading-relaxed">
               Get expert Ayurvedic tips, wellness insights, and product updates delivered to your inbox weekly.
             </p>
-            <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <form className="flex flex-col sm:flex-rosw gap-3 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
