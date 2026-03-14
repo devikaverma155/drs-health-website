@@ -155,22 +155,22 @@ export default async function BlogPage() {
           </div>
 
           {/* Newsletter CTA */}
-          <div className="mt-20 bg-gradient-to-r from-primary/10 to-accent-green/10 rounded-2xl border border-border p-12 text-center">
-            <h3 className="text-2xl font-semibold text-foreground mb-3">
+          <div className="mt-16 sm:mt-20 bg-gradient-to-r from-primary/10 to-accent-green/10 rounded-2xl border border-border p-6 sm:p-8 md:p-12 text-center">
+            <h3 className="text-2xl sm:text-3xl font-semibold text-foreground mb-3 leading-tight">
               Subscribe to Our Wellness Newsletter
             </h3>
-            <p className="text-body-muted mb-6 max-w-2xl mx-auto">
+            <p className="text-body-muted text-base sm:text-lg mb-6 max-w-2xl mx-auto leading-relaxed">
               Get expert Ayurvedic tips, wellness insights, and product updates delivered to your inbox weekly.
             </p>
-            <form className="flex gap-2 max-w-md mx-auto">
+            <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-4 py-3 rounded-lg border border-border bg-white text-foreground placeholder:text-body-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full flex-1 px-4 py-3 rounded-lg border border-border bg-white text-foreground placeholder:text-body-muted focus:outline-none focus:ring-2 focus:ring-primary"
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition-colors"
+                className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition-colors"
               >
                 Subscribe
               </button>
