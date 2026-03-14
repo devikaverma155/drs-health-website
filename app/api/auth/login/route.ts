@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const { email } = await request.json();
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
     const consumerSecret = process.env.WC_CONSUMER_SECRET;
 
     if (!baseUrl || !consumerKey || !consumerSecret) {
+      console.error('Missing WooCommerce credentials:', { baseUrl: !!baseUrl, consumerKey: !!consumerKey, consumerSecret: !!consumerSecret });
       return NextResponse.json(
         { error: 'Service temporarily unavailable' },
         { status: 500 }
@@ -34,12 +35,17 @@ export async function POST(request: NextRequest) {
     );
 
     if (!response.ok) {
-      throw new Error('Failed to fetch customer');
+      const errorText = await response.text();
+      console.error('WooCommerce API error:', { status: response.status, error: errorText });
+      return NextResponse.json(
+        { error: `WooCommerce API Error: ${response.status}. Please check your credentials and WordPress configuration.` },
+        { status: 500 }
+      );
     }
 
     const customers = await response.json();
     
-    if (customers.length === 0) {
+    if (!Array.isArray(customers) || customers.length === 0) {
       return NextResponse.json(
         { error: 'Account not found. Please sign up first.' },
         { status: 404 }
@@ -48,11 +54,10 @@ export async function POST(request: NextRequest) {
 
     const customer = customers[0];
 
-    // Note: WooCommerce REST API doesn't verify passwords directly
-    // In production, you'd need to:
-    // 1. Use WordPress/WooCommerce authentication
-    // 2. Or implement your own password verification
-    // For now, we just verify the customer exists
+    // Note: WooCommerce REST API doesn't verify passwords directly through the API
+    // The password verification happens on the WordPress side
+    // This endpoint just verifies the customer exists by email
+    // For full authentication, you would need to use WordPress's native auth or implement custom password verification
 
     return NextResponse.json({
       success: true,
@@ -64,7 +69,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Login error:', error instanceof Error ? error.message : String(error));
     return NextResponse.json(
       { error: 'Login failed. Please try again.' },
       { status: 500 }

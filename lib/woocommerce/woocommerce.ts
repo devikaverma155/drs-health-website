@@ -49,6 +49,11 @@ async function wcFetch<T>(path: string, params?: Record<string, string>): Promis
     
     if (!res.ok) {
       const text = await res.text();
+      if (res.status === 403) {
+        console.error(
+          `WooCommerce API 403 at ${path}. Check HOSTING.md "Fixing WooCommerce 403". Ensure NEXT_PUBLIC_WC_API_URL matches your WordPress domain (e.g. https://www.9gk.22b.myftpupload.com/wp-json/wc/v3), WC keys are set in the host env, and no firewall/plugin is blocking server requests.`
+        );
+      }
       throw new Error(`WooCommerce API error ${res.status}: ${text}`);
     }
     
@@ -56,7 +61,11 @@ async function wcFetch<T>(path: string, params?: Record<string, string>): Promis
     const data = await res.json() as T;
     return { data, totalPages };
   } catch (error) {
-    console.error(`wcFetch error at ${path}:`, error instanceof Error ? error.message : String(error));
+    if (process.env.NODE_ENV === 'production' && error instanceof Error && error.message.includes('403')) {
+      // Already logged above; avoid duplicate long messages in prod
+    } else {
+      console.error(`wcFetch error at ${path}:`, error instanceof Error ? error.message : String(error));
+    }
     throw error;
   }
 }
@@ -394,7 +403,7 @@ export async function createProductReview(params: {
  * Product ID is WooCommerce product id; optional quantity for cart.
  */
 export function getCheckoutUrl(productId: string, quantity = 1): string {
-  const base = process.env.NEXT_PUBLIC_WC_CHECKOUT_URL ?? 'https://drshealth.in/checkout';
+  const base = process.env.NEXT_PUBLIC_WC_CHECKOUT_URL ?? 'https://9gk.22b.myftpupload.com/checkout';
   const url = new URL(base);
   url.searchParams.set('add-to-cart', productId);
   if (quantity > 1) url.searchParams.set('quantity', String(quantity));

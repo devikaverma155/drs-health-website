@@ -17,7 +17,7 @@ export function ServicesSection() {
           <div className="bg-white rounded-2xl overflow-hidden border border-border shadow-card transition-all duration-200 hover:shadow-card-hover hover:-translate-y-1">
             <div className="relative h-48 bg-gradient-to-br from-accent-blue/10 to-accent-blue/5 flex items-center justify-center overflow-hidden">
               <Image
-                src="https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp"
+                src="https://9gk.22b.myftpupload.com/wp-content/uploads/2024/11/Syadwad-Combo.webp"
                 alt="Health consultation"
                 width={500}
                 height={300}
@@ -39,7 +39,7 @@ export function ServicesSection() {
           <div className="bg-white rounded-2xl overflow-hidden border border-border shadow-card transition-all duration-200 hover:shadow-card-hover hover:-translate-y-1">
             <div className="relative h-48 bg-gradient-to-br from-accent-green/10 to-accent-green/5 flex items-center justify-center overflow-hidden">
               <Image
-                src="https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp"
+                src="https://9gk.22b.myftpupload.com/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp"
                 alt="Product guidance"
                 width={500}
                 height={300}
@@ -61,7 +61,7 @@ export function ServicesSection() {
           <div className="bg-white rounded-2xl overflow-hidden border border-border shadow-card transition-all duration-200 hover:shadow-card-hover hover:-translate-y-1">
             <div className="relative h-48 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center overflow-hidden">
               <img
-                src="https://drshealth.in/wp-content/uploads/2026/02/manu.png"
+                src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/manu.png"
                 alt="Manufacturing facility"
                 width={500}
                 height={300}

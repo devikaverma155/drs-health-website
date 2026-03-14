@@ -12,15 +12,15 @@ import {
 } from '@/components/ui/carousel';
 
 const THIRD_PARTY_CLIENT_IMAGES = [
-  'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.17.jpeg',
-  'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.16-1.jpeg',
-  'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.16.jpeg',
-  'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.08-2.jpeg',
-  'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.08-1.jpeg',
-  'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.08.jpeg',
-  'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.07-1-1.jpeg',
-  'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.07.jpeg',
-  'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.06-1.jpeg',
+  'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.17.jpeg',
+  'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.16-1.jpeg',
+  'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.16.jpeg',
+  'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.08-2.jpeg',
+  'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.08-1.jpeg',
+  'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.08.jpeg',
+  'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.07-1-1.jpeg',
+  'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.07.jpeg',
+  'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-07-at-13.21.06-1.jpeg',
 ];
 
 export function ThirdPartyClientsCarousel() {

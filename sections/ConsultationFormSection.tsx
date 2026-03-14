@@ -69,7 +69,7 @@ export function ConsultationFormSection() {
       id="consultation"
       className="section-padding bg-soft-bg border-y border-border scroll-mt-20 panel-accent-mint"
       style={{
-        backgroundImage: "url('https://drshealth.in/wp-content/uploads/2026/02/image-1771828238429-e1772350773356.png')",
+        backgroundImage: "url('https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/image-1771828238429-e1772350773356.png')",
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

@@ -46,10 +46,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create customer in WooCommerce
+    // Create customer in WooCommerce (no password required)
+    const username = email.split('@')[0] + '_' + Date.now();
+    // Generate a random temporary password (WooCommerce requires this, but user won't use it)
+    const tempPassword = Math.random().toString(36).slice(-12);
+    
     const customerData = {
-      username: email.split('@')[0] + '_' + Date.now(), // Generate unique username from email
+      username: username,
       email: email,
+      password: tempPassword, // WooCommerce requires this, but user logs in via email
       first_name: firstName,
       last_name: lastName || '',
       billing: {
@@ -63,11 +68,6 @@ export async function POST(request: NextRequest) {
         last_name: lastName || '',
       },
     };
-
-    // Add password if provided
-    if (password) {
-      (customerData as any).password = password;
-    }
 
     const response = await fetch(`${baseUrl}/customers`, {
       method: 'POST',
@@ -96,9 +96,11 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Sign up error:', error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error('Sign up error:', errorMsg);
+    console.error('Full error:', error);
     return NextResponse.json(
-      { error: 'Sign up failed. Please try again.' },
+      { error: errorMsg || 'Sign up failed. Please try again.' },
       { status: 500 }
     );
   }

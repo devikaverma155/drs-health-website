@@ -5,7 +5,7 @@ import { getProducts } from '@/lib/woocommerce';
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // Revalidate hourly if possible
 
-const BASE = 'https://drshealth.in';
+const BASE = 'https://9gk.22b.myftpupload.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [

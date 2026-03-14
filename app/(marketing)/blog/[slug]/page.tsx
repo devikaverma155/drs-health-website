@@ -21,7 +21,7 @@ const STATIC_POSTS: Record<
     date: '2024-12-26',
     category: 'Herbal Remedies',
     readTime: '8 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2024/11/Syadwad-Combo.webp',
     excerpt: 'Discover the powerful benefits of milk thistle for liver health, detoxification, and overall wellness.',
     content: `Milk thistle, scientifically known as Silybum marianum, is a flowering plant from the daisy family. It has been used for thousands of years in traditional medicine, particularly in Ayurvedic and Mediterranean healing practices. The active compound in milk thistle is silymarin, a flavonoid complex with potent antioxidant and anti-inflammatory properties.
 
@@ -47,7 +47,7 @@ Always consult with an Ayurvedic practitioner before starting any new supplement
     date: '2024-12-26',
     category: 'Supplements',
     readTime: '10 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2024/11/SW-Products.png',
     excerpt: 'Explore the scientifically-backed health benefits of apple cider vinegar tablets.',
     content: `Apple cider vinegar (ACV) has been used for centuries as a natural remedy and wellness support. When concentrated into tablet form, it provides a convenient and effective way to harness its benefits.
 
@@ -77,7 +77,7 @@ For best results, ACV tablets should be taken consistently as part of a balanced
     date: '2024-11-12',
     category: 'Natural Remedies',
     readTime: '6 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/image-1771828228498-e1771838762263.png',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/image-1771828228498-e1771838762263.png',
     excerpt: 'Learn how apple cider vinegar can soothe sore throats naturally.',
     content: `A sore throat can be uncomfortable and disruptive to daily life. While there are many over-the-counter options, natural remedies like apple cider vinegar have been used traditionally to soothe throat discomfort.
 
@@ -110,7 +110,7 @@ While traditional use is extensive, modern scientific studies on ACV for sore th
     date: '2024-11-12',
     category: 'Hair Care',
     readTime: '7 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/Haircare-2.webp',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2024/11/Haircare-2.webp',
     excerpt: 'Unlock the secrets of shilajit for hair health and discover how to use it effectively.',
     content: `Shilajit, a mineral-rich substance formed over centuries in the Himalayan mountains, has been a cornerstone of Ayurvedic medicine for thousands of years. It's increasingly recognized for its powerful benefits for hair health.
 
@@ -146,12 +146,57 @@ Best Practices:
 Expected Timeline:
 Most people notice improvements in hair quality within 4-8 weeks of consistent use. Stronger, shinier hair typically becomes visible after 2-3 months.`,
   },
+  'liver-care-herbs': {
+    title: 'Herbs for Liver Care and Detox: Traditional Wisdom Meets Modern Science',
+    date: '2024-01-08',
+    category: 'Herbal Remedies',
+    readTime: '8 min read',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/liver-care-e1773502460654.webp',
+    excerpt: 'Traditional herbs that support liver function and natural detoxification.',
+    content: `The liver is your body's primary detoxification organ, working tirelessly to filter toxins and support overall health. Ayurvedic herbs have been used for centuries to support optimal liver function and promote natural detoxification.
+
+Essential Liver-Supporting Herbs:
+
+Punarnava (Boerhavia diffusa):
+Known as "the herb that rejuvenates," Punarnava supports liver health and promotes the elimination of toxins. It's particularly valued in Ayurveda for supporting kidney and liver function. This versatile herb helps maintain healthy liver enzyme levels.
+
+Bhumi Amla (Phyllanthus amarus):
+This powerful herb supports liver enzyme levels and promotes healthy liver regeneration. It's rich in antioxidants and has been traditionally used for comprehensive liver care. The herb works by supporting the body's natural detoxification processes.
+
+Kutki (Picrorhiza kurroa):
+A bitter herb that stimulates liver function and supports healthy bile production. Kutki is traditionally used to promote natural liver detoxification and has been a cornerstone of Ayurvedic liver care for millennia.
+
+Milk Thistle (Silybum marianum):
+Contains silymarin, a compound that protects liver cells from oxidative stress and supports regeneration. This herb is valued across both traditional and modern wellness systems.
+
+Turmeric (Curcuma longa):
+The active compound curcumin provides powerful antioxidant and anti-inflammatory support to liver tissue. When combined with black pepper for better absorption, turmeric becomes a potent liver support supplement.
+
+Neem (Azadirachta indica):
+Supports liver health through its antimicrobial and antioxidant properties. Used traditionally to support the body's natural cleansing processes.
+
+Liver Care Formulations:
+These herbs are often combined in traditional formulations that work synergistically to provide comprehensive support. DRS Health's Livcare range combines these potent herbs with specific ratios to maximize benefits and support your liver's natural functions.
+
+Complementary Lifestyle Practices:
+- Reduce processed foods and refined sugars
+- Maintain adequate hydration with warm water
+- Regular light exercise like walking or yoga
+- Consistent sleep schedules (aim for 10 PM - 6 AM)
+- Stress management through meditation and pranayama
+
+Duration and Consistency:
+Liver support herbs work best with consistent, long-term use (3-6 months) as part of a holistic wellness approach. Most people notice improved energy and digestion after 4-6 weeks.
+
+Safety Considerations:
+Always consult with an Ayurvedic practitioner before starting new herbs, especially if you're on medications. Quality matters—use standardized, pure herbs from trusted sources like DRS Health.`,
+  },
   'ayurveda-daily-routine': {
     title: 'Ayurveda and Your Daily Routine: Align Your Day with Ancient Wisdom',
     date: '2024-01-15',
     category: 'Lifestyle',
     readTime: '9 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/daily-ayurved.webp',
     excerpt: 'How to align your day with Ayurvedic principles for better energy and balance.',
     content: `Ayurveda emphasizes living in harmony with natural rhythms and your individual constitution (dosha). By incorporating Ayurvedic practices into your daily routine, you can experience improved energy, better digestion, enhanced mental clarity, and overall wellness.
 
@@ -163,94 +208,46 @@ Tongue Scraping: Remove accumulated toxins from your tongue using a copper or st
 
 Oil Massage (Abhyanga): A warm oil massage stimulates circulation, nourishes the skin, and calms the nervous system. Adjust oil type based on your dosha.
 
-Warm Water: Start with a glass of warm water, optionally with lemon, to stimulate digestion.
+Warm Shower: Follow with a warm shower to invigorate the body and mind.
 
-Meditation: 10-15 minutes of meditation supports mental clarity and emotional balance.
+Breakfast: Eat a warm, freshly cooked breakfast that supports your dosha balance.
 
-Breakfast (7-8 AM):
-Eat a nourishing breakfast that matches your constitution. Include warming spices and foods easy to digest.
+Midday Routine (12-1 PM):
 
-Work Hours:
-- Stay hydrated with warm water or herbal teas
-- Take short breaks to stretch and breathe mindfully
-- Avoid rushing meals
+Lunch at Noon: This is when your digestive fire is strongest. Eat your largest meal at midday.
 
-Lunch (12-1 PM):
-Have your main meal at midday when digestive fire is strongest. Include all six tastes (sweet, sour, salty, pungent, bitter, astringent).
+Gentle Movement: Take a short walk or practice gentle yoga.
 
-Afternoon (2-4 PM):
-Light activities or a short walk aid digestion. Avoid heavy mental work after large meals.
+Meditation: Even 5-10 minutes enhances mental clarity and emotional balance.
 
-Dinner (6-7 PM):
-Eat lighter than lunch, at least 2-3 hours before bed. Include warming, easy-to-digest foods.
+Evening Routine (6-8 PM):
 
-Evening Routine (8-10 PM):
+Lighter Supper: Eat lighter foods as digestion naturally decreases in the evening.
 
-Gentle Movement: Light yoga or stretching promotes relaxation.
+Oil Massage: A lighter oil massage before bed prepares the nervous system for sleep.
 
-Herbal Tea: Chamomile or ashwagandha tea supports sleep quality.
+Bedtime Rituals: Establish a consistent bedtime (ideally by 10 PM).
 
-Digital Detox: Minimize screen time 1 hour before bed.
-
-Self-Massage: A gentle foot massage calms the nervous system.
-
-Bedtime (10 PM):
-Consistent sleep schedules strengthen your body's natural healing processes.
+Sleep: Aim for 7-9 hours of quality sleep in a cool, dark room.
 
 Seasonal Adjustments:
-Ayurveda recommends adjusting routines seasonally. In cooler seasons, emphasize warming practices. In warmer seasons, cooling and refreshing practices become important.`,
-  },
-  'liver-care-herbs': {
-    title: 'Herbs for Liver Care and Detox: Traditional Wisdom Meets Modern Science',
-    date: '2024-01-08',
-    category: 'Herbal Remedies',
-    readTime: '8 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp',
-    excerpt: 'Traditional herbs that support liver function and natural detoxification.',
-    content: `The liver is your body's primary detoxification organ, working tirelessly to filter toxins and support overall health. Ayurvedic herbs have been used for centuries to support optimal liver function.
+Ayurveda recommends adjusting routines seasonally. In cooler seasons, emphasize warming practices. In warmer seasons, cooling and refreshing practices become important.
 
-Essential Liver-Supporting Herbs:
-
-Punarnava (Boerhavia diffusa):
-Known as "the herb that rejuvenates," Punarnava supports liver health and promotes the elimination of toxins. It's particularly valued in Ayurveda for supporting kidney and liver function.
-
-Bhumi Amla (Phyllanthus amarus):
-This powerful herb supports liver enzyme levels and promotes healthy liver regeneration. It's rich in antioxidants and has been traditionally used for comprehensive liver care.
-
-Kutki (Picrorhiza kurroa):
-A bitter herb that stimulates liver function and supports healthy bile production. Kutki is traditionally used to promote natural liver detoxification.
-
-Milk Thistle (Silybum marianum):
-Contains silymarin, a compound that protects liver cells from oxidative stress and supports regeneration.
-
-Turmeric (Curcuma longa):
-The active compound curcumin provides powerful antioxidant and anti-inflammatory support to liver tissue.
-
-Neem (Azadirachta indica):
-Supports liver health through its antimicrobial and antioxidant properties.
-
-Liver Care Formulations:
-These herbs are often combined in traditional formulations that work synergistically. DRS Health's Livcare range combines these potent herbs with specific ratios to maximize benefits.
-
-Complementary Lifestyle Practices:
-- Reduce processed foods and refined sugars
-- Maintain adequate hydration
-- Regular light exercise like walking or yoga
-- Consistent sleep schedules
-- Stress management through meditation
-
-Duration and Consistency:
-Liver support herbs work best with consistent, long-term use (3-6 months) as part of a holistic wellness approach.
-
-Safety Considerations:
-Always consult with an Ayurvedic practitioner before starting new herbs, especially if you're on medications. Quality matters—use standardized, pure herbs from trusted sources.`,
+Benefits of Ayurvedic Routines:
+- Improved digestion and metabolism
+- Enhanced energy throughout the day
+- Better sleep quality
+- Reduced stress and anxiety
+- Stronger immune function
+- Improved skin health and radiance
+- Greater mental clarity and focus`,
   },
   'immunity-winter': {
     title: 'Building Immunity in Winter: Ayurvedic Practices for Cold Season',
     date: '2024-01-01',
     category: 'Wellness',
     readTime: '7 min read',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/6-12-scaled.webp',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2024/11/6-12-scaled.webp',
     excerpt: 'Simple Ayurvedic practices to stay healthy through the cold season.',
     content: `Winter is when the body's digestive fire naturally weakens, making it important to take extra care of your immunity. Ayurveda offers time-tested practices to maintain strong immunity through the colder months.
 

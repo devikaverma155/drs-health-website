@@ -75,7 +75,7 @@ export default function NGOPage() {
               <div className="flex-shrink-0">
                 <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden border-2 border-accent-green/20 shadow-card bg-white">
                   <Image
-                    src="https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-12-48-07.jpg"
+                    src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/PHOTO-2026-02-27-12-48-07.jpg"
                     alt="Jeev Daya Parmarth Jan Kalyan Samiti Logo"
                     fill
                     className="object-contain p-2"
@@ -121,7 +121,7 @@ export default function NGOPage() {
       <section className="relative py-16 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://drshealth.in/wp-content/uploads/2026/03/ngo.jpg"
+            src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/ngo.jpg"
             alt="NGO community work"
             fill
             className="object-cover scale-110"

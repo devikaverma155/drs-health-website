@@ -43,7 +43,7 @@ export function ManufacturingQualitySection() {
           </div>
           <div className="relative h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-accent-green/10 border border-border">
             <Image
-              src="https://drshealth.in/wp-content/uploads/2026/02/manufactor.jpg"
+              src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/manufactor.jpg"
               alt="Manufacturing facility"
               fill
               className="object-cover"

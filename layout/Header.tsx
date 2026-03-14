@@ -71,7 +71,7 @@ export function Header() {
         {/* Logo - Left */}
         <Link href="/" className="flex-shrink-0 flex items-center gap-1">
           <Image
-            src="https://drshealth.in/wp-content/uploads/2025/01/cropped-DRS-Logo-e1771510375912.png"
+            src="https://9gk.22b.myftpupload.com/wp-content/uploads/2025/01/cropped-DRS-Logo-e1771510375912.png"
             alt="DRS Health"
             width={100}
             height={80}

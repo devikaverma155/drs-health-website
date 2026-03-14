@@ -10,39 +10,39 @@ import {
 
 const certificationImages = [
   {
-    src: 'https://drshealth.in/wp-content/uploads/2026/03/1772255367424-removebg-preview.png',
+    src: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/1772255367424-removebg-preview.png',
     alt: 'GMP Certification',
   },
   {
-    src: 'https://drshealth.in/wp-content/uploads/2026/03/1772256665743.png',
+    src: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/1772256665743.png',
     alt: 'Ayush Approved',
   },
   {
-    src: 'https://drshealth.in/wp-content/uploads/2026/03/WA_1772256180628-removebg-preview.png',
+    src: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WA_1772256180628-removebg-preview.png',
     alt: 'FSSAI Approved',
   },
   {
-    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_t6c8yct6c8yct6c8-removebg-preview.png',
+    src: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_t6c8yct6c8yct6c8-removebg-preview.png',
     alt: 'Lab Tested',
   },
   {
-    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_oh6rweoh6rweoh6r-removebg-preview.png',
+    src: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_oh6rweoh6rweoh6r-removebg-preview.png',
     alt: '100% Natural',
   },
   {
-    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_c9oloec9oloec9ol.png',
+    src: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_c9oloec9oloec9ol.png',
     alt: 'No Chemicals',
   },
   {
-    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_ukhv5qukhv5qukhv-removebg-preview.png',
+    src: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_ukhv5qukhv5qukhv-removebg-preview.png',
     alt: 'Trusted Seller',
   },
   {
-    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_gpzntmgpzntmgpzn__1_-removebg-preview.png',
+    src: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_gpzntmgpzntmgpzn__1_-removebg-preview.png',
     alt: 'Formulation by Vaidya',
   },
   {
-    src: 'https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_tq67tptq67tptq67-1.png',
+    src: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_tq67tptq67tptq67-1.png',
     alt: 'Decades of Experience',
   },
 ];

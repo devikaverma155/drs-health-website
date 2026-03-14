@@ -10,14 +10,14 @@ const DOCTORS = [
   {
     name: 'Vaidya Dhanya Kumar Jain (DNYS)',
     title: 'Ayurvedacharya & Founder',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-01-10-e1772191818188.jpg',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-01-10-e1772191818188.jpg',
     description:
       'With 25+ years of experience in Ayurveda, Vaidya Dhanya Kumar Jain founded DRS Health Solutions (Dhanya Ras Shala) in 2003 in Tikamgarh (M.P.) to carry forward the rich legacy of his grandfather, Rajvaidya Pandit Barelal Ji. With a powerful vision to take Ayurveda to every home across the world, he is a dedicated practitioner and formulation expert who creates authentic and result-oriented Ayurvedic medicines while actively treating patients at his clinic with holistic care, and has also been serving Jeev Daya Parmarth Jan Kalyan Samiti (NGO) for several years as the Secretary of the community, actively contributing towards social welfare and humanitarian service. His mission continues to guide our commitment to purity, effectiveness, and true Ayurvedic principles.',
   },
   {
     name: 'Vd. Dr. Manoj Jain (BAMS)',
     title: 'Ayurvedacharya',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-00-16.jpg',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-00-16.jpg',
     description:
       'Dr. Manoj Jain (BAMS) is an experienced Ayurvedic physician with 20+ years of expertise in holistic healing. He focuses on treating the root cause of health concerns through personalized Ayurvedic treatments, combining classical wisdom with modern clinical understanding. His compassionate approach and commitment to authentic Ayurveda have helped numerous patients achieve lasting wellness.',
   },
@@ -163,7 +163,7 @@ export function ConsultationPageContent() {
 
           <div className="relative h-[420px] rounded-2xl overflow-hidden shadow-card">
             <Image
-              src="https://drshealth.in/wp-content/uploads/2026/02/consult.png"
+              src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/consult.png"
               alt="Ayurvedic consultation"
               className="object-cover w-full h-full"
               fill

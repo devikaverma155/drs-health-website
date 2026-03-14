@@ -9,39 +9,39 @@ type Partner = {
 const partners: Partner[] = [
   {
     name: "GMP Certified",
-    image: "https://drshealth.in/wp-content/uploads/2026/03/1772255367424-removebg-preview.png",
+    image: "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/1772255367424-removebg-preview.png",
   },
   {
     name: "Ayush Approved",
-    image: "https://drshealth.in/wp-content/uploads/2026/03/1772256665743.png",
+    image: "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/1772256665743.png",
   },
   {
     name: "FSSAI Approved",
-    image: "https://drshealth.in/wp-content/uploads/2026/03/WA_1772256180628-removebg-preview.png",
+    image: "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WA_1772256180628-removebg-preview.png",
   },
   {
     name: "Lab Tested",
-    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_t6c8yct6c8yct6c8-removebg-preview.png",
+    image: "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_t6c8yct6c8yct6c8-removebg-preview.png",
   },
   {
     name: "100% Natural",
-    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_oh6rweoh6rweoh6r-removebg-preview.png",
+    image: "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_oh6rweoh6rweoh6r-removebg-preview.png",
   },
   {
     name: "No Chemicals",
-    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_c9oloec9oloec9ol.png",
+    image: "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_c9oloec9oloec9ol.png",
   },
   {
     name: "Trusted Seller",
-    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_ukhv5qukhv5qukhv-removebg-preview.png",
+    image: "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_ukhv5qukhv5qukhv-removebg-preview.png",
   },
   {
     name: "Formulation by Vaidya",
-    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_gpzntmgpzntmgpzn__1_-removebg-preview.png",
+    image: "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_gpzntmgpzntmgpzn__1_-removebg-preview.png",
   },
   {
     name: "Decades of Experience",
-    image: "https://drshealth.in/wp-content/uploads/2026/03/Gemini_Generated_Image_tq67tptq67tptq67-1.png",
+    image: "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Gemini_Generated_Image_tq67tptq67tptq67-1.png",
   },
 ];
 

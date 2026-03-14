@@ -14,10 +14,10 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-heading' });
 
 //adding favicon logo url
-const LOGO_URL = 'https://drshealth.in/wp-content/uploads/2025/01/DRS-Logo.png';
+const LOGO_URL = 'https://9gk.22b.myftpupload.com/wp-content/uploads/2025/01/DRS-Logo.png';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://drshealth.in'),
+  metadataBase: new URL('https://9gk.22b.myftpupload.com'),
   icons: {
     icon: LOGO_URL,
     shortcut: LOGO_URL,
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     'max-video-preview': -1,
   },
   alternates: {
-    canonical: 'https://drshealth.in',
+    canonical: 'https://9gk.22b.myftpupload.com',
   },
 };
 

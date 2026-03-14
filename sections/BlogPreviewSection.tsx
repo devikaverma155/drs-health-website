@@ -4,7 +4,7 @@ import Image from 'next/image';
 const POSTS = [
   { slug: 'ayurveda-daily-routine', title: 'Ayurveda and Your Daily Routine', date: '2024-01-15', image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80' },
   { slug: 'liver-care-herbs', title: 'Herbs for Liver Care and Detox', date: '2024-01-08', image: 'https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=800&q=80' },
-  { slug: 'immunity-winter', title: 'Building Immunity in Winter', date: '2024-01-01', image: 'https://drshealth.in/wp-content/uploads/2026/03/immunity-.avif' },
+  { slug: 'immunity-winter', title: 'Building Immunity in Winter', date: '2024-01-01', image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/immunity-.avif' },
 ];
 
 export function BlogPreviewSection() {

@@ -19,7 +19,7 @@ const leaders: Leader[] = [
     title: 'Founder – Syadwad Jain Aushadhalay (170-Year Ayurvedic Legacy)',
     description:
       'A visionary healer and custodian of Ayurvedic wisdom, Pandit Barelal Ji Jain established the Syadwad Jain Aushadhalay in the historic village of Patha, Tikamgarh, laying the foundation of a 170-year legacy. Honored as "Raj Vaidya" by the King of Tikamgarh, he earned international recognition and was invited to lecture at Washington University. Beyond medicine, he served as the first administrator of Aharji, a 1000-year-old Jain temple town, transforming it into a hub of education and community services. His dedication to holistic healing and cultural preservation continues to inspire.',
-    image: 'https://drshealth.in/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-02-at-15.45.56.jpeg',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-02-at-15.45.56.jpeg',
   },
   {
     id: 1,
@@ -27,7 +27,7 @@ const leaders: Leader[] = [
     title: 'पूर्व परामर्शदाता चिकित्सक – धन्यरसशाला',
     description:
       'श्रेष्ठ आयुर्वेदज्ञ, आयुर्वेद विशेषज्ञ आदि विभिन्न उपाधियों से सुशोभित। महाऔषधि रुदंती को शोष (लगभग एड्स के समान) नाशक औषधि एवं रोग प्रतिरोधक क्षमता बढ़ाने वाली औषधि के रूप में स्थापित करना। अपनी विशेषज्ञता से AIIMS (दिल्ली) को अपनी चिकित्सा क्षमता का लोहा मनवाना। हाइड्रोफोबिया (स्वानदंश) जैसी आज लाइलाज मानी जाने वाली व्याधि को स्वस्थ कर आश्चर्य उत्पन्न करना। मूत्र परीक्षण को रोगों के सटीक निदान में अत्यंत उपयोगी सिद्ध कर इस प्राचीन विद्या को पुनः प्रतिष्ठित करना। कैंसर, कुष्ठ, हृदय रोग, खंज (लिथेरिज्म) इत्यादि असाध्य रोगों के अनेक रोगियों को स्वस्थ कर नवजीवन प्रदान करना। ऐसे व्यक्तित्व का धन्यरसशाला से जुड़ना हमारे लिए गौरव की बात है।',
-    image: 'https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-02-15-45-38.jpg',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/PHOTO-2026-03-02-15-45-38.jpg',
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ const leaders: Leader[] = [
     title: 'Founder – DRS Health Solutions',
     description:
       'With 25+ years of experience in Ayurveda, Vaidya Dhanya Kumar Jain founded DRS Health Solutions (Dhanya Ras Shala) in 2003 in Tikamgarh (M.P.) to carry forward the rich legacy of his grandfather, Rajvaidya Pandit Barelal Ji. With a powerful vision to take Ayurveda to every home across the world, he is a dedicated practitioner and formulation expert who creates authentic and result-oriented Ayurvedic medicines while actively treating patients at his clinic with holistic care. He has also been serving Jeev Daya Parmarth Jan Kalyan Samiti (NGO) for several years as the Secretary of the community, actively contributing towards social welfare and humanitarian service.',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-13-01-10-e1772191818188.jpg',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/PHOTO-2026-03-09-14-05-24-e1773503204309.jpg',
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ const leaders: Leader[] = [
     title: 'Director – DRS Health Solutions Pvt. Ltd.',
     description:
       'At just 22 years of age, Bimbsar Jain represents the dynamic new generation leading the expansion of DRS Health Solutions Pvt. Ltd., the evolution of Dhanya Ras Shala. Carrying forward his father\'s rich Ayurvedic legacy, he is driven by innovation, growth, and a modern vision to take the brand to greater heights while preserving its authentic roots. His leadership reflects youthful energy combined with deep respect for tradition.',
-    image: 'https://drshealth.in/wp-content/uploads/2026/02/PHOTO-2026-02-27-15-23-12-e1772191735849.jpg',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/PHOTO-2026-03-09-14-05-22-e1773502991727.jpg',
   },
 ];
 

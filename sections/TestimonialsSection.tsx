@@ -56,7 +56,7 @@ export function TestimonialsSection() {
       {/* Background image */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src="https://drshealth.in/wp-content/uploads/2026/02/image-1771828228498-e1771838724548.png"
+          src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/image-1771828228498-e1771838724548.png"
           alt="Background accent"
           fill
           priority

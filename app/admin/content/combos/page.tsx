@@ -7,19 +7,19 @@ const DEFAULT_COMBOS = [
   {
     id: 'default-1', title: 'Wellness Combo',
     description: 'Complete health package for daily wellness',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2024/11/Syadwad-Combo.webp',
     price: '₹1,499', originalPrice: '₹1,999', discount: '25%',
   },
   {
     id: 'default-2', title: 'Immunity Booster',
     description: 'Strengthen your immunity with our premium combo',
-    image: 'https://drshealth.in/wp-content/uploads/2024/11/SW-Products.png',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2024/11/SW-Products.png',
     price: '₹1,799', originalPrice: '₹2,399', discount: '25%',
   },
   {
     id: 'default-3', title: 'Skincare Essential',
     description: 'Complete skincare routine in one combo',
-    image: 'https://drshealth.in/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2024/12/Herbalis-Shampoo-scaled.webp',
     price: '₹2,099', originalPrice: '₹2,899', discount: '28%',
   },
 ];

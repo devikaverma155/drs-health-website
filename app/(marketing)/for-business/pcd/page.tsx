@@ -20,7 +20,7 @@ export default function PCDPage() {
           <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-accent-lime/10 to-accent-green/10 h-[400px] flex items-center justify-center border border-border md:order-2">
             <div className="text-center text-body-muted">
               <Image
-                src="https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp"
+                src="https://9gk.22b.myftpupload.com/wp-content/uploads/2024/11/Syadwad-Combo.webp"
                 alt="PCD distribution network"
                 width={500}
                 height={400}

@@ -24,7 +24,7 @@ const services: Service[] = [
     title: "PCD Pharma",
     description: "Professional Cooperation Distributor rights across India",
     image:
-      "https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-02-16-08-38.jpg",
+      "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/PHOTO-2026-03-02-16-08-38.jpg",
     href: "/for-business/pcd",
   },
   {
@@ -40,7 +40,7 @@ const services: Service[] = [
     title: "Contract Manufacturing",
     description: "Custom formulation and manufacturing services",
     image:
-      "https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-02-15-59-08.jpg",
+      "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/PHOTO-2026-03-02-15-59-08.jpg",
     href: "/for-business/contract-manufacturing",
   },
   {
@@ -56,7 +56,7 @@ const services: Service[] = [
     title: "Ayurvedic Consultation",
     description: "Expert-guided personalized Ayurvedic wellness plans",
     image:
-      "https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg",
+      "https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/consultation.jpg",
     href: "/consultation",
   },
   {

@@ -81,7 +81,7 @@ const BUSINESS_SERVICES = [
     cta: 'Enquire for Contract Manufacturing',
     emoji: '🏭',
     accentColor: 'border-l-primary',
-    image: 'https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-02-15-59-08.jpg',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/PHOTO-2026-03-02-15-59-08.jpg',
     imageAlt: 'Manufacturing production line in a factory',
   },
   {
@@ -93,7 +93,7 @@ const BUSINESS_SERVICES = [
     cta: 'Enquire for PCD',
     emoji: '🤝',
     accentColor: 'border-l-gold-soft',
-    image: 'https://drshealth.in/wp-content/uploads/2026/03/PHOTO-2026-03-02-16-08-38.jpg',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/PHOTO-2026-03-02-16-08-38.jpg',
     imageAlt: 'Distribution and logistics network',
   },
 ];
@@ -208,7 +208,7 @@ export default function ServicesPage() {
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://drshealth.in/wp-content/uploads/2026/02/image-1771828228498-e1771838762263.png"
+            src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/image-1771828228498-e1771838762263.png"
             alt="Ayurvedic consultation"
             fill
             className="object-cover"

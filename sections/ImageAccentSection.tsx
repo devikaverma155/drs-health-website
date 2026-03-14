@@ -17,7 +17,7 @@ export function ImageAccentSection() {
             <div className="rounded-3xl overflow-hidden backdrop-blur-md border border-white/40 p-8 bg-gradient-to-br from-white/80 to-white/60">
               <div className="relative w-full h-96 transform rotate-90 origin-center">
                 <Image
-                  src="https://drshealth.in/wp-content/uploads/2026/02/image-1771828228498.png"
+                  src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/image-1771828228498.png"
                   alt="Rotated botanical accent"
                   fill
                   className="object-cover rounded-xl"

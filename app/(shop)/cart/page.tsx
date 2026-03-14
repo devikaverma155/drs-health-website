@@ -115,7 +115,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8 pb-24 lg:pb-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -180,10 +180,10 @@ export default function CartPage() {
                   <span className="text-2xl sm:text-3xl font-bold text-primary">₹{cart.totalPrice}</span>
                 </div>
 
-                {/* Checkout Button */}
+                {/* Checkout Button — primary red so it’s clearly visible and clickable */}
                 <Link
                   href="/checkout"
-                  className="w-full px-4 py-3 bg-accent-lime hover:bg-opacity-90 text-white rounded-lg font-bold text-center transition-colors block mb-3"
+                  className="w-full px-4 py-3.5 bg-primary hover:bg-primary-dark text-white font-bold text-center transition-colors block mb-3 rounded-none border-0"
                 >
                   Proceed to Checkout
                 </Link>
@@ -191,7 +191,7 @@ export default function CartPage() {
                 {/* Continue Shopping Button */}
                 <Link
                   href="/shop"
-                  className="w-full px-4 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium text-center transition-colors block mb-3"
+                  className="w-full px-4 py-3 border-2 border-primary text-primary hover:bg-primary/10 font-medium text-center transition-colors block mb-3 rounded-none"
                 >
                   Continue Shopping
                 </Link>
@@ -199,7 +199,8 @@ export default function CartPage() {
                 {/* Clear Cart Button */}
                 <button
                   onClick={clearAllItems}
-                  className="w-full px-4 py-3 border border-primary text-primary hover:bg-primary/5 rounded-lg font-medium transition-colors"
+                  type="button"
+                  className="w-full px-4 py-3 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-none font-medium transition-colors"
                 >
                   Clear Cart
                 </button>
@@ -210,6 +211,22 @@ export default function CartPage() {
                 <p className="text-xs text-primary text-center font-medium">✓ Secure checkout with encrypted payments</p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Sticky "Proceed to Checkout" bar — visible on mobile so CTA is always available */}
+        <div className="fixed bottom-0 left-0 right-0 z-30 lg:hidden bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 safe-area-pb">
+          <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+            <div>
+              <p className="text-xs text-gray-500">Total</p>
+              <p className="text-xl font-bold text-primary">₹{cart.totalPrice}</p>
+            </div>
+            <Link
+              href="/checkout"
+              className="flex-1 min-w-0 py-3 px-6 bg-primary text-white font-bold text-center rounded-none hover:bg-primary-dark transition-colors"
+            >
+              Proceed to Checkout
+            </Link>
           </div>
         </div>
       </div>

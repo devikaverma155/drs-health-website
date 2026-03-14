@@ -38,7 +38,6 @@ export function LoginForm() {
         },
         body: JSON.stringify({
           email: email,
-          password: password,
         }),
       });
 
@@ -100,23 +99,6 @@ export function LoginForm() {
               required
               autoFocus
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Password (if set)
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError('');
-              }}
-              placeholder="••••••••"
-              className="w-full px-4 py-2.5 border border-input-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
-            />
-            <p className="text-xs text-body-muted mt-1">Leave empty if you didn&apos;t set a password</p>
           </div>
 
           <button

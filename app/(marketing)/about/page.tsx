@@ -51,10 +51,10 @@ const VALUES = [
 ];
 
 const SERVICES = [
-  { title: 'Ask Dr. DRS Health', description: 'Get prompt, research-backed answers to all your health-related queries.', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg' },
-  { title: 'Disease Information', description: 'Comprehensive insights about various health conditions and their management.', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg' },
-  { title: 'Herbal Efficacy', description: 'Latest research-backed information about herbs and their therapeutic benefits.', image: 'https://drshealth.in/wp-content/uploads/2024/11/Syadwad-Combo.webp' },
-  { title: 'Lifestyle Guidance', description: 'Learn about dietary and lifestyle changes to improve your wellbeing.', image: 'https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg' },
+  { title: 'Ask Dr. DRS Health', description: 'Get prompt, research-backed answers to all your health-related queries.', image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/consultation.jpg' },
+  { title: 'Disease Information', description: 'Comprehensive insights about various health conditions and their management.', image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/consultation.jpg' },
+  { title: 'Herbal Efficacy', description: 'Latest research-backed information about herbs and their therapeutic benefits.', image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2024/11/Syadwad-Combo.webp' },
+  { title: 'Lifestyle Guidance', description: 'Learn about dietary and lifestyle changes to improve your wellbeing.', image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/consultation.jpg' },
 ];
 
 const QUALITY_ITEMS = [
@@ -163,7 +163,7 @@ export default function AboutPage() {
 
           <div className="relative h-96 rounded-2xl overflow-hidden border border-border shadow-card">
             <Image
-              src="https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg"
+              src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/consultation.jpg"
               alt="Health consultation"
               fill
               className="object-cover"
@@ -208,7 +208,7 @@ export default function AboutPage() {
                   <h3 className="text-2xl font-bold text-foreground">Our Vision</h3>
                 </div>
                 <p className="text-body-muted leading-relaxed text-[15px]">
-                  Bring wellness and joy to every home via herbal solutions based on science.
+                  Our vision is to revive and elevate the timeless wisdom of Ayurveda for the modern world. We strive to become a globally trusted name in natural healthcare by delivering authentic, safe, and effective Ayurvedic solutions. Through continuous research, innovation, and ethical practices, we aim to make holistic wellness accessible to every household. Our goal is to build a future where traditional knowledge and modern science work together to create healthier lives.
                 </p>
               </div>
             </div>
@@ -224,7 +224,7 @@ export default function AboutPage() {
                   <h3 className="text-2xl font-bold text-foreground">Our Mission</h3>
                 </div>
                 <p className="text-body-muted leading-relaxed text-[15px]">
-                  To develop high-quality Ayurvedic formulations that promote natural healing and long-term well-being. We are committed to the highest standards of purity, quality, and authenticity in every product. By empowering healthcare professionals, partners, and communities, we aim to expand the reach of Ayurveda across India and the world. At DRS Health Solutions, we work with dedication to build trust, improve lives, and carry forward our legacy of holistic healthcare.
+                  Our mission is to develop high-quality Ayurvedic formulations that promote natural healing and long-term well-being. We are committed to maintaining the highest standards of purity, quality, and authenticity in every product we create. By empowering healthcare professionals, partners, and communities, we aim to expand the reach of Ayurveda across India and the world. At DRS Health Solutions, we work with dedication to build trust, improve lives, and carry forward our legacy of holistic healthcare.
                 </p>
               </div>
             </div>
@@ -291,7 +291,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-96 rounded-2xl overflow-hidden border border-border shadow-card">
               <Image
-                src="https://drshealth.in/wp-content/uploads/2022/11/IMG_1074-e1772171437239.jpg"
+                src="https://9gk.22b.myftpupload.com/wp-content/uploads/2022/11/IMG_1074-e1772171437239.jpg"
                 alt="Global expansion"
                 fill
                 className="object-cover"

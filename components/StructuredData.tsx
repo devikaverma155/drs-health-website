@@ -1,6 +1,6 @@
 import type { Product } from '@/lib/woocommerce';
 
-const BASE = 'https://drshealth.in';
+const BASE = 'https://9gk.22b.myftpupload.com';
 
 const organizationSchema = {
   '@context': 'https://schema.org',

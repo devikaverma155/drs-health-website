@@ -46,7 +46,7 @@ export default function B2BPage() {
           <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-accent-green/10 h-[400px] flex items-center justify-center border border-border">
             <div className="text-center text-body-muted">
               <Image
-                src="https://drshealth.in/wp-content/uploads/2026/02/consultation.jpg"
+                src="https://9gk.22b.myftpupload.com/wp-content/uploads/2026/02/consultation.jpg"
                 alt="B2B partnership illustration"
                 width={500}
                 height={400}

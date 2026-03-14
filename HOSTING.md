@@ -32,6 +32,40 @@ Optional / public (safe to expose in client):
 - **Database**: Ensure the host can reach your DB at build time if any pages need DB during SSG; otherwise runtime-only is fine.
 - **WooCommerce**: Store (drshealth.in or your WC URL) must be reachable from the host for product/review/order APIs.
 
+## Fixing WooCommerce 403 Forbidden when deployed (e.g. on Vercel)
+
+If you see `WooCommerce API error 403: Forbidden` in logs and products/categories don’t load:
+
+1. **Use the correct API URL**
+   - If your WordPress site is at **https://www.drshealth.in**, set:
+     - `NEXT_PUBLIC_WC_API_URL=https://www.drshealth.in/wp-json/wc/v3`
+   - If it’s at **https://drshealth.in** (no www), use:
+     - `NEXT_PUBLIC_WC_API_URL=https://drshealth.in/wp-json/wc/v3`
+   - No trailing slash. Must match the domain WordPress uses.
+
+2. **WooCommerce REST API key**
+   - In WordPress: **WooCommerce → Settings → Advanced → REST API**.
+   - Create an API key with **Read** permission.
+   - Copy **Consumer key** and **Consumer secret** into Vercel (or your host) as `WC_CONSUMER_KEY` and `WC_CONSUMER_SECRET` (same as in your local `.env`).
+
+3. **Permalinks**
+   - **Settings → Permalinks**: use any “pretty” structure (e.g. Post name). Plain permalinks can break the REST API.
+
+4. **Security / firewall (WordPress or host)**
+   - If you use a security plugin (Wordfence, Sucuri, etc.), it may block server requests from Vercel.
+   - Allow the REST API path (e.g. `/wp-json/`) or allowlist Vercel’s IPs / disable “block server/bot” for that path.
+   - On the WordPress host, ensure the server allows inbound requests to `https://yourdomain.com/wp-json/wc/v3/...` from the internet (no firewall blocking by IP for that path).
+
+5. **Vercel**
+   - In **Project → Settings → Environment Variables**, confirm `NEXT_PUBLIC_WC_API_URL`, `WC_CONSUMER_KEY`, and `WC_CONSUMER_SECRET` are set for **Production** (and Preview if you need products there).
+   - Redeploy after changing env vars.
+   - If your host has a “Firewall” or “Attack Challenge Mode”, allow outbound requests from your project to your WooCommerce domain.
+
+6. **Quick test**
+   - From your machine:  
+     `curl -u "CONSUMER_KEY:CONSUMER_SECRET" "https://yourdomain.com/wp-json/wc/v3/products?per_page=1"`  
+     (use the same URL as `NEXT_PUBLIC_WC_API_URL` and your key/secret). If this returns JSON, the block is likely between Vercel and WordPress (firewall/plugin).
+
 ## After first deploy
 
 1. Run `npm run db:seed` (or your migration/seed) against the production DB if needed.

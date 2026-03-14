@@ -12,8 +12,6 @@ export function SignUpForm() {
     lastName: '',
     email: '',
     phone: '',
-    password: '',
-    confirmPassword: '',
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -29,18 +27,13 @@ export function SignUpForm() {
     setError('');
 
     // Validation
-    if (!formData.firstName || !formData.email || !formData.phone) {
+    if (!formData.firstName || !formData.email) {
       setError('Please fill in all required fields');
       return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       setError('Please enter a valid email address');
-      return;
-    }
-
-    if (formData.password && formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
       return;
     }
 
@@ -58,7 +51,6 @@ export function SignUpForm() {
           lastName: formData.lastName,
           email: formData.email,
           phone: formData.phone,
-          password: formData.password,
         }),
       });
 
@@ -118,20 +110,9 @@ export function SignUpForm() {
             <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" className={inputClass} required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
-            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+91 98765 43210" className={inputClass} required />
+            <label className="block text-sm font-medium text-foreground mb-2">Phone</label>
+            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+91 98765 43210" className={inputClass} />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Password (Optional)</label>
-            <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" className={inputClass} />
-            <p className="text-xs text-body-muted mt-1">Leave empty to login with email only</p>
-          </div>
-          {formData.password && (
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Confirm Password *</label>
-              <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="••••••••" className={inputClass} />
-            </div>
-          )}
 
           <button type="submit" disabled={isLoading} className="w-full py-3 bg-primary text-white rounded-xl hover:bg-primary-dark disabled:opacity-50 font-semibold transition-colors mt-6">
             {isLoading ? 'Creating Account...' : 'Create Account'}

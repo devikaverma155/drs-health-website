@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const WP_ADMIN_URL = process.env.NEXT_PUBLIC_SITE_URL
   ? `${process.env.NEXT_PUBLIC_SITE_URL}/wp-admin`
-  : 'https://drshealth.in/wp-admin';
+  : 'https://9gk.22b.myftpupload.com/wp-admin';
 
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
