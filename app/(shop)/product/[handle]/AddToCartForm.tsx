@@ -46,11 +46,7 @@ export function AddToCartForm({ product }: { product: Product }) {
       quantity,
       permalink: product.permalink,
     });
-    if (product.permalink) {
-      window.open(product.permalink, '_blank');
-    } else {
-      router.push('/cart');
-    }
+    router.push('/cart');
   };
 
   return (
@@ -103,7 +99,7 @@ export function AddToCartForm({ product }: { product: Product }) {
           </button>
         </div>
 
-        <div className="flex flex-col xs:flex-row gap-3 flex-1 sm:flex-initial">
+        <div className="flex flex-row xs:flex-row gap-3 flex-1 sm:flex-initial">
           {/* Add to Cart — rectangular, full width on mobile */}
           <button
             type="button"
@@ -130,8 +126,8 @@ export function AddToCartForm({ product }: { product: Product }) {
           <button
             type="button"
             onClick={handleBuyNow}
-            className="h-11 px-5 sm:px-7 bg-accent-lime text-white font-semibold text-sm uppercase tracking-wide rounded-none
-              hover:opacity-90 active:scale-[0.98] transition-all shadow-sm hover:shadow-md min-w-0 whitespace-nowrap"
+            className="h-11 px-5 sm:px-7 bg-primary text-white font-semibold text-sm uppercase tracking-wide rounded-none
+              hover:bg-primary-dark active:scale-[0.98] transition-all shadow-sm hover:shadow-md min-w-0 whitespace-nowrap"
           >
             Buy Now
           </button>
