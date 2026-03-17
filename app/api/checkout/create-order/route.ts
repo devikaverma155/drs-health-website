@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 interface LineItem {
   product_id: string;
@@ -168,7 +169,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
       const isAuthError = rzpRes.status === 401 || rzpRes.status === 403 || /authentication|invalid.*key|unauthorized/i.test(errMessage);
       if (isAuthError) {
-        errMessage = 'Payment service is temporarily unavailable. Please try again later.';
+        console.error('Razorpay Auth Error - Check your API Keys:', { status: rzpRes.status, keyId: keyId?.substring(0, 10), body: rzpBody });
+        errMessage = 'Razorpay API keys are invalid. Please contact admin.';
       }
       console.error('Razorpay order create error:', rzpRes.status, rzpBody);
       return NextResponse.json(
@@ -178,6 +180,29 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     const rzpOrder = JSON.parse(rzpBody) as { id: string };
+
+    // Store order in database for local tracking
+    try {
+      await prisma.customerOrder.create({
+        data: {
+          wooOrderId: String(wooOrder.id),
+          razorpayOrderId: rzpOrder.id,
+          email: orderData.billing.email,
+          phone: orderData.billing.phone,
+          firstName: orderData.billing.first_name,
+          lastName: orderData.billing.last_name,
+          total: parseFloat(String(total)),
+          status: 'pending',
+          items: orderData.line_items,
+          shippingAddress: orderData.shipping,
+          billingAddress: orderData.billing,
+          notes: orderData.customer_note || null,
+        },
+      });
+    } catch (dbError) {
+      console.error('Failed to store order in database:', dbError);
+      // Don't fail the request if DB save fails - the order is still created in WooCommerce
+    }
 
     return NextResponse.json({
       success: true,

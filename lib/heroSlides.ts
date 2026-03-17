@@ -12,6 +12,7 @@ export interface HeroSlideConfig {
   secondaryCtaLabel?: string;
   secondaryCtaHref?: string;
   image?: string;
+  mobileImage?: string;
   imageAlt?: string;
   textColor?: string;
   headlineBold?: boolean;

@@ -4,12 +4,16 @@ import { prisma } from '@/lib/prisma';
 import { ClientForm } from '../ClientForm';
 import { deleteClient } from '../actions';
 import { DeleteButton } from '@/components/ui/DeleteButton';
+import { ClientFileSection } from './ClientFileSection';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const client = await prisma.client.findUnique({ where: { id } });
+  const client = await prisma.client.findUnique({
+    where: { id },
+    include: { documents: { orderBy: { uploadedAt: 'desc' } } },
+  });
   if (!client) notFound();
 
   return (
@@ -23,8 +27,11 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
           </div>
         </div>
         <div>
-          <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6">
-            <DeleteButton action={deleteClient.bind(null, client.id)} label="Delete Client" redirectPath="/admin/clients" />
+          <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6 space-y-6">
+            <ClientFileSection clientId={client.id} documents={client.documents} />
+            <div className="pt-6 border-t border-slate-200">
+              <DeleteButton action={deleteClient.bind(null, client.id)} label="Delete Client" redirectPath="/admin/clients" />
+            </div>
           </div>
         </div>
       </div>

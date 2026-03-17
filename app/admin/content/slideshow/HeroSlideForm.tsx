@@ -16,6 +16,7 @@ interface SlideData {
   secondaryCtaHref: string | null;
   imageUrl: string | null;
   imageAlt: string | null;
+  mobileImageUrl: string | null;
   textColor: string | null;
   headlineBold: boolean;
   subtextBold: boolean;
@@ -35,6 +36,7 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
   const [secondaryCtaLabel, setSecondaryCtaLabel] = useState(slide?.secondaryCtaLabel || '');
   const [secondaryCtaHref, setSecondaryCtaHref] = useState(slide?.secondaryCtaHref || '');
   const [imageUrl, setImageUrl] = useState(slide?.imageUrl || '');
+  const [mobileImageUrl, setMobileImageUrl] = useState(slide?.mobileImageUrl || '');
   const [imageAlt, setImageAlt] = useState(slide?.imageAlt || '');
   const [textColor, setTextColor] = useState(slide?.textColor || '#FFFFFF');
   const [headlineBold, setHeadlineBold] = useState(slide?.headlineBold ?? true);
@@ -51,14 +53,14 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
         await updateHeroSlide(slide.id, {
           headline, subtext, ctaLabel, ctaHref,
           secondaryCtaLabel, secondaryCtaHref,
-          imageUrl, imageAlt, textColor, headlineBold, subtextBold,
+          imageUrl, mobileImageUrl, imageAlt, textColor, headlineBold, subtextBold,
           sortOrder, isActive,
         });
       } else {
         await createHeroSlide({
           headline, subtext, ctaLabel, ctaHref,
           secondaryCtaLabel, secondaryCtaHref,
-          imageUrl, imageAlt, textColor, headlineBold, subtextBold,
+          imageUrl, mobileImageUrl, imageAlt, textColor, headlineBold, subtextBold,
           sortOrder, isActive,
         });
       }
@@ -118,16 +120,39 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Image URL</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Desktop Image URL *</label>
           <input
             type="url"
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
             disabled={loading}
-            placeholder="https://example.com/image.jpg"
+            placeholder="https://example.com/image-desktop.jpg"
+            required
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
-          <p className="mt-1 text-xs text-slate-400">Recommended size: 1920×680px</p>
+          <p className="mt-2 text-xs text-slate-600 bg-blue-50 border border-blue-200 rounded px-3 py-2">
+            📱 Desktop Image <strong>3.1:1 aspect ratio</strong><br/>
+            Recommended sizes:<br/>
+            • 1920 × 620px (Full HD desktop)<br/>
+            • 1536 × 500px (Tablet landscape)
+          </p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Mobile Image URL</label>
+          <input
+            type="url"
+            value={mobileImageUrl}
+            onChange={(e) => setMobileImageUrl(e.target.value)}
+            disabled={loading}
+            placeholder="https://example.com/image-mobile.jpg"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+          />
+          <p className="mt-2 text-xs text-slate-600 bg-green-50 border border-green-200 rounded px-3 py-2">
+            📱 Mobile Image <strong>3.4:1 aspect ratio</strong><br/>
+            Recommended size: <strong>1080 × 320px</strong><br/>
+            Leave blank to use desktop image on mobile
+          </p>
         </div>
 
         <div>

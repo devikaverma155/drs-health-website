@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const type = formData.get('type') as string; // 'employee' or 'patient'
+    const type = formData.get('type') as string; // 'employee' | 'patient' | 'client'
     const entityId = formData.get('entityId') as string;
     const documentName = formData.get('documentName') as string;
 
@@ -49,7 +49,6 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Set the fileUrl to our DB-serving endpoint
       await prisma.employeeDocument.update({
         where: { id: document.id },
         data: { fileUrl: `/api/files/${document.id}` },
@@ -59,6 +58,33 @@ export async function POST(request: NextRequest) {
         success: true,
         id: document.id,
         fileUrl: `/api/files/${document.id}`,
+        fileName: displayName,
+        fileSize: file.size,
+        uploadedAt: document.uploadedAt?.toISOString() ?? new Date().toISOString(),
+      });
+    }
+
+    if (type === 'client') {
+      const document = await prisma.clientDocument.create({
+        data: {
+          clientId: entityId,
+          fileName: displayName,
+          fileSize: file.size,
+          fileType: file.type?.split('/')[0] || 'application',
+          fileData: buffer,
+          mimeType: file.type || 'application/octet-stream',
+        },
+      });
+
+      await prisma.clientDocument.update({
+        where: { id: document.id },
+        data: { fileUrl: `/api/files/client/${document.id}` },
+      });
+
+      return NextResponse.json({
+        success: true,
+        id: document.id,
+        fileUrl: `/api/files/client/${document.id}`,
         fileName: displayName,
         fileSize: file.size,
         uploadedAt: document.uploadedAt?.toISOString() ?? new Date().toISOString(),

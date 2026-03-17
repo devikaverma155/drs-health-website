@@ -47,6 +47,7 @@ export function ManufacturingQualitySection() {
               alt="Manufacturing facility"
               fill
               className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
         </div>

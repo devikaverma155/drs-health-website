@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "hero_slides" ADD COLUMN "mobile_image_url" TEXT;

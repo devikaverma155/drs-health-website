@@ -228,6 +228,7 @@ model HeroSlide {
   secondaryCtaLabel String?   @map("secondary_cta_label")
   secondaryCtaHref  String?   @map("secondary_cta_href")
   imageUrl          String?   @map("image_url")
+  mobileImageUrl    String?   @map("mobile_image_url")
   imageAlt          String?   @map("image_alt")
   textColor         String?   @default("#FFFFFF") @map("text_color")
   headlineBold      Boolean   @default(true) @map("headline_bold")
@@ -271,12 +272,31 @@ model Client {
   city          String?
   state         String?
   gstNumber     String?   @map("gst_number")
+  notes         String?   @db.Text
   createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt     DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  orders Order[]
+  orders    Order[]
+  documents ClientDocument[]
 
   @@map("clients")
+}
+
+model ClientDocument {
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  clientId  String?   @map("client_id") @db.Uuid
+  client    Client?   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  fileName  String?   @map("file_name")
+  fileUrl   String?   @map("file_url")
+  fileSize  Int?      @map("file_size")
+  fileType  String?   @map("file_type") // pdf, doc, image, etc
+  fileData  Bytes?    @map("file_data")
+  mimeType  String?   @map("mime_type")
+  notes     String?   @db.Text
+  uploadedAt DateTime? @default(now()) @map("uploaded_at") @db.Timestamp(6)
+
+  @@index([clientId])
+  @@map("client_documents")
 }
 
 // ---------------------------------------------------------------------------
@@ -287,9 +307,11 @@ model RawMaterial {
   materialCode String?   @unique @map("material_code")
   name         String?
   unit         String?
-  purchaseRate Decimal?  @map("purchase_rate") @db.Decimal
+  purchaseRate Decimal?  @map("purchase_rate") @db.Decimal(10, 2)
+  costPerUnit  Decimal?  @map("cost_per_unit") @db.Decimal(10, 2) // Updated pricing
   supplierId   String?   @map("supplier_id") @db.Uuid
   minStock     Decimal?  @map("min_stock") @db.Decimal
+  currentStock Decimal?  @map("current_stock") @db.Decimal(10, 2) // Track inventory
   createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
@@ -297,6 +319,7 @@ model RawMaterial {
   batches  RawMaterialBatch[]
   bomRawItems BomRawItem[]
   rawMaterialOrders RawMaterialOrder[]
+  productRequirements ProductRequirement[]
 
   @@map("raw_materials")
 }
@@ -348,6 +371,8 @@ model PackagingMaterial {
   supplierId    String?   @map("supplier_id") @db.Uuid
   quantity      Decimal?  @db.Decimal
   unit          String?
+  costPerUnit   Decimal?  @map("cost_per_unit") @db.Decimal(10, 2) // Pricing
+  currentStock  Decimal?  @map("current_stock") @db.Decimal(10, 2) // Track inventory
   minStock      Decimal?  @map("min_stock") @db.Decimal
   createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt     DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
@@ -356,6 +381,7 @@ model PackagingMaterial {
   batches  PackagingBatch[]
   bomPackagingItems BomPackagingItem[]
   packagingOrders   PackagingOrder[]
+  productRequirements ProductRequirement[]
 
   @@map("packaging_materials")
 }
@@ -392,7 +418,7 @@ model Product {
   name               String
   categoryId         String?   @map("category_id") @db.Uuid
   packSize           String?   @map("pack_size")
-  mrp                Decimal?  @db.Decimal
+  mrp                Decimal?  @db.Decimal(10, 2)
   standardBatchSize  Int?      @map("standard_batch_size")
   createdAt          DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt          DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
@@ -402,8 +428,29 @@ model Product {
   productionBatches   ProductionBatch[]
   finishedGoodsBatches FinishedGoodsBatch[]
   orderItems         OrderItem[]
+  requirements       ProductRequirement[]
 
   @@map("products")
+}
+
+model ProductRequirement {
+  id                    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  productId             String?   @map("product_id") @db.Uuid
+  product               Product?  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rawMaterialId         String?   @map("raw_material_id") @db.Uuid
+  rawMaterial           RawMaterial? @relation(fields: [rawMaterialId], references: [id])
+  packagingMaterialId   String?   @map("packaging_material_id") @db.Uuid
+  packagingMaterial     PackagingMaterial? @relation(fields: [packagingMaterialId], references: [id])
+  quantityPerUnit       Decimal?  @map("quantity_per_unit") @db.Decimal(10, 4)
+  unit                  String?
+  costPerUnit           Decimal?  @map("cost_per_unit") @db.Decimal(10, 2)
+  createdAt             DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt             DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@index([productId])
+  @@index([rawMaterialId])
+  @@index([packagingMaterialId])
+  @@map("product_requirements")
 }
 
 // ---------------------------------------------------------------------------
@@ -412,6 +459,7 @@ model Product {
 model BillOfMaterial {
   id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   productId String?   @map("product_id") @db.Uuid
+  quantity  Int?      @default(1) // Number of units this BOM is for; requirements = Product Master (per unit) × quantity
   status    String?   @default("draft")
   createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
 
@@ -576,6 +624,33 @@ model StockMovement {
   createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
 
   @@map("stock_movements")
+}
+
+// ---------------------------------------------------------------------------
+// E-COMMERCE CUSTOMER ORDERS
+// ---------------------------------------------------------------------------
+model CustomerOrder {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  wooOrderId      String?   @unique @map("woo_order_id")
+  razorpayOrderId String?   @map("razorpay_order_id")
+  razorpayPaymentId String? @map("razorpay_payment_id")
+  email           String?   @db.VarChar(255)
+  phone           String?   @db.VarChar(20)
+  firstName       String?   @map("first_name")
+  lastName        String?   @map("last_name")
+  total           Decimal?  @db.Decimal(10, 2)
+  status          String?   @default("pending")
+  items           Json?     @db.JsonB // Array of {name, quantity, price}
+  shippingAddress Json?     @db.JsonB // {address, city, state, zip, country}
+  billingAddress  Json?     @db.JsonB
+  notes           String?   @db.Text
+  createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("customer_orders")
 }
 
 model BlogPost {

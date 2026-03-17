@@ -358,6 +358,7 @@ export default async function BlogPostPage({ params }: Props) {
             fill
             className="object-cover"
             priority
+            sizes="100vw"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-400">No image</div>
@@ -415,6 +416,7 @@ export default async function BlogPostPage({ params }: Props) {
                             alt={rel.title}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform"
+                            sizes="(max-width: 768px) 100vw, 33vw"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">No image</div>

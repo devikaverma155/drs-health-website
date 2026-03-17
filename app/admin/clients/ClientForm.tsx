@@ -18,6 +18,7 @@ export function ClientForm({ client }: { client?: Client | null }) {
   const [city, setCity] = useState(client?.city ?? '');
   const [state, setState] = useState(client?.state ?? '');
   const [gstNumber, setGstNumber] = useState(client?.gstNumber ?? '');
+  const [notes, setNotes] = useState(client?.notes ?? '');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -25,9 +26,9 @@ export function ClientForm({ client }: { client?: Client | null }) {
     setLoading(true);
     try {
       if (client) {
-        await updateClient(client.id, { companyName, contactPerson, phone, email, address, city, state, gstNumber });
+        await updateClient(client.id, { companyName, contactPerson, phone, email, address, city, state, gstNumber, notes });
       } else {
-        await createClient({ companyName, contactPerson, phone, email, address, city, state, gstNumber });
+        await createClient({ companyName, contactPerson, phone, email, address, city, state, gstNumber, notes });
       }
       router.push('/admin/clients');
       router.refresh();
@@ -71,6 +72,10 @@ export function ClientForm({ client }: { client?: Client | null }) {
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">GST number</label>
           <input type="text" value={gstNumber} onChange={(e) => setGstNumber(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+        <div className="sm:col-span-2">
+          <label className="block text-sm font-medium text-slate-700 mb-1">Notes</label>
+          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} disabled={loading} rows={3} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm resize-y" placeholder="Internal notes about this client..." />
         </div>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}

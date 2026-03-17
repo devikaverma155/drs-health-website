@@ -9,6 +9,7 @@ import { CartProvider } from '@/lib/cartContext';
 import { WishlistProvider } from '@/lib/wishlistContext';
 import { CartDrawer } from '@/components/CartDrawer';
 import { AuthSessionProvider } from '@/lib/SessionProvider';
+import { PrintAwareRoot } from '@/components/PrintAwareRoot';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-heading' });
@@ -57,13 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CartProvider>
             <WishlistProvider>
               <OrganizationSchema />
-              <div className="relative z-10 flex flex-col flex-1 min-h-screen">
-                <MarqueeBar />
-                <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
-              <CartDrawer />
+              <PrintAwareRoot>{children}</PrintAwareRoot>
             </WishlistProvider>
           </CartProvider>
         </AuthSessionProvider>

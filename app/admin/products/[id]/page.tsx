@@ -24,8 +24,17 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
         <div>
-          <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6">
-            <DeleteButton action={deleteProduct.bind(null, product.id)} label="Delete Product" redirectPath="/admin/products" />
+          <div className="rounded-xl bg-white border border-slate-200 p-6 sticky top-6 space-y-6">
+            <div>
+              <h2 className="font-medium text-slate-900 mb-2">Material requirements (per unit)</h2>
+              <p className="text-sm text-slate-600 mb-3">Define raw materials and packaging needed per unit of this product. Used by BOM and production for deductions.</p>
+              <Link href={`/admin/products/${id}/requirements`} className="rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark inline-block">
+                Edit material requirements
+              </Link>
+            </div>
+            <div className="pt-6 border-t border-slate-200">
+              <DeleteButton action={deleteProduct.bind(null, product.id)} label="Delete Product" redirectPath="/admin/products" />
+            </div>
           </div>
         </div>
       </div>

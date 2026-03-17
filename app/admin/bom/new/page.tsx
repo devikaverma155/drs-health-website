@@ -10,7 +10,7 @@ export default async function NewBOMPage() {
     <div className="space-y-6">
       <Link href="/admin/bom" className="text-sm text-slate-500 hover:text-slate-900">← Bill of Material</Link>
       <h1 className="text-2xl font-semibold text-slate-900">Add BOM</h1>
-      <p className="text-sm text-slate-600">Create a BOM for a product. Add raw materials and packaging items on the next screen.</p>
+      <p className="text-sm text-slate-600">Create a BOM by selecting a product and the quantity to produce. Raw &amp; packaging requirements are defined per unit in Product Master; they will be multiplied by this quantity and shown with stock warnings on the next screen.</p>
       <BOMForm products={products} />
     </div>
   );

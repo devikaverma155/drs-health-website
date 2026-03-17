@@ -10,10 +10,12 @@ export function ProductionBatchForm({
   batch,
   products,
   initialProductId,
+  initialQuantity,
 }: {
   batch?: ProductionBatch | null;
   products: { id: string; name: string }[];
   initialProductId?: string | null;
+  initialQuantity?: string | null;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -22,7 +24,7 @@ export function ProductionBatchForm({
   const [batchNumber, setBatchNumber] = useState(batch?.batchNumber ?? '');
   const [manufacturingDate, setManufacturingDate] = useState(batch?.manufacturingDate ? new Date(batch.manufacturingDate).toISOString().split('T')[0] : '');
   const [expiryDate, setExpiryDate] = useState(batch?.expiryDate ? new Date(batch.expiryDate).toISOString().split('T')[0] : '');
-  const [quantityProduced, setQuantityProduced] = useState(batch?.quantityProduced?.toString() ?? '');
+  const [quantityProduced, setQuantityProduced] = useState(batch?.quantityProduced?.toString() ?? initialQuantity ?? '');
   const [status, setStatus] = useState(batch?.status ?? 'running');
 
   async function handleSubmit(e: React.FormEvent) {
@@ -77,7 +79,7 @@ export function ProductionBatchForm({
             <option value="running">Running</option>
             <option value="completed">Completed</option>
           </select>
-          <p className="text-xs text-slate-500 mt-1">When set to Completed: RM &amp; PM (from BOM × quantity) are deducted from inventory and added to Finished Goods. Stock is checked first.</p>
+          <p className="text-xs text-slate-500 mt-1">When set to Completed: RM &amp; PM (from Product Master per-unit × quantity produced) are deducted from inventory and added to Finished Goods. Stock is checked first.</p>
         </div>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}

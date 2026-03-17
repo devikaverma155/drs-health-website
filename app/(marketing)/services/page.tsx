@@ -57,7 +57,7 @@ const BUSINESS_SERVICES = [
     cta: 'B2B Enquiry',
     emoji: '🏪',
     accentColor: 'border-l-accent-green',
-    image: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?w=600&q=80',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Screenshot-2026-03-16-at-11.56.43-PM.png',
     imageAlt: 'Retail store with shelves of health and wellness products',
   },
   {
@@ -69,7 +69,7 @@ const BUSINESS_SERVICES = [
     cta: 'Enquire for Private Labelling',
     emoji: '🎨',
     accentColor: 'border-l-accent-blue',
-    image: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=600&q=80',
+    image: 'https://9gk.22b.myftpupload.com/wp-content/uploads/2026/03/Screenshot-2026-03-16-at-11.57.41-PM.png',
     imageAlt: 'Private label herbal supplement bottles',
   },
   {

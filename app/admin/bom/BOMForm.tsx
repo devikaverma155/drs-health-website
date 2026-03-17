@@ -17,17 +17,24 @@ export function BOMForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [productId, setProductId] = useState(bom?.productId ?? '');
+  const [quantity, setQuantity] = useState(bom?.quantity != null ? String(bom.quantity) : '1');
   const [status, setStatus] = useState(bom?.status ?? 'draft');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
     setLoading(true);
+    const qty = quantity.trim() ? parseInt(quantity, 10) : undefined;
+    if (!bom && (!qty || qty < 1)) {
+      setError('Quantity must be at least 1.');
+      setLoading(false);
+      return;
+    }
     try {
       if (bom) {
-        await updateBOM(bom.id, { productId: productId || undefined, status });
+        await updateBOM(bom.id, { productId: productId || undefined, quantity: qty, status });
       } else {
-        await createBOM({ productId: productId || undefined, status });
+        await createBOM({ productId: productId || undefined, quantity: qty ?? 1, status });
       }
       router.push('/admin/bom');
       router.refresh();
@@ -47,6 +54,12 @@ export function BOMForm({
             <option key={p.id} value={p.id}>{p.name}</option>
           ))}
         </select>
+        <p className="text-xs text-slate-500 mt-1">Raw &amp; packaging requirements are defined per unit in Product Master. Here we only set how many units this BOM is for.</p>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Quantity (units) *</label>
+        <input type="number" min={1} value={quantity} onChange={(e) => setQuantity(e.target.value)} required disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        <p className="text-xs text-slate-500 mt-1">Number of units to produce. Material needs = (per-unit from Product Master) × this quantity.</p>
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>

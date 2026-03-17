@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { prisma } from '@/lib/prisma';
+import { sendOrderConfirmationEmail } from '@/lib/email';
 
 /**
  * POST /api/razorpay/verify
@@ -59,6 +61,46 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { success: false, error: 'Order update failed' },
         { status: 502 }
       );
+    }
+
+    // Update order in our database and send confirmation email
+    try {
+      const dbOrder = await prisma.customerOrder.findUnique({
+        where: { wooOrderId },
+      });
+
+      if (dbOrder) {
+        // Update status in database
+        await prisma.customerOrder.update({
+          where: { id: dbOrder.id },
+          data: {
+            status: 'processing',
+            razorpayPaymentId: razorpay_payment_id,
+          },
+        });
+
+        // Send confirmation email
+        const items = Array.isArray(dbOrder.items)
+          ? dbOrder.items.map((item: any) => ({
+              name: item.name || item.product_id,
+              quantity: item.quantity || 1,
+              price: item.price || '0',
+            }))
+          : [];
+
+        await sendOrderConfirmationEmail(dbOrder.email || '', {
+          orderNumber: wooOrderId,
+          total: dbOrder.total?.toString() || '0',
+          items,
+          date: new Date().toLocaleDateString('en-IN'),
+        }).catch((err) => {
+          console.error('[Email send error]', err);
+          // Don't fail the request if email fails
+        });
+      }
+    } catch (dbError) {
+      console.error('Failed to update database order:', dbError);
+      // Don't fail if DB update fails - WooCommerce order is already updated
     }
 
     return NextResponse.json({

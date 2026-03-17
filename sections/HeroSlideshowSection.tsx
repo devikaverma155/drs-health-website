@@ -18,6 +18,7 @@ function mapDbSlide(s: Record<string, unknown>): HeroSlide {
     secondaryCtaLabel: (s.secondaryCtaLabel as string) || undefined,
     secondaryCtaHref: (s.secondaryCtaHref as string) || undefined,
     image: (s.imageUrl as string) || (s.image as string) || undefined,
+    mobileImage: (s.mobileImageUrl as string) || undefined,
     imageAlt: (s.imageAlt as string) || undefined,
     textColor: (s.textColor as string) || undefined,
     headlineBold: typeof s.headlineBold === 'boolean' ? s.headlineBold : undefined,
@@ -28,6 +29,17 @@ function mapDbSlide(s: Record<string, unknown>): HeroSlide {
 export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlide[] }) {
   const [index, setIndex] = useState(0);
   const [slides, setSlides] = useState<HeroSlide[]>(propSlides || DEFAULT_HERO_SLIDES);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Fetch from API on mount (if no prop slides given)
   useEffect(() => {
@@ -43,6 +55,7 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
   }, [propSlides]);
 
   const current = slides[index % slides.length];
+  const imageToUse = isMobile && current.mobileImage ? current.mobileImage : current.image;
 
   useEffect(() => {
     const t = setInterval(() => setIndex((i) => i + 1), 5000);
@@ -50,16 +63,16 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
   }, []);
 
   return (
-    <section className="relative min-h-[400px] md:min-h-[520px] flex items-center bg-[#F7F6F1] overflow-hidden">
+    <section className="relative min-h-[320px] sm:min-h-[450px] md:min-h-[620px] flex items-center bg-[#F7F6F1] overflow-hidden">
       <div className="absolute inset-0">
-        {current.image ? (
+        {imageToUse ? (
           <Image
-            src={current.image}
+            src={imageToUse}
             alt={current.imageAlt ?? current.headline}
             fill
             className="object-cover"
             priority
-            sizes="100vw"
+            sizes="(max-width: 640px) 1080px, (max-width: 1024px) 1536px, 1920px"
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-soft-bg to-accent-mint/20" />

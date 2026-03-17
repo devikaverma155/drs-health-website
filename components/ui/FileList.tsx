@@ -14,7 +14,7 @@ interface FileItem {
 interface FileListProps {
   files: FileItem[];
   onDelete?: (fileId: string) => Promise<void>;
-  entityType: 'employee' | 'patient';
+  entityType: 'employee' | 'patient' | 'client';
 }
 
 export function FileList({ files, onDelete, entityType }: FileListProps) {

@@ -14,6 +14,7 @@ export async function createClient(data: {
   city?: string;
   state?: string;
   gstNumber?: string;
+  notes?: string;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
@@ -29,6 +30,7 @@ export async function createClient(data: {
       city: data.city?.trim() || null,
       state: data.state?.trim() || null,
       gstNumber: data.gstNumber?.trim() || null,
+      notes: data.notes?.trim() || null,
     },
   });
   revalidatePath('/admin/clients');
@@ -43,6 +45,7 @@ export async function updateClient(id: string, data: {
   city?: string;
   state?: string;
   gstNumber?: string;
+  notes?: string;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
@@ -58,6 +61,7 @@ export async function updateClient(id: string, data: {
       city: data.city?.trim() || null,
       state: data.state?.trim() || null,
       gstNumber: data.gstNumber?.trim() || null,
+      notes: data.notes?.trim() ?? undefined,
     },
   });
   revalidatePath('/admin/clients');
@@ -69,4 +73,12 @@ export async function deleteClient(id: string) {
   if (!session?.user?.id) throw new Error('Unauthorized');
   await prisma.client.delete({ where: { id } });
   revalidatePath('/admin/clients');
+}
+
+export async function deleteClientDocument(documentId: string, clientId?: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error('Unauthorized');
+  await prisma.clientDocument.delete({ where: { id: documentId } });
+  revalidatePath('/admin/clients');
+  if (clientId) revalidatePath(`/admin/clients/${clientId}`);
 }

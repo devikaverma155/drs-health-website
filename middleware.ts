@@ -4,7 +4,9 @@ import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  if (!path.startsWith('/admin')) return NextResponse.next();
+  const isAdmin = path.startsWith('/admin');
+  const isPrint = path.startsWith('/print');
+  if (!isAdmin && !isPrint) return NextResponse.next();
   if (path === '/admin/login') return NextResponse.next();
 
   const token = await getToken({
@@ -22,5 +24,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/print/:path*'],
 };

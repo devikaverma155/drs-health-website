@@ -5,7 +5,7 @@ import { LoadingSpinner } from './LoadingSpinner';
 
 interface FileUploadProps {
   entityId: string;
-  type: 'employee' | 'patient';
+  type: 'employee' | 'patient' | 'client';
   onUploadSuccess?: (file: { id: string; fileUrl: string; fileName: string; fileSize: number; uploadedAt: string }) => void;
   disabled?: boolean;
 }

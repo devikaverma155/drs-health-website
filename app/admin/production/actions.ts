@@ -5,46 +5,53 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
-/** When production is marked completed: check BOM × quantityProduced against inventory, deduct RM/PM (FIFO), then add to FG. */
+/** When production is marked completed: check Product Master requirements × quantityProduced against inventory, deduct RM/PM (FIFO), then add to FG. */
 async function onProductionCompleted(productionId: string, productId: string, quantityProduced: number) {
   if (quantityProduced <= 0) return;
 
-  const bom = await prisma.billOfMaterial.findFirst({
-    where: { productId, status: 'complete' },
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
     include: {
-      rawItems: { include: { rawMaterial: true } },
-      packagingItems: { include: { packaging: true } },
+      requirements: {
+        include: {
+          rawMaterial: true,
+          packagingMaterial: true,
+        },
+      },
     },
   });
 
-  const errors: string[] = [];
-
-  if (bom?.rawItems?.length) {
-    for (const item of bom.rawItems) {
-      if (!item.rawMaterialId || item.quantity == null) continue;
-      const required = Number(item.quantity) * quantityProduced;
-      const batches = await prisma.rawMaterialBatch.findMany({
-        where: { materialId: item.rawMaterialId },
-        orderBy: { createdAt: 'asc' },
-      });
-      const available = batches.reduce((s, b) => s + Number(b.quantity ?? 0), 0);
-      if (required > available) {
-        errors.push(`${item.rawMaterial?.name ?? 'Raw material'}: required ${required}, available ${available}`);
-      }
-    }
+  if (!product?.requirements?.length) {
+    throw new Error(
+      'No material requirements defined for this product. Add raw & packaging per unit in Product Master → Product → Material Requirements.'
+    );
   }
 
-  if (bom?.packagingItems?.length) {
-    for (const item of bom.packagingItems) {
-      if (!item.packagingId || item.quantity == null) continue;
-      const required = Number(item.quantity) * quantityProduced;
-      const batches = await prisma.packagingBatch.findMany({
-        where: { packagingId: item.packagingId },
+  const errors: string[] = [];
+
+  for (const req of product.requirements) {
+    if (req.rawMaterialId && req.rawMaterial) {
+      const required = Number(req.quantityPerUnit ?? 0) * quantityProduced;
+      if (required <= 0) continue;
+      const batches = await prisma.rawMaterialBatch.findMany({
+        where: { materialId: req.rawMaterialId },
         orderBy: { createdAt: 'asc' },
       });
       const available = batches.reduce((s, b) => s + Number(b.quantity ?? 0), 0);
       if (required > available) {
-        errors.push(`${item.packaging?.name ?? 'Packaging'}: required ${required}, available ${available}`);
+        errors.push(`${req.rawMaterial.name ?? 'Raw material'}: required ${required}, available ${available}`);
+      }
+    }
+    if (req.packagingMaterialId && req.packagingMaterial) {
+      const required = Number(req.quantityPerUnit ?? 0) * quantityProduced;
+      if (required <= 0) continue;
+      const batches = await prisma.packagingBatch.findMany({
+        where: { packagingId: req.packagingMaterialId },
+        orderBy: { createdAt: 'asc' },
+      });
+      const available = batches.reduce((s, b) => s + Number(b.quantity ?? 0), 0);
+      if (required > available) {
+        errors.push(`${req.packagingMaterial.name ?? 'Packaging'}: required ${required}, available ${available}`);
       }
     }
   }
@@ -53,12 +60,11 @@ async function onProductionCompleted(productionId: string, productId: string, qu
     throw new Error(`Insufficient inventory. Cannot complete production:\n${errors.join('\n')}`);
   }
 
-  if (bom?.rawItems?.length) {
-    for (const item of bom.rawItems) {
-      if (!item.rawMaterialId || item.quantity == null) continue;
-      let remaining = Number(item.quantity) * quantityProduced;
+  for (const req of product.requirements) {
+    if (req.rawMaterialId && req.quantityPerUnit != null) {
+      let remaining = Number(req.quantityPerUnit) * quantityProduced;
       const batches = await prisma.rawMaterialBatch.findMany({
-        where: { materialId: item.rawMaterialId },
+        where: { materialId: req.rawMaterialId },
         orderBy: { createdAt: 'asc' },
       });
       for (const batch of batches) {
@@ -73,14 +79,10 @@ async function onProductionCompleted(productionId: string, productId: string, qu
         remaining -= deduct;
       }
     }
-  }
-
-  if (bom?.packagingItems?.length) {
-    for (const item of bom.packagingItems) {
-      if (!item.packagingId || item.quantity == null) continue;
-      let remaining = Number(item.quantity) * quantityProduced;
+    if (req.packagingMaterialId && req.quantityPerUnit != null) {
+      let remaining = Number(req.quantityPerUnit) * quantityProduced;
       const batches = await prisma.packagingBatch.findMany({
-        where: { packagingId: item.packagingId },
+        where: { packagingId: req.packagingMaterialId },
         orderBy: { createdAt: 'asc' },
       });
       for (const batch of batches) {
