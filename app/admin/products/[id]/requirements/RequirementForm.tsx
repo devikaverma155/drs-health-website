@@ -8,11 +8,11 @@ import type { ProductRequirement } from '@prisma/client';
 interface RequirementFormProps {
   productId: string;
   requirement?: (ProductRequirement & {
-    rawMaterial?: { id: string; name: string } | null;
-    packagingMaterial?: { id: string; name: string } | null;
+    rawMaterial?: { id: string; name: string | null } | null;
+    packagingMaterial?: { id: string; name: string | null } | null;
   }) | null;
-  rawMaterials: { id: string; name: string }[];
-  packagingMaterials: { id: string; name: string }[];
+  rawMaterials: { id: string; name: string | null }[];
+  packagingMaterials: { id: string; name: string | null }[];
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -172,8 +172,8 @@ export function ProductRequirementForm({
 interface RequirementListProps {
   productId: string;
   requirements: (ProductRequirement & {
-    rawMaterial?: { id: string; name: string } | null;
-    packagingMaterial?: { id: string; name: string } | null;
+    rawMaterial?: { id: string; name: string | null } | null;
+    packagingMaterial?: { id: string; name: string | null } | null;
   })[];
   onEdit: (req: any) => void;
   onDeleteSuccess?: () => void;
@@ -241,7 +241,7 @@ export function ProductRequirementList({
                   </span>
                 </td>
                 <td className="px-4 py-3 font-medium text-slate-900">{materialName}</td>
-                <td className="px-4 py-3 text-slate-600">{req.quantityPerUnit}</td>
+                <td className="px-4 py-3 text-slate-600">{req.quantityPerUnit?.toString()}</td>
                 <td className="px-4 py-3 text-slate-600">{req.unit}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">

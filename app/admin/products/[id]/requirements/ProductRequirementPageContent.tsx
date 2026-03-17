@@ -7,16 +7,16 @@ import type { Product, ProductRequirement } from '@prisma/client';
 
 type ProductWithReqs = Product & {
   requirements: (ProductRequirement & {
-    rawMaterial?: { id: string; name: string } | null;
-    packagingMaterial?: { id: string; name: string } | null;
+    rawMaterial?: { id: string; name: string | null } | null;
+    packagingMaterial?: { id: string; name: string | null } | null;
   })[];
 };
 
 interface ProductRequirementPageContentProps {
   productId: string;
   product: ProductWithReqs;
-  rawMaterials: { id: string; name: string }[];
-  packagingMaterials: { id: string; name: string }[];
+  rawMaterials: { id: string; name: string | null }[];
+  packagingMaterials: { id: string; name: string | null }[];
 }
 
 export function ProductRequirementPageContent({
@@ -27,8 +27,8 @@ export function ProductRequirementPageContent({
 }: ProductRequirementPageContentProps) {
   const router = useRouter();
   const [editingRequirement, setEditingRequirement] = useState<(ProductRequirement & {
-    rawMaterial?: { id: string; name: string } | null;
-    packagingMaterial?: { id: string; name: string } | null;
+    rawMaterial?: { id: string; name: string | null } | null;
+    packagingMaterial?: { id: string; name: string | null } | null;
   }) | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
 

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
 interface LineItem {
@@ -193,9 +194,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           lastName: orderData.billing.last_name,
           total: parseFloat(String(total)),
           status: 'pending',
-          items: orderData.line_items,
-          shippingAddress: orderData.shipping,
-          billingAddress: orderData.billing,
+          items: orderData.line_items as unknown as Prisma.InputJsonValue,
+          shippingAddress: orderData.shipping as unknown as Prisma.InputJsonValue,
+          billingAddress: orderData.billing as unknown as Prisma.InputJsonValue,
           notes: orderData.customer_note || null,
         },
       });
