@@ -1,8 +1,4 @@
-/**
- * Email sending utilities
- * Currently uses console logging as placeholder.
- * Replace with real email service (Nodemailer, SendGrid, Resend, etc.)
- */
+
 
 interface EmailOptions {
   to: string;
