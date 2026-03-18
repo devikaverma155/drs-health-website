@@ -79,6 +79,8 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showBillingForm, setShowBillingForm] = useState(false);
   const [shipToDifferentAddress, setShipToDifferentAddress] = useState(false);
+  const showRazorpay = process.env.NEXT_PUBLIC_ENABLE_RAZORPAY === 'true';
+  const [paymentMethod, setPaymentMethod] = useState<'razorpay' | 'cod'>(showRazorpay ? 'razorpay' : 'cod');
   const [customerInfo, setCustomerInfo] = useState<AddressInfo>({ ...emptyAddress });
   const [shippingInfo, setShippingInfo] = useState<AddressInfo>({ ...emptyAddress });
 
@@ -185,6 +187,7 @@ export default function CheckoutPage() {
         })),
         customer_note: 'Order placed via DRS Health',
         status: 'pending',
+        paymentMethod: showRazorpay ? paymentMethod : 'cod',
       };
 
       const response = await fetch('/api/checkout/create-order', {
@@ -194,7 +197,7 @@ export default function CheckoutPage() {
       });
 
       const raw = await response.text();
-      let result: { success?: boolean; error?: string; key?: string; amount?: number; razorpayOrderId?: string; wooOrderId?: string };
+      let result: { success?: boolean; error?: string; key?: string; amount?: number; razorpayOrderId?: string; wooOrderId?: string; paymentMethod?: string };
       try {
         result = JSON.parse(raw);
       } catch {
@@ -205,15 +208,24 @@ export default function CheckoutPage() {
         alert(result.error || 'Failed to create order');
         return;
       }
-      if (!result.key || result.amount == null || !result.razorpayOrderId || !result.wooOrderId) {
-        alert('Invalid payment setup. Please try again.');
-        return;
-      }
 
       localStorage.setItem('customer-email', customerInfo.email);
       localStorage.setItem('customer-first-name', customerInfo.firstName);
       localStorage.setItem('customer-last-name', customerInfo.lastName);
       localStorage.setItem('customer-phone', customerInfo.phone);
+
+      // Handle COD payment method
+      if (paymentMethod === 'cod' || result.paymentMethod === 'cod') {
+        clearAllItems();
+        window.location.href = '/checkout/success?method=cod&order=' + result.wooOrderId;
+        return;
+      }
+
+      // Handle Razorpay payment method
+      if (!result.key || result.amount == null || !result.razorpayOrderId || !result.wooOrderId) {
+        alert('Invalid payment setup. Please try again.');
+        return;
+      }
 
       await loadRazorpay();
       const wooOrderId = result.wooOrderId;
@@ -257,7 +269,7 @@ export default function CheckoutPage() {
     } finally {
       setIsProcessing(false);
     }
-  }, [cart, customerInfo, shippingToUse, shipToDifferentAddress, clearAllItems]);
+  }, [cart, customerInfo, shippingToUse, shipToDifferentAddress, clearAllItems, paymentMethod, showRazorpay]);
 
   const inputClass =
     'w-full px-4 py-2.5 border border-input-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary';
@@ -272,18 +284,20 @@ export default function CheckoutPage() {
     return parts.join('\n');
   };
 
-  if (cart.items.length === 0) {
-    return (
-      <div className="min-h-screen bg-background py-12 px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-foreground mb-4">Checkout</h1>
-          <p className="text-body-muted mb-6">Your cart is empty</p>
-          <Link href="/shop" className="inline-block px-6 py-2.5 bg-primary text-white rounded-xl hover:bg-primary-dark">
-            Continue Shopping
-          </Link>
-        </div>
+  const EmptyCart = () => (
+    <div className="min-h-screen bg-background py-12 px-4">
+      <div className="max-w-2xl mx-auto text-center">
+        <h1 className="text-3xl font-bold text-foreground mb-4">Checkout</h1>
+        <p className="text-body-muted mb-6">Your cart is empty</p>
+        <Link href="/shop" className="inline-block px-6 py-2.5 bg-primary text-white rounded-xl hover:bg-primary-dark">
+          Continue Shopping
+        </Link>
       </div>
-    );
+    </div>
+  );
+
+  if (cart.items.length === 0) {
+    return <EmptyCart />;
   }
 
   return (
@@ -368,6 +382,44 @@ export default function CheckoutPage() {
                 </div>
               )}
             </div>
+
+            {/* Payment Method Selection */}
+            <div className="card-soft p-6">
+              <h2 className="text-xl font-bold text-foreground mb-4">Payment Method</h2>
+              <div className="space-y-3">
+                {showRazorpay && (
+                  <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors" style={{ borderColor: paymentMethod === 'razorpay' ? '#A3261A' : undefined }}>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="razorpay"
+                      checked={paymentMethod === 'razorpay'}
+                      onChange={(e) => setPaymentMethod(e.target.value as 'razorpay' | 'cod')}
+                      className="w-4 h-4"
+                    />
+                    <div>
+                      <p className="font-medium text-foreground">Online Payment (Razorpay)</p>
+                      <p className="text-sm text-body-muted">UPI • Credit Card • Debit Card • NetBanking</p>
+                    </div>
+                  </label>
+                )}
+
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors" style={{ borderColor: paymentMethod === 'cod' ? '#A3261A' : undefined }}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={paymentMethod === 'cod'}
+                    onChange={(e) => setPaymentMethod(e.target.value as 'razorpay' | 'cod')}
+                    className="w-4 h-4"
+                  />
+                  <div>
+                    <p className="font-medium text-foreground">Cash on Delivery (COD)</p>
+                    <p className="text-sm text-body-muted">Pay when you receive your order</p>
+                  </div>
+                </label>
+              </div>
+            </div>
           </div>
 
           <div className="md:col-span-1">
@@ -400,9 +452,17 @@ export default function CheckoutPage() {
                 disabled={isProcessing}
                 className="w-full px-4 py-3 bg-primary text-white rounded-xl hover:bg-primary-dark disabled:opacity-50 font-bold"
               >
-                {isProcessing ? 'Opening payment...' : 'Pay Now'}
+                {isProcessing
+                  ? paymentMethod === 'cod'
+                    ? 'Placing order...'
+                    : 'Opening payment...'
+                  : paymentMethod === 'cod'
+                    ? 'Place order'
+                    : 'Pay Now'}
               </button>
-              <p className="text-xs text-body-muted mt-2 text-center">{PAYMENT_DESCRIPTION}</p>
+              <p className="text-xs text-body-muted mt-2 text-center">
+                {paymentMethod === 'cod' ? 'Pay when you receive your order' : PAYMENT_DESCRIPTION}
+              </p>
               <Link href="/cart" className="block mt-4 text-center text-primary hover:underline text-sm font-medium">
                 Back to Cart
               </Link>

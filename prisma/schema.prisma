@@ -634,6 +634,7 @@ model CustomerOrder {
   wooOrderId      String?   @unique @map("woo_order_id")
   razorpayOrderId String?   @map("razorpay_order_id")
   razorpayPaymentId String? @map("razorpay_payment_id")
+  paymentMethod   String?   @default("razorpay") @map("payment_method") // 'razorpay' or 'cod'
   email           String?   @db.VarChar(255)
   phone           String?   @db.VarChar(20)
   firstName       String?   @map("first_name")

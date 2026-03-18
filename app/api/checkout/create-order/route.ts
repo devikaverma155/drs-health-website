@@ -32,15 +32,17 @@ interface OrderRequest {
   line_items: LineItem[];
   customer_note?: string;
   status?: string;
+  paymentMethod?: 'razorpay' | 'cod'; // Payment method selection
 }
 
 /**
  * POST /api/checkout/create-order
- * Create an order in WooCommerce
+ * Create an order in WooCommerce with support for both Razorpay and COD payment methods
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const orderData: OrderRequest = await req.json();
+    const paymentMethod = orderData.paymentMethod || 'cod';
 
     // Validate required fields
     if (!orderData.billing || !orderData.line_items || orderData.line_items.length === 0) {
@@ -69,6 +71,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
     const baseUrl = wcUrl.replace(/\/$/, '');
 
+    // Map payment method for WooCommerce
+    const wcPaymentMethod = paymentMethod === 'cod' ? 'cod' : 'razorpay';
+    const initialStatus = paymentMethod === 'cod' ? 'pending' : 'pending';
+
     const response = await fetch(`${baseUrl}/orders`, {
       method: 'POST',
       headers: {
@@ -83,8 +89,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           quantity: item.quantity,
         })),
         customer_note: orderData.customer_note || '',
-        status: 'pending',
-        payment_method: 'razorpay', // Payment method - will be processed via Razorpay
+        status: initialStatus,
+        payment_method: wcPaymentMethod,
+        payment_method_title: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Razorpay',
       }),
     });
 
@@ -118,6 +125,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { status: 502 }
       );
     }
+
     const totalRaw = wooOrder.total ?? wooOrder.total_price ?? 0;
     const total = typeof totalRaw === 'number' ? totalRaw : parseFloat(String(totalRaw));
     if (Number.isNaN(total) || total <= 0) {
@@ -127,6 +135,41 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { status: 400 }
       );
     }
+
+    // Handle COD payment method
+    if (paymentMethod === 'cod') {
+      try {
+        await prisma.customerOrder.create({
+          data: {
+            wooOrderId: String(wooOrder.id),
+            paymentMethod: 'cod',
+            email: orderData.billing.email,
+            phone: orderData.billing.phone,
+            firstName: orderData.billing.first_name,
+            lastName: orderData.billing.last_name,
+            total: parseFloat(String(total)),
+            status: 'pending', // COD orders start as pending - admin confirms
+            items: orderData.line_items as unknown as Prisma.InputJsonValue,
+            shippingAddress: orderData.shipping as unknown as Prisma.InputJsonValue,
+            billingAddress: orderData.billing as unknown as Prisma.InputJsonValue,
+            notes: orderData.customer_note || null,
+          },
+        });
+      } catch (dbError) {
+        console.error('Failed to store COD order in database:', dbError);
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: 'Order created successfully with Cash on Delivery',
+        order: wooOrder,
+        wooOrderId: String(wooOrder.id),
+        paymentMethod: 'cod',
+        amount: Math.round(total * 100),
+      });
+    }
+
+    // Handle Razorpay payment method
     const amountPaise = Math.round(total * 100);
     if (amountPaise < 100) {
       return NextResponse.json(
@@ -182,12 +225,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const rzpOrder = JSON.parse(rzpBody) as { id: string };
 
-    // Store order in database for local tracking
+    // Store Razorpay order in database for local tracking
     try {
       await prisma.customerOrder.create({
         data: {
           wooOrderId: String(wooOrder.id),
           razorpayOrderId: rzpOrder.id,
+          paymentMethod: 'razorpay',
           email: orderData.billing.email,
           phone: orderData.billing.phone,
           firstName: orderData.billing.first_name,
@@ -213,6 +257,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       amount: amountPaise,
       key: keyId,
       wooOrderId: String(wooOrder.id),
+      paymentMethod: 'razorpay',
     });
   } catch (error) {
     console.error('Checkout error:', error);
