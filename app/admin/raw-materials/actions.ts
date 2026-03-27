@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { syncRawMaterialCurrentStock } from '@/lib/inventory-sync';
+import { isVendorOrderReceivedStatus, VENDOR_ORDER_RECEIVED_STATUS } from '@/lib/vendor-order-status';
 
 // Vendor functions
 export async function createVendor(data: {
@@ -75,8 +77,8 @@ export async function createRawMaterialOrder(data: {
     },
   });
 
-  // If status is complete/delivered and rawMaterialId set, add to inventory
-  if ((data.status === 'complete' || data.status === 'delivered') && data.rawMaterialId && data.quantity) {
+  // Receipt into stock when status is delivered (single canonical status)
+  if (data.status === VENDOR_ORDER_RECEIVED_STATUS && data.rawMaterialId && data.quantity) {
     const qty = parseFloat(data.quantity);
     if (!isNaN(qty) && qty > 0) {
       await prisma.rawMaterialBatch.create({
@@ -88,11 +90,22 @@ export async function createRawMaterialOrder(data: {
           expiryDate: null,
         },
       });
+      await syncRawMaterialCurrentStock(data.rawMaterialId);
+      const totalPrice = order.price != null ? Number(order.price) : 0;
+      if (totalPrice > 0) {
+        const unitCost = totalPrice / qty;
+        await prisma.rawMaterial.update({
+          where: { id: data.rawMaterialId },
+          data: { costPerUnit: unitCost, purchaseRate: unitCost },
+        });
+      }
     }
   }
 
   revalidatePath('/admin/raw-materials');
   revalidatePath('/admin/vendor-orders');
+  revalidatePath('/admin/materials');
+  revalidatePath('/admin/bom');
   return order.id;
 }
 
@@ -113,8 +126,9 @@ export async function updateRawMaterialOrder(id: string, data: {
   const existing = await prisma.rawMaterialOrder.findUnique({ where: { id } });
   if (!existing) throw new Error('Order not found');
 
-  const wasComplete = existing.status === 'complete' || existing.status === 'delivered';
-  const nowComplete = data.status === 'complete' || data.status === 'delivered';
+  const mergedStatus = data.status ?? existing.status ?? '';
+  const wasReceived = isVendorOrderReceivedStatus(existing.status);
+  const nowReceived = isVendorOrderReceivedStatus(mergedStatus);
   const materialId = data.rawMaterialId?.trim() || existing.rawMaterialId;
   const quantity = data.quantity?.trim() || existing.quantity;
 
@@ -133,8 +147,8 @@ export async function updateRawMaterialOrder(id: string, data: {
     },
   });
 
-  // When status changes to complete/delivered and rawMaterialId is set, add to inventory (once)
-  if (!wasComplete && nowComplete && materialId && quantity) {
+  // First transition into received status: add batch once
+  if (!wasReceived && nowReceived && materialId && quantity) {
     const qty = parseFloat(quantity);
     if (!isNaN(qty) && qty > 0) {
       await prisma.rawMaterialBatch.create({
@@ -146,11 +160,23 @@ export async function updateRawMaterialOrder(id: string, data: {
           expiryDate: null,
         },
       });
+      await syncRawMaterialCurrentStock(materialId);
+      const updated = await prisma.rawMaterialOrder.findUnique({ where: { id } });
+      const totalPrice = updated?.price != null ? Number(updated.price) : 0;
+      if (totalPrice > 0) {
+        const unitCost = totalPrice / qty;
+        await prisma.rawMaterial.update({
+          where: { id: materialId },
+          data: { costPerUnit: unitCost, purchaseRate: unitCost },
+        });
+      }
     }
   }
 
   revalidatePath('/admin/raw-materials');
   revalidatePath('/admin/vendor-orders');
+  revalidatePath('/admin/materials');
+  revalidatePath('/admin/bom');
 }
 
 export async function deleteRawMaterialOrder(id: string) {

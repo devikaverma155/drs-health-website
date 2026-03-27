@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { syncPackagingCurrentStock, syncRawMaterialCurrentStock } from '@/lib/inventory-sync';
 
 /** When production is marked completed: check Product Master requirements × quantityProduced against inventory, deduct RM/PM (FIFO), then add to FG. */
 async function onProductionCompleted(productionId: string, productId: string, quantityProduced: number) {
@@ -98,6 +99,21 @@ async function onProductionCompleted(productionId: string, productId: string, qu
       }
     }
   }
+
+  const rawToSync = new Set<string>();
+  const packToSync = new Set<string>();
+  for (const req of product.requirements) {
+    if (req.rawMaterialId && req.quantityPerUnit != null && Number(req.quantityPerUnit) * quantityProduced > 0) {
+      rawToSync.add(req.rawMaterialId);
+    }
+    if (req.packagingMaterialId && req.quantityPerUnit != null && Number(req.quantityPerUnit) * quantityProduced > 0) {
+      packToSync.add(req.packagingMaterialId);
+    }
+  }
+  await Promise.all([
+    ...Array.from(rawToSync, (id) => syncRawMaterialCurrentStock(id)),
+    ...Array.from(packToSync, (id) => syncPackagingCurrentStock(id)),
+  ]);
 
   const batch = await prisma.productionBatch.findUnique({ where: { id: productionId } });
   if (batch?.productId && batch.quantityProduced != null && Number(batch.quantityProduced) > 0) {

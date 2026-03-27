@@ -16,8 +16,8 @@ export default async function ProductRequirementsPage({
     include: {
       requirements: {
         include: {
-          rawMaterial: { select: { id: true, name: true } },
-          packagingMaterial: { select: { id: true, name: true } },
+          rawMaterial: { select: { id: true, name: true, purchaseRate: true, unit: true } },
+          packagingMaterial: { select: { id: true, name: true, costPerUnit: true, unit: true } },
         },
       },
     },
@@ -27,11 +27,11 @@ export default async function ProductRequirementsPage({
 
   const [rawMaterials, packagingMaterials] = await Promise.all([
     prisma.rawMaterial.findMany({
-      select: { id: true, name: true },
+      select: { id: true, name: true, purchaseRate: true, unit: true },
       orderBy: { name: 'asc' },
     }),
     prisma.packagingMaterial.findMany({
-      select: { id: true, name: true },
+      select: { id: true, name: true, costPerUnit: true, unit: true },
       orderBy: { name: 'asc' },
     }),
   ]);

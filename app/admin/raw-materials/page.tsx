@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import { isVendorOrderReceivedStatus } from '@/lib/vendor-order-status';
 import { RawMaterialOrderForm } from './RawMaterialOrderForm';
 
 export const dynamic = 'force-dynamic';
@@ -77,7 +78,7 @@ export default async function RawMaterialsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      order.status === 'delivered' || order.status === 'complete' ? 'bg-green-100 text-green-700' :
+                      isVendorOrderReceivedStatus(order.status) ? 'bg-green-100 text-green-700' :
                       order.status === 'ordered' ? 'bg-blue-100 text-blue-700' :
                       order.status === 'cancelled' ? 'bg-red-100 text-red-700' :
                       'bg-slate-100 text-slate-700'

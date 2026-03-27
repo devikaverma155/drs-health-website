@@ -10,9 +10,24 @@ export const dynamic = 'force-dynamic';
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  // Omit file_data / mime_type from query until DB migration is applied (avoids errors if columns missing).
   const client = await prisma.client.findUnique({
     where: { id },
-    include: { documents: { orderBy: { uploadedAt: 'desc' } } },
+    include: {
+      documents: {
+        orderBy: { uploadedAt: 'desc' },
+        select: {
+          id: true,
+          clientId: true,
+          fileName: true,
+          fileUrl: true,
+          fileSize: true,
+          fileType: true,
+          notes: true,
+          uploadedAt: true,
+        },
+      },
+    },
   });
   if (!client) notFound();
 

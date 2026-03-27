@@ -6,13 +6,19 @@ import { FileList } from '@/components/ui/FileList';
 import { deleteClientDocument } from '../actions';
 import type { ClientDocument } from '@prisma/client';
 
+/** Document list without binary blob (matches server select; avoids missing `file_data` column errors). */
+export type ClientDocumentListItem = Pick<
+  ClientDocument,
+  'id' | 'clientId' | 'fileName' | 'fileUrl' | 'fileSize' | 'fileType' | 'notes' | 'uploadedAt'
+>;
+
 interface ClientFileSectionProps {
   clientId: string;
-  documents: ClientDocument[];
+  documents: ClientDocumentListItem[];
 }
 
 export function ClientFileSection({ clientId, documents: initialDocuments }: ClientFileSectionProps) {
-  const [documents, setDocuments] = useState(initialDocuments);
+  const [documents, setDocuments] = useState<ClientDocumentListItem[]>(initialDocuments);
 
   function handleUploadSuccess(file: {
     id: string;
@@ -29,8 +35,6 @@ export function ClientFileSection({ clientId, documents: initialDocuments }: Cli
         fileUrl: file.fileUrl,
         fileSize: file.fileSize,
         fileType: null,
-        fileData: null,
-        mimeType: null,
         notes: null,
         uploadedAt: new Date(file.uploadedAt),
       },

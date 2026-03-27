@@ -33,6 +33,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ success: false, error: 'Invalid payment signature' }, { status: 400 });
     }
 
+    // Look up the order by razorpay_order_id from our DB (don't trust client-supplied wooOrderId)
+    // This prevents an attacker from submitting a valid payment but substituting a different order ID
+    let resolvedWooOrderId = wooOrderId;
+    try {
+      const dbOrderByRzp = await prisma.customerOrder.findFirst({
+        where: { razorpayOrderId: razorpay_order_id },
+        select: { wooOrderId: true },
+      });
+      if (dbOrderByRzp?.wooOrderId) {
+        resolvedWooOrderId = dbOrderByRzp.wooOrderId;
+      }
+    } catch {
+      // fall back to client-supplied if DB lookup fails
+    }
+
     // Update WooCommerce order to processing
     const wcUrl = process.env.NEXT_PUBLIC_WC_API_URL;
     const consumerKey = process.env.WC_CONSUMER_KEY;
@@ -43,7 +58,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
     const baseUrl = wcUrl.replace(/\/$/, '');
-    const updateRes = await fetch(`${baseUrl}/orders/${wooOrderId}`, {
+    const updateRes = await fetch(`${baseUrl}/orders/${resolvedWooOrderId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -66,7 +81,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // Update order in our database and send confirmation email
     try {
       const dbOrder = await prisma.customerOrder.findUnique({
-        where: { wooOrderId },
+        where: { wooOrderId: resolvedWooOrderId },
       });
 
       if (dbOrder) {
@@ -89,7 +104,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           : [];
 
         await sendOrderConfirmationEmail(dbOrder.email || '', {
-          orderNumber: wooOrderId,
+          orderNumber: resolvedWooOrderId,
           total: dbOrder.total?.toString() || '0',
           items,
           date: new Date().toLocaleDateString('en-IN'),

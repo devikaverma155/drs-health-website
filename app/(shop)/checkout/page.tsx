@@ -37,6 +37,11 @@ declare global {
 }
 
 const PAYMENT_DESCRIPTION = 'UPI | Credit Card | Debit Card | NetBanking';
+const ONLINE_DISCOUNT_PERCENT = 10;
+// Partial payment: customer pays this fraction upfront online, rest on delivery
+const PARTIAL_UPFRONT_PERCENT = 50;
+
+const razorpayEnabled = process.env.NEXT_PUBLIC_ENABLE_RAZORPAY !== 'false';
 
 function loadRazorpay(): Promise<void> {
   return new Promise((resolve) => {
@@ -51,6 +56,8 @@ function loadRazorpay(): Promise<void> {
     document.body.appendChild(script);
   });
 }
+
+type PaymentMethod = 'razorpay' | 'partial' | 'cod';
 
 type AddressInfo = {
   firstName: string;
@@ -74,17 +81,19 @@ const emptyAddress: AddressInfo = {
   zipCode: '',
 };
 
+function applyDiscount(amount: number, pct: number) {
+  return amount - (amount * pct) / 100;
+}
+
 export default function CheckoutPage() {
   const { cart, clearAllItems } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [showBillingForm, setShowBillingForm] = useState(false);
   const [shipToDifferentAddress, setShipToDifferentAddress] = useState(false);
-  const showRazorpay = process.env.NEXT_PUBLIC_ENABLE_RAZORPAY === 'true';
-  const [paymentMethod, setPaymentMethod] = useState<'razorpay' | 'cod'>(showRazorpay ? 'razorpay' : 'cod');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(razorpayEnabled ? 'razorpay' : 'cod');
   const [customerInfo, setCustomerInfo] = useState<AddressInfo>({ ...emptyAddress });
   const [shippingInfo, setShippingInfo] = useState<AddressInfo>({ ...emptyAddress });
 
-  // Pre-fill from logged-in customer: localStorage first, then fetch address from API
   useEffect(() => {
     const saved = getSavedCustomer();
     if (saved.firstName || saved.email) {
@@ -140,8 +149,17 @@ export default function CheckoutPage() {
   };
 
   const billingFilled = customerInfo.firstName && customerInfo.email && customerInfo.phone && customerInfo.address;
-  const shippingFilled = shippingInfo.firstName && shippingInfo.address;
   const shippingToUse = shipToDifferentAddress ? shippingInfo : customerInfo;
+
+  // Price calculations
+  const subtotal = parseFloat(cart.totalPrice || '0');
+  const discountedTotal = (paymentMethod === 'razorpay' || paymentMethod === 'partial')
+    ? applyDiscount(subtotal, ONLINE_DISCOUNT_PERCENT)
+    : subtotal;
+  const partialUpfront = paymentMethod === 'partial'
+    ? (discountedTotal * PARTIAL_UPFRONT_PERCENT) / 100
+    : 0;
+  const partialOnDelivery = paymentMethod === 'partial' ? discountedTotal - partialUpfront : 0;
 
   const handleCheckout = useCallback(async () => {
     if (cart.items.length === 0) {
@@ -185,9 +203,13 @@ export default function CheckoutPage() {
           quantity: item.quantity,
           price: item.price,
         })),
-        customer_note: 'Order placed via DRS Health',
+        customer_note: paymentMethod === 'partial'
+          ? `Partial payment: ₹${partialUpfront.toFixed(2)} paid online, ₹${partialOnDelivery.toFixed(2)} on delivery`
+          : 'Order placed via DRS Health',
         status: 'pending',
-        paymentMethod: showRazorpay ? paymentMethod : 'cod',
+        paymentMethod: paymentMethod === 'partial' ? 'razorpay' : paymentMethod,
+        discountApplied: paymentMethod !== 'cod' ? ONLINE_DISCOUNT_PERCENT : 0,
+        chargeAmount: paymentMethod === 'partial' ? partialUpfront : discountedTotal,
       };
 
       const response = await fetch('/api/checkout/create-order', {
@@ -214,14 +236,12 @@ export default function CheckoutPage() {
       localStorage.setItem('customer-last-name', customerInfo.lastName);
       localStorage.setItem('customer-phone', customerInfo.phone);
 
-      // Handle COD payment method
       if (paymentMethod === 'cod' || result.paymentMethod === 'cod') {
         clearAllItems();
         window.location.href = '/checkout/success?method=cod&order=' + result.wooOrderId;
         return;
       }
 
-      // Handle Razorpay payment method
       if (!result.key || result.amount == null || !result.razorpayOrderId || !result.wooOrderId) {
         alert('Invalid payment setup. Please try again.');
         return;
@@ -229,13 +249,16 @@ export default function CheckoutPage() {
 
       await loadRazorpay();
       const wooOrderId = result.wooOrderId;
+      const successMethod = paymentMethod === 'partial' ? 'partial' : 'razorpay';
 
       const rzp = new window.Razorpay({
         key: result.key,
         amount: result.amount,
         order_id: result.razorpayOrderId,
         name: 'DRS Health',
-        description: PAYMENT_DESCRIPTION,
+        description: paymentMethod === 'partial'
+          ? `Advance payment (${PARTIAL_UPFRONT_PERCENT}% of discounted total)`
+          : PAYMENT_DESCRIPTION,
         theme: { color: '#A3261A' },
         prefill: { email: customerInfo.email, contact: customerInfo.phone },
         handler: async (res) => {
@@ -253,7 +276,7 @@ export default function CheckoutPage() {
             const verifyData = await verifyRes.json();
             if (verifyData.success) {
               clearAllItems();
-              window.location.href = '/checkout/success';
+              window.location.href = `/checkout/success?method=${successMethod}&order=${wooOrderId}`;
             } else {
               alert(verifyData.error || 'Payment verification failed');
             }
@@ -269,7 +292,7 @@ export default function CheckoutPage() {
     } finally {
       setIsProcessing(false);
     }
-  }, [cart, customerInfo, shippingToUse, shipToDifferentAddress, clearAllItems, paymentMethod, showRazorpay]);
+  }, [cart, customerInfo, shippingToUse, shipToDifferentAddress, clearAllItems, paymentMethod, discountedTotal, partialUpfront, partialOnDelivery]);
 
   const inputClass =
     'w-full px-4 py-2.5 border border-input-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary';
@@ -284,20 +307,18 @@ export default function CheckoutPage() {
     return parts.join('\n');
   };
 
-  const EmptyCart = () => (
-    <div className="min-h-screen bg-background py-12 px-4">
-      <div className="max-w-2xl mx-auto text-center">
-        <h1 className="text-3xl font-bold text-foreground mb-4">Checkout</h1>
-        <p className="text-body-muted mb-6">Your cart is empty</p>
-        <Link href="/shop" className="inline-block px-6 py-2.5 bg-primary text-white rounded-xl hover:bg-primary-dark">
-          Continue Shopping
-        </Link>
-      </div>
-    </div>
-  );
-
   if (cart.items.length === 0) {
-    return <EmptyCart />;
+    return (
+      <div className="min-h-screen bg-background py-12 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <h1 className="text-3xl font-bold text-foreground mb-4">Checkout</h1>
+          <p className="text-body-muted mb-6">Your cart is empty</p>
+          <Link href="/shop" className="inline-block px-6 py-2.5 bg-primary text-white rounded-xl hover:bg-primary-dark">
+            Continue Shopping
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -307,10 +328,10 @@ export default function CheckoutPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-6">
-            {/* Billing — show as summary, or form when "Change" clicked */}
+            {/* Billing & Shipping */}
             <div className="card-soft p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-foreground">Billing &amp; shipping</h2>
+                <h2 className="text-xl font-bold text-foreground">Billing &amp; Shipping</h2>
                 {billingFilled && !showBillingForm && (
                   <button
                     type="button"
@@ -383,34 +404,73 @@ export default function CheckoutPage() {
               )}
             </div>
 
-            {/* Payment Method Selection */}
+            {/* Payment Method */}
             <div className="card-soft p-6">
-              <h2 className="text-xl font-bold text-foreground mb-4">Payment Method</h2>
+              <h2 className="text-xl font-bold text-foreground mb-1">Payment Method</h2>
+              {razorpayEnabled && (
+                <p className="text-sm text-green-700 bg-green-50 rounded-lg px-3 py-2 mb-4 font-medium">
+                  10% discount applied on Online Payment &amp; Partial Payment
+                </p>
+              )}
               <div className="space-y-3">
-                {showRazorpay && (
-                  <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors" style={{ borderColor: paymentMethod === 'razorpay' ? '#A3261A' : undefined }}>
+                {razorpayEnabled && (
+                  <label
+                    className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors"
+                    style={{ borderColor: paymentMethod === 'razorpay' ? '#A3261A' : undefined }}
+                  >
                     <input
                       type="radio"
                       name="paymentMethod"
                       value="razorpay"
                       checked={paymentMethod === 'razorpay'}
-                      onChange={(e) => setPaymentMethod(e.target.value as 'razorpay' | 'cod')}
+                      onChange={() => setPaymentMethod('razorpay')}
                       className="w-4 h-4"
                     />
-                    <div>
-                      <p className="font-medium text-foreground">Online Payment (Razorpay)</p>
+                    <div className="flex-1">
+                      <p className="font-medium text-foreground">Full Online Payment</p>
                       <p className="text-sm text-body-muted">UPI • Credit Card • Debit Card • NetBanking</p>
                     </div>
+                    <span className="text-sm font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded">
+                      10% OFF
+                    </span>
                   </label>
                 )}
 
-                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors" style={{ borderColor: paymentMethod === 'cod' ? '#A3261A' : undefined }}>
+                {razorpayEnabled && (
+                  <label
+                    className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors"
+                    style={{ borderColor: paymentMethod === 'partial' ? '#A3261A' : undefined }}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="partial"
+                      checked={paymentMethod === 'partial'}
+                      onChange={() => setPaymentMethod('partial')}
+                      className="w-4 h-4"
+                    />
+                    <div className="flex-1">
+                      <p className="font-medium text-foreground">Partial Payment</p>
+                      <p className="text-sm text-body-muted">
+                        Pay {PARTIAL_UPFRONT_PERCENT}% now online, rest on delivery
+                      </p>
+                    </div>
+                    <span className="text-sm font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded">
+                      10% OFF
+                    </span>
+                  </label>
+                )}
+
+                <label
+                  className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors"
+                  style={{ borderColor: paymentMethod === 'cod' ? '#A3261A' : undefined }}
+                >
                   <input
                     type="radio"
                     name="paymentMethod"
                     value="cod"
                     checked={paymentMethod === 'cod'}
-                    onChange={(e) => setPaymentMethod(e.target.value as 'razorpay' | 'cod')}
+                    onChange={() => setPaymentMethod('cod')}
                     className="w-4 h-4"
                   />
                   <div>
@@ -419,9 +479,19 @@ export default function CheckoutPage() {
                   </div>
                 </label>
               </div>
+
+              {/* Partial breakdown */}
+              {paymentMethod === 'partial' && (
+                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm space-y-1">
+                  <p className="font-medium text-amber-800">Partial Payment Breakdown</p>
+                  <p className="text-amber-700">Pay now (online): <strong>₹{partialUpfront.toFixed(2)}</strong></p>
+                  <p className="text-amber-700">Pay on delivery: <strong>₹{partialOnDelivery.toFixed(2)}</strong></p>
+                </div>
+              )}
             </div>
           </div>
 
+          {/* Order Summary */}
           <div className="md:col-span-1">
             <div className="card-soft p-6 sticky top-24">
               <h2 className="text-xl font-bold text-foreground mb-4">Order Summary</h2>
@@ -433,36 +503,55 @@ export default function CheckoutPage() {
                   </div>
                 ))}
               </div>
-              <div className="space-y-2 mb-6">
+              <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-body-muted">Subtotal</span>
-                  <span className="font-medium text-foreground">₹{cart.totalPrice}</span>
+                  <span className="font-medium text-foreground">₹{subtotal.toFixed(2)}</span>
                 </div>
+                {(paymentMethod === 'razorpay' || paymentMethod === 'partial') && (
+                  <div className="flex justify-between text-sm text-green-700">
+                    <span>Discount ({ONLINE_DISCOUNT_PERCENT}%)</span>
+                    <span className="font-medium">-₹{(subtotal - discountedTotal).toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm">
                   <span className="text-body-muted">Shipping</span>
                   <span className="font-medium text-foreground">TBD</span>
                 </div>
               </div>
-              <div className="flex justify-between text-lg font-bold text-foreground mb-6 pb-6 border-b border-border">
+              <div className="flex justify-between text-lg font-bold text-foreground mb-2 pb-4 border-b border-border">
                 <span>Total</span>
-                <span>₹{cart.totalPrice}</span>
+                <span>
+                  {(paymentMethod === 'razorpay' || paymentMethod === 'partial') ? (
+                    <span>
+                      <span className="line-through text-body-muted text-sm mr-2">₹{subtotal.toFixed(2)}</span>
+                      ₹{discountedTotal.toFixed(2)}
+                    </span>
+                  ) : (
+                    `₹${subtotal.toFixed(2)}`
+                  )}
+                </span>
               </div>
+              {paymentMethod === 'partial' && (
+                <div className="text-sm text-amber-700 bg-amber-50 rounded-lg px-3 py-2 mb-4">
+                  <p>Pay now: <strong>₹{partialUpfront.toFixed(2)}</strong></p>
+                  <p>On delivery: <strong>₹{partialOnDelivery.toFixed(2)}</strong></p>
+                </div>
+              )}
               <button
                 onClick={handleCheckout}
                 disabled={isProcessing}
                 className="w-full px-4 py-3 bg-primary text-white rounded-xl hover:bg-primary-dark disabled:opacity-50 font-bold"
               >
                 {isProcessing
-                  ? paymentMethod === 'cod'
-                    ? 'Placing order...'
-                    : 'Opening payment...'
+                  ? 'Processing...'
                   : paymentMethod === 'cod'
-                    ? 'Place order'
-                    : 'Pay Now'}
+                  ? 'Place Order'
+                  : paymentMethod === 'partial'
+                  ? `Pay ₹${partialUpfront.toFixed(2)} Now`
+                  : `Pay ₹${discountedTotal.toFixed(2)} Now`}
               </button>
-              <p className="text-xs text-body-muted mt-2 text-center">
-                {paymentMethod === 'cod' ? 'Pay when you receive your order' : PAYMENT_DESCRIPTION}
-              </p>
+              <p className="text-xs text-body-muted mt-2 text-center">{PAYMENT_DESCRIPTION}</p>
               <Link href="/cart" className="block mt-4 text-center text-primary hover:underline text-sm font-medium">
                 Back to Cart
               </Link>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { ProfileSection } from './components/ProfileSection';
 import { OrdersSection } from './components/OrdersSection';
@@ -10,16 +11,23 @@ import { AddressesSection } from './components/AddressesSection';
 type TabType = 'profile' | 'orders' | 'addresses';
 
 export function AccountPageContent() {
-  const [activeTab, setActiveTab] = useState<TabType>('profile');
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const placed = searchParams.get('placed');
+  const [activeTab, setActiveTab] = useState<TabType>(
+    tabParam === 'orders' || tabParam === 'addresses' ? tabParam : 'profile'
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState<string | null>(null);
+  const [showPlacedMessage, setShowPlacedMessage] = useState(false);
 
   useEffect(() => {
-    // Get email from localStorage or sessionStorage
     const storedEmail = localStorage.getItem('customer-email') || sessionStorage.getItem('customer-email');
     setEmail(storedEmail);
+    if (tabParam === 'orders' || tabParam === 'addresses') setActiveTab(tabParam);
+    if (placed === '1') setShowPlacedMessage(true);
     setIsLoading(false);
-  }, []);
+  }, [tabParam, placed]);
 
   if (isLoading) {
     return (
@@ -66,6 +74,20 @@ export function AccountPageContent() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
+        {/* Order placed success banner */}
+        {showPlacedMessage && (
+          <div className="mb-6 rounded-lg bg-green-50 border border-green-200 p-4 text-green-800 flex items-center justify-between">
+            <p className="font-medium">Your order has been placed successfully. You can view it below.</p>
+            <button
+              type="button"
+              onClick={() => setShowPlacedMessage(false)}
+              className="text-green-600 hover:text-green-800 text-sm font-medium"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">My Account</h1>

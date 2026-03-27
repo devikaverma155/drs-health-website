@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 
-interface Order {
+export interface Order {
   id: string;
   orderNumber: string;
   date: string;
@@ -25,6 +25,7 @@ export function OrdersSection({ email }: OrdersSectionProps) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [detailOrder, setDetailOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -57,6 +58,9 @@ export function OrdersSection({ email }: OrdersSectionProps) {
       case 'completed':
       case 'processing':
         return 'bg-green-100 text-green-800';
+      case 'on-hold':
+      case 'on hold':
+        return 'bg-amber-100 text-amber-800';
       case 'pending':
         return 'bg-yellow-100 text-yellow-800';
       case 'cancelled':
@@ -133,18 +137,75 @@ export function OrdersSection({ email }: OrdersSectionProps) {
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-4 border-t border-gray-200">
-              <button className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50">
+              <button
+                type="button"
+                onClick={() => setDetailOrder(order)}
+                className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50"
+              >
                 View Details
               </button>
               {order.status.toLowerCase() === 'completed' && (
-                <button className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50">
-                  Reorder
-                </button>
+                <Link href="/shop">
+                  <button type="button" className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50">
+                    Reorder
+                  </button>
+                </Link>
               )}
             </div>
           </div>
         ))}
       </div>
+
+      {/* Order detail modal */}
+      {detailOrder && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+          onClick={() => setDetailOrder(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="order-detail-title"
+        >
+          <div
+            className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-4">
+              <h3 id="order-detail-title" className="text-lg font-semibold text-gray-900">
+                Order #{detailOrder.orderNumber}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setDetailOrder(null)}
+                className="text-gray-400 hover:text-gray-600 p-1"
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mb-2">
+              {detailOrder.date ? new Date(detailOrder.date).toLocaleDateString(undefined, { dateStyle: 'medium' }) : '-'}
+            </p>
+            <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-4 ${getStatusColor(detailOrder.status)}`}>
+              {detailOrder.status}
+            </span>
+            <div className="border-t border-gray-200 pt-4 space-y-2">
+              {detailOrder.items.map((item, idx) => (
+                <div key={idx} className="flex justify-between text-sm">
+                  <span className="text-gray-600">{item.name} × {item.quantity}</span>
+                  <span className="font-medium text-gray-900">₹{item.price}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between text-base font-semibold mt-4 pt-4 border-t border-gray-200">
+              <span>Total</span>
+              <span>₹{detailOrder.total}</span>
+            </div>
+            <div className="mt-6 flex justify-end">
+              <Button onClick={() => setDetailOrder(null)}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

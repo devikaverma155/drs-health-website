@@ -4,6 +4,24 @@
  */
 
 import { prisma } from '@/lib/prisma';
+import { loadPackagingBatchStockMap, loadRawBatchStockMap } from '@/lib/inventory-sync';
+
+/** Human-readable qty for BOM tables (avoids ambiguous "12 20" when labels were wrong). */
+export function formatBomQuantity(n: number): string {
+  if (!Number.isFinite(n)) return '0';
+  return new Intl.NumberFormat('en-IN', {
+    maximumFractionDigits: 6,
+    minimumFractionDigits: 0,
+  }).format(n);
+}
+
+/** Prefer Product Master line unit (per unit of product); fallback to material master. */
+function requirementDisplayUnit(
+  req: { unit?: string | null },
+  material: { unit?: string | null }
+): string {
+  return req.unit?.trim() || material.unit?.trim() || '';
+}
 
 export interface MaterialRequirement {
   id: string;
@@ -55,6 +73,17 @@ export async function calculateBOM(
     throw new Error(`Product not found: ${productId}`);
   }
 
+  const rawIds = Array.from(
+    new Set(product.requirements.map((r) => r.rawMaterialId).filter((id): id is string => id != null))
+  );
+  const packIds = Array.from(
+    new Set(product.requirements.map((r) => r.packagingMaterialId).filter((id): id is string => id != null))
+  );
+  const [rawStockMap, packStockMap] = await Promise.all([
+    loadRawBatchStockMap(rawIds),
+    loadPackagingBatchStockMap(packIds),
+  ]);
+
   const rawMaterials: MaterialRequirement[] = [];
   const packagingMaterials: MaterialRequirement[] = [];
   const shortageWarnings: string[] = [];
@@ -65,7 +94,8 @@ export async function calculateBOM(
   for (const req of product.requirements) {
     if (req.rawMaterialId && req.rawMaterial) {
       const quantityRequired = Number(req.quantityPerUnit || 0) * quantity;
-      const currentStock = Number(req.rawMaterial.currentStock || 0);
+      const displayUnit = requirementDisplayUnit(req, req.rawMaterial);
+      const currentStock = rawStockMap.get(req.rawMaterialId) ?? 0;
       const minStock = Number(req.rawMaterial.minStock || 0);
       const costPerUnit = Number(req.rawMaterial.costPerUnit || 0);
       const totalCost = quantityRequired * costPerUnit;
@@ -76,7 +106,7 @@ export async function calculateBOM(
       if (isShortage) {
         hasShortage = true;
         shortageWarnings.push(
-          `⚠️ ${req.rawMaterial.name}: Need ${quantityRequired} ${req.rawMaterial.unit}, Only have ${currentStock} (Short by ${Math.abs(shortage)} ${req.rawMaterial.unit})`
+          `⚠️ ${req.rawMaterial.name}: Need ${formatBomQuantity(quantityRequired)}${displayUnit ? ` ${displayUnit}` : ''}, only have ${formatBomQuantity(currentStock)}${displayUnit ? ` ${displayUnit}` : ''} (short by ${formatBomQuantity(Math.abs(shortage))}${displayUnit ? ` ${displayUnit}` : ''})`
         );
       }
 
@@ -85,7 +115,7 @@ export async function calculateBOM(
         name: req.rawMaterial.name || '',
         type: 'raw',
         quantityRequired,
-        unit: req.rawMaterial.unit || '',
+        unit: displayUnit,
         costPerUnit,
         totalCost,
         currentStock,
@@ -99,7 +129,8 @@ export async function calculateBOM(
 
     if (req.packagingMaterialId && req.packagingMaterial) {
       const quantityRequired = Number(req.quantityPerUnit || 0) * quantity;
-      const currentStock = Number(req.packagingMaterial.currentStock || 0);
+      const displayUnit = requirementDisplayUnit(req, req.packagingMaterial);
+      const currentStock = packStockMap.get(req.packagingMaterialId) ?? 0;
       const minStock = Number(req.packagingMaterial.minStock || 0);
       const costPerUnit = Number(req.packagingMaterial.costPerUnit || 0);
       const totalCost = quantityRequired * costPerUnit;
@@ -110,7 +141,7 @@ export async function calculateBOM(
       if (isShortage) {
         hasShortage = true;
         shortageWarnings.push(
-          `⚠️ ${req.packagingMaterial.name}: Need ${quantityRequired} ${req.packagingMaterial.unit}, Only have ${currentStock} (Short by ${Math.abs(shortage)} ${req.packagingMaterial.unit})`
+          `⚠️ ${req.packagingMaterial.name}: Need ${formatBomQuantity(quantityRequired)}${displayUnit ? ` ${displayUnit}` : ''}, only have ${formatBomQuantity(currentStock)}${displayUnit ? ` ${displayUnit}` : ''} (short by ${formatBomQuantity(Math.abs(shortage))}${displayUnit ? ` ${displayUnit}` : ''})`
         );
       }
 
@@ -119,7 +150,7 @@ export async function calculateBOM(
         name: req.packagingMaterial.name || '',
         type: 'packaging',
         quantityRequired,
-        unit: req.packagingMaterial.unit || '',
+        unit: displayUnit,
         costPerUnit,
         totalCost,
         currentStock,
@@ -164,6 +195,17 @@ export async function getProductInventoryStatus(productId: string) {
     return null;
   }
 
+  const rawIds2 = Array.from(
+    new Set(product.requirements.map((r) => r.rawMaterialId).filter((id): id is string => id != null))
+  );
+  const packIds2 = Array.from(
+    new Set(product.requirements.map((r) => r.packagingMaterialId).filter((id): id is string => id != null))
+  );
+  const [rawStockMap, packStockMap] = await Promise.all([
+    loadRawBatchStockMap(rawIds2),
+    loadPackagingBatchStockMap(packIds2),
+  ]);
+
   const status = {
     productId,
     productName: product.name,
@@ -175,10 +217,10 @@ export async function getProductInventoryStatus(productId: string) {
   let minUnitsCanProduce = Infinity;
 
   for (const req of product.requirements) {
-    if (req.rawMaterial) {
-      const currentStock = Number(req.rawMaterial.currentStock || 0);
+    if (req.rawMaterial && req.rawMaterialId) {
+      const currentStock = rawStockMap.get(req.rawMaterialId) ?? 0;
       const quantityPerUnit = Number(req.quantityPerUnit || 0);
-      const unitsCanProduce = Math.floor(currentStock / quantityPerUnit);
+      const unitsCanProduce = quantityPerUnit > 0 ? Math.floor(currentStock / quantityPerUnit) : 0;
 
       if (unitsCanProduce < minUnitsCanProduce) {
         minUnitsCanProduce = unitsCanProduce;
@@ -194,10 +236,10 @@ export async function getProductInventoryStatus(productId: string) {
       });
     }
 
-    if (req.packagingMaterial) {
-      const currentStock = Number(req.packagingMaterial.currentStock || 0);
+    if (req.packagingMaterial && req.packagingMaterialId) {
+      const currentStock = packStockMap.get(req.packagingMaterialId) ?? 0;
       const quantityPerUnit = Number(req.quantityPerUnit || 0);
-      const unitsCanProduce = Math.floor(currentStock / quantityPerUnit);
+      const unitsCanProduce = quantityPerUnit > 0 ? Math.floor(currentStock / quantityPerUnit) : 0;
 
       if (unitsCanProduce < minUnitsCanProduce) {
         minUnitsCanProduce = unitsCanProduce;

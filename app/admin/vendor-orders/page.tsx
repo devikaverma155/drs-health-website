@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import { isVendorOrderReceivedStatus } from '@/lib/vendor-order-status';
 
 export const dynamic = 'force-dynamic';
 
@@ -73,7 +74,7 @@ export default async function VendorOrdersPage() {
         </div>
       </div>
       <p className="text-sm text-slate-600">
-        When status is <strong>Complete</strong> or <strong>Delivered</strong> and a material is linked, it is added to inventory automatically.
+        When status is <strong>Delivered</strong> and a material is linked, the quantity is received into stock (batch + totals).
       </p>
       <div className="rounded-xl bg-white border border-slate-200 overflow-hidden">
         {rows.length === 0 ? (
@@ -111,7 +112,7 @@ export default async function VendorOrdersPage() {
                   <td className="px-4 py-3 text-slate-600">{r.quantityInfo}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      r.status === 'complete' || r.status === 'delivered' ? 'bg-green-100 text-green-700' :
+                      isVendorOrderReceivedStatus(r.status) ? 'bg-green-100 text-green-700' :
                       r.status === 'ordered' ? 'bg-blue-100 text-blue-700' :
                       r.status === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700'
                     }`}>

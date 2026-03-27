@@ -6,6 +6,17 @@ import { createClient, updateClient } from './actions';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import type { Client } from '@prisma/client';
 
+const CLIENT_CATEGORIES = [
+  'Distributor',
+  'Retailer',
+  'Wholesaler',
+  'Hospital / Clinic',
+  'Pharmacy',
+  'Online Seller',
+  'Export',
+  'Other',
+];
+
 export function ClientForm({ client }: { client?: Client | null }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -18,6 +29,7 @@ export function ClientForm({ client }: { client?: Client | null }) {
   const [city, setCity] = useState(client?.city ?? '');
   const [state, setState] = useState(client?.state ?? '');
   const [gstNumber, setGstNumber] = useState(client?.gstNumber ?? '');
+  const [category, setCategory] = useState((client as Client & { category?: string | null })?.category ?? '');
   const [notes, setNotes] = useState(client?.notes ?? '');
 
   async function handleSubmit(e: React.FormEvent) {
@@ -26,9 +38,9 @@ export function ClientForm({ client }: { client?: Client | null }) {
     setLoading(true);
     try {
       if (client) {
-        await updateClient(client.id, { companyName, contactPerson, phone, email, address, city, state, gstNumber, notes });
+        await updateClient(client.id, { companyName, contactPerson, phone, email, address, city, state, gstNumber, category, notes });
       } else {
-        await createClient({ companyName, contactPerson, phone, email, address, city, state, gstNumber, notes });
+        await createClient({ companyName, contactPerson, phone, email, address, city, state, gstNumber, category, notes });
       }
       router.push('/admin/clients');
       router.refresh();
@@ -46,6 +58,15 @@ export function ClientForm({ client }: { client?: Client | null }) {
           <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} required disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
         </div>
         <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+            <option value="">— Select category —</option>
+            {CLIENT_CATEGORIES.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </div>
+        <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Contact person</label>
           <input type="text" value={contactPerson} onChange={(e) => setContactPerson(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
         </div>
@@ -53,7 +74,7 @@ export function ClientForm({ client }: { client?: Client | null }) {
           <label className="block text-sm font-medium text-slate-700 mb-1">Phone</label>
           <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
         </div>
-        <div className="sm:col-span-2">
+        <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
         </div>

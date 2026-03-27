@@ -1,5 +1,14 @@
 import Link from 'next/link';
-import { calculateBOM } from '@/lib/bom-calculator';
+import { calculateBOM, formatBomQuantity } from '@/lib/bom-calculator';
+
+function fmtInr(n: number) {
+  return `₹${n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function qtyWithUnit(q: number, unit: string) {
+  const u = unit?.trim();
+  return `${formatBomQuantity(q)}${u ? ` ${u}` : ''}`;
+}
 
 interface Props {
   productId: string | null;
@@ -51,7 +60,7 @@ export async function BOMComputedRequirementsSection({ productId, productName, q
         Material requirements for {quantity} unit(s) of {result.productName}
       </h2>
       <p className="text-xs text-slate-500 mb-4">
-        Computed from Product Master (per-unit) × quantity. When production is completed, these amounts are deducted from inventory.
+        <strong>Required</strong> = per-unit quantity (Product Master) × {quantity} (BOM quantity). <strong>In stock</strong> = sum of batches for that material. <strong>Rate / unit</strong> = raw or packaging material master.
       </p>
 
       {result.hasShortage && result.shortageWarnings.length > 0 && (
@@ -74,6 +83,8 @@ export async function BOMComputedRequirementsSection({ productId, productName, q
               <tr className="bg-slate-50 text-left">
                 <th className="px-3 py-2 font-medium text-slate-700">Material</th>
                 <th className="px-3 py-2 font-medium text-slate-700">Required</th>
+                <th className="px-3 py-2 font-medium text-slate-700 text-right">Rate / unit</th>
+                <th className="px-3 py-2 font-medium text-slate-700 text-right">Line total</th>
                 <th className="px-3 py-2 font-medium text-slate-700">In stock</th>
                 <th className="px-3 py-2 font-medium text-slate-700">Status</th>
               </tr>
@@ -82,11 +93,15 @@ export async function BOMComputedRequirementsSection({ productId, productName, q
               {result.rawMaterials.map((m) => (
                 <tr key={m.id} className="border-t border-slate-100">
                   <td className="px-3 py-2">{m.name}</td>
-                  <td className="px-3 py-2">{m.quantityRequired} {m.unit}</td>
-                  <td className="px-3 py-2">{m.currentStock} {m.unit}</td>
+                  <td className="px-3 py-2 tabular-nums">{qtyWithUnit(m.quantityRequired, m.unit)}</td>
+                  <td className="px-3 py-2 text-right tabular-nums text-slate-700">{fmtInr(m.costPerUnit)}</td>
+                  <td className="px-3 py-2 text-right tabular-nums font-medium text-slate-900">{fmtInr(m.totalCost)}</td>
+                  <td className="px-3 py-2 tabular-nums">{qtyWithUnit(m.currentStock, m.unit)}</td>
                   <td className="px-3 py-2">
                     {m.isShortage ? (
-                      <span className="text-red-600 font-medium">Short by {Math.abs(m.shortage)}</span>
+                      <span className="text-red-600 font-medium">
+                        Short by {qtyWithUnit(Math.abs(m.shortage), m.unit)}
+                      </span>
                     ) : (
                       <span className="text-green-600">OK</span>
                     )}
@@ -106,6 +121,8 @@ export async function BOMComputedRequirementsSection({ productId, productName, q
               <tr className="bg-slate-50 text-left">
                 <th className="px-3 py-2 font-medium text-slate-700">Material</th>
                 <th className="px-3 py-2 font-medium text-slate-700">Required</th>
+                <th className="px-3 py-2 font-medium text-slate-700 text-right">Rate / unit</th>
+                <th className="px-3 py-2 font-medium text-slate-700 text-right">Line total</th>
                 <th className="px-3 py-2 font-medium text-slate-700">In stock</th>
                 <th className="px-3 py-2 font-medium text-slate-700">Status</th>
               </tr>
@@ -114,11 +131,15 @@ export async function BOMComputedRequirementsSection({ productId, productName, q
               {result.packagingMaterials.map((m) => (
                 <tr key={m.id} className="border-t border-slate-100">
                   <td className="px-3 py-2">{m.name}</td>
-                  <td className="px-3 py-2">{m.quantityRequired} {m.unit}</td>
-                  <td className="px-3 py-2">{m.currentStock} {m.unit}</td>
+                  <td className="px-3 py-2 tabular-nums">{qtyWithUnit(m.quantityRequired, m.unit)}</td>
+                  <td className="px-3 py-2 text-right tabular-nums text-slate-700">{fmtInr(m.costPerUnit)}</td>
+                  <td className="px-3 py-2 text-right tabular-nums font-medium text-slate-900">{fmtInr(m.totalCost)}</td>
+                  <td className="px-3 py-2 tabular-nums">{qtyWithUnit(m.currentStock, m.unit)}</td>
                   <td className="px-3 py-2">
                     {m.isShortage ? (
-                      <span className="text-red-600 font-medium">Short by {Math.abs(m.shortage)}</span>
+                      <span className="text-red-600 font-medium">
+                        Short by {qtyWithUnit(Math.abs(m.shortage), m.unit)}
+                      </span>
                     ) : (
                       <span className="text-green-600">OK</span>
                     )}
@@ -129,6 +150,11 @@ export async function BOMComputedRequirementsSection({ productId, productName, q
           </table>
         </div>
       )}
+
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-4 py-3">
+        <span className="text-sm font-medium text-slate-800">Total materials cost ({quantity} units)</span>
+        <span className="text-base font-semibold tabular-nums text-slate-900">{fmtInr(result.totalMaterialsCost)}</span>
+      </div>
 
       <p className="text-xs text-slate-500 mt-4">
         To change per-unit requirements, go to{' '}

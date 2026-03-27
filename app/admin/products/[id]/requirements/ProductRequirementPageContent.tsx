@@ -4,19 +4,23 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProductRequirementForm, ProductRequirementList } from './RequirementForm';
 import type { Product, ProductRequirement } from '@prisma/client';
+import type { Decimal } from '@prisma/client/runtime/library';
+
+type RawMaterialOption = { id: string; name: string | null; purchaseRate?: Decimal | null; unit?: string | null };
+type PackagingMaterialOption = { id: string; name: string | null; costPerUnit?: Decimal | null; unit?: string | null };
 
 type ProductWithReqs = Product & {
   requirements: (ProductRequirement & {
-    rawMaterial?: { id: string; name: string | null } | null;
-    packagingMaterial?: { id: string; name: string | null } | null;
+    rawMaterial?: RawMaterialOption | null;
+    packagingMaterial?: PackagingMaterialOption | null;
   })[];
 };
 
 interface ProductRequirementPageContentProps {
   productId: string;
   product: ProductWithReqs;
-  rawMaterials: { id: string; name: string | null }[];
-  packagingMaterials: { id: string; name: string | null }[];
+  rawMaterials: RawMaterialOption[];
+  packagingMaterials: PackagingMaterialOption[];
 }
 
 export function ProductRequirementPageContent({
@@ -27,8 +31,8 @@ export function ProductRequirementPageContent({
 }: ProductRequirementPageContentProps) {
   const router = useRouter();
   const [editingRequirement, setEditingRequirement] = useState<(ProductRequirement & {
-    rawMaterial?: { id: string; name: string | null } | null;
-    packagingMaterial?: { id: string; name: string | null } | null;
+    rawMaterial?: RawMaterialOption | null;
+    packagingMaterial?: PackagingMaterialOption | null;
   }) | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -38,8 +42,24 @@ export function ProductRequirementPageContent({
     router.refresh();
   }
 
+  // Compute total cost per unit across all requirements
+  const totalCostPerUnit = product.requirements.reduce((sum, req) => {
+    const qty = Number(req.quantityPerUnit ?? 0);
+    const rate = req.rawMaterial
+      ? Number(req.rawMaterial.purchaseRate ?? 0)
+      : Number(req.packagingMaterial?.costPerUnit ?? 0);
+    return sum + qty * rate;
+  }, 0);
+
   return (
     <div className="space-y-6">
+      {product.requirements.length > 0 && (
+        <div className="rounded-lg bg-primary/5 border border-primary/20 px-4 py-3 flex items-center justify-between">
+          <span className="text-sm text-slate-700 font-medium">Estimated cost per unit</span>
+          <span className="text-lg font-bold text-primary">₹{totalCostPerUnit.toFixed(4)}</span>
+        </div>
+      )}
+
       <ProductRequirementList
         productId={productId}
         requirements={product.requirements}

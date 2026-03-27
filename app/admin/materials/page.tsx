@@ -3,6 +3,10 @@ import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
+function fmtInr(n: number) {
+  return `₹${n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
 type MaterialRow = {
   id: string;
   category: 'Raw Material' | 'Packaging';
@@ -13,6 +17,7 @@ type MaterialRow = {
   batchCount?: number;
   totalQty?: number;
   minStock?: string | null;
+  costPerUnit: number | null;
 };
 
 export default async function MaterialsPage() {
@@ -38,6 +43,7 @@ export default async function MaterialsPage() {
       batchCount: m.batches.length,
       totalQty: m.batches.reduce((s, b) => s + Number(b.quantity ?? 0), 0),
       minStock: m.minStock != null ? String(m.minStock) : null,
+      costPerUnit: m.costPerUnit != null ? Number(m.costPerUnit) : null,
     })),
     ...packagingMaterials.map((m) => ({
       id: m.id,
@@ -49,6 +55,7 @@ export default async function MaterialsPage() {
       batchCount: m.batches.length,
       totalQty: m.batches.reduce((s, b) => s + Number(b.quantity ?? 0), 0),
       minStock: null,
+      costPerUnit: m.costPerUnit != null ? Number(m.costPerUnit) : null,
     })),
   ].sort((a, b) => (a.name ?? '').localeCompare(b.name ?? ''));
 
@@ -71,6 +78,11 @@ export default async function MaterialsPage() {
           </Link>
         </div>
       </div>
+      <p className="text-sm text-slate-600 max-w-3xl">
+        <strong>Total in stock</strong> is the sum of all batches (increases when a vendor order is <strong>Delivered</strong>; decreases when production completes).
+        <strong className="font-medium"> Cost / unit</strong> is set from the order line total ÷ quantity on delivery (for BOM pricing); you can also edit it on each material.
+      </p>
+
       <div className="rounded-xl bg-white border border-slate-200 overflow-hidden">
         {rows.length === 0 ? (
           <div className="p-8 text-center text-slate-500 text-sm">
@@ -84,7 +96,8 @@ export default async function MaterialsPage() {
                 <th className="px-4 py-3 font-medium">Code</th>
                 <th className="px-4 py-3 font-medium">Name</th>
                 <th className="px-4 py-3 font-medium">Unit</th>
-                <th className="px-4 py-3 font-medium">Batches / Qty</th>
+                <th className="px-4 py-3 font-medium">In stock (batches)</th>
+                <th className="px-4 py-3 font-medium text-right">Cost / unit</th>
                 <th className="px-4 py-3 font-medium">Min stock</th>
                 <th className="px-4 py-3 font-medium">Actions</th>
               </tr>
@@ -102,8 +115,20 @@ export default async function MaterialsPage() {
                   <td className="px-4 py-3 font-medium text-slate-900">{r.code || '-'}</td>
                   <td className="px-4 py-3 text-slate-600">{r.name || '-'}</td>
                   <td className="px-4 py-3 text-slate-600">{r.unit || '-'}</td>
-                  <td className="px-4 py-3 text-slate-600">
-                    {r.batchCount != null ? `${r.batchCount} ${r.totalQty != null ? `(${r.totalQty})` : ''}` : '-'}
+                  <td className="px-4 py-3 text-slate-600 tabular-nums">
+                    {r.totalQty != null ? (
+                      <span>
+                        <span className="font-medium text-slate-900">{r.totalQty}</span>
+                        {r.batchCount != null ? (
+                          <span className="text-slate-400 text-xs ml-1">({r.batchCount} batches)</span>
+                        ) : null}
+                      </span>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-right tabular-nums text-slate-700">
+                    {r.costPerUnit != null && r.costPerUnit > 0 ? fmtInr(r.costPerUnit) : '—'}
                   </td>
                   <td className="px-4 py-3 text-slate-600">{r.minStock ?? '-'}</td>
                   <td className="px-4 py-3">

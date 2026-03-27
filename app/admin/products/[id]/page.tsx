@@ -4,12 +4,24 @@ import { prisma } from '@/lib/prisma';
 import { ProductForm } from '../ProductForm';
 import { deleteProduct } from '../actions';
 import { DeleteButton } from '@/components/ui/DeleteButton';
+import { ProductRequirementsSummary } from './ProductRequirementsSummary';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = await prisma.product.findUnique({ where: { id } });
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      requirements: {
+        include: {
+          rawMaterial: { select: { id: true, name: true, purchaseRate: true } },
+          packagingMaterial: { select: { id: true, name: true, costPerUnit: true } },
+        },
+        orderBy: { createdAt: 'asc' },
+      },
+    },
+  });
   if (!product) notFound();
   const categories = await prisma.productCategory.findMany({ orderBy: { name: 'asc' }, select: { id: true, name: true } });
 
@@ -28,6 +40,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <div>
               <h2 className="font-medium text-slate-900 mb-2">Material requirements (per unit)</h2>
               <p className="text-sm text-slate-600 mb-3">Define raw materials and packaging needed per unit of this product. Used by BOM and production for deductions.</p>
+              <div className="mb-4">
+                <ProductRequirementsSummary requirements={product.requirements} />
+              </div>
               <Link href={`/admin/products/${id}/requirements`} className="rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark inline-block">
                 Edit material requirements
               </Link>

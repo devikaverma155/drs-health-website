@@ -3,9 +3,9 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-const WP_ADMIN_URL = process.env.NEXT_PUBLIC_SITE_URL
-  ? `${process.env.NEXT_PUBLIC_SITE_URL}/wp-admin`
-  : 'https://9gk.22b.myftpupload.com/wp-admin';
+const WP_ORDERS_URL = 'https://9gk.22b.myftpupload.com/wp-admin/edit.php?post_type=shop_order';
+const WP_PRODUCTS_URL = 'https://9gk.22b.myftpupload.com/wp-admin/edit.php?post_type=product';
+const WP_DASHBOARD_URL = 'https://9gk.22b.myftpupload.com/wp-admin/index.php';
 
 async function getDashboardData() {
   const now = new Date();
@@ -14,21 +14,30 @@ async function getDashboardData() {
   startOfWeek.setDate(startOfWeek.getDate() - 7);
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  const [leadsToday, leadsThisWeek, leadsThisMonth, allLeads, converted, recentLeads] = await Promise.all([
-    prisma.lead.count({ where: { createdAt: { gte: startOfToday } } }),
-    prisma.lead.count({ where: { createdAt: { gte: startOfWeek } } }),
-    prisma.lead.count({ where: { createdAt: { gte: startOfMonth } } }),
-    prisma.lead.groupBy({ by: ['source'], _count: { id: true } }),
-    prisma.lead.count({ where: { status: 'converted' } }),
-    prisma.lead.findMany({
-      take: 10,
-      orderBy: { createdAt: 'desc' },
-      select: { id: true, name: true, email: true, source: true, status: true, createdAt: true },
-    }),
-  ]);
+  // Lead stats — wrapped in try-catch so a DB error doesn't crash the whole dashboard
+  let leadsToday = 0, leadsThisWeek = 0, leadsThisMonth = 0, converted = 0, total = 0;
+  let allLeads: { source: string | null; _count: { id: number } }[] = [];
+  let recentLeads: { id: string; name: string | null; email: string | null; source: string | null; status: string | null; createdAt: Date | null }[] = [];
+  let conversionRate = '0';
 
-  const total = await prisma.lead.count();
-  const conversionRate = total > 0 ? ((converted / total) * 100).toFixed(1) : '0';
+  try {
+    [leadsToday, leadsThisWeek, leadsThisMonth, allLeads, converted, recentLeads] = await Promise.all([
+      prisma.lead.count({ where: { createdAt: { gte: startOfToday } } }),
+      prisma.lead.count({ where: { createdAt: { gte: startOfWeek } } }),
+      prisma.lead.count({ where: { createdAt: { gte: startOfMonth } } }),
+      prisma.lead.groupBy({ by: ['source'], _count: { id: true } }),
+      prisma.lead.count({ where: { status: 'converted' } }),
+      prisma.lead.findMany({
+        take: 10,
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, name: true, email: true, source: true, status: true, createdAt: true },
+      }),
+    ]);
+    total = await prisma.lead.count();
+    conversionRate = total > 0 ? ((converted / total) * 100).toFixed(1) : '0';
+  } catch {
+    // DB unavailable — return safe zeros, page still loads
+  }
 
   // Production, inventory & low-stock (may fail if tables not yet created)
   let productionRunning = 0;
@@ -132,7 +141,7 @@ export default async function AdminDashboardPage() {
           </div>
           <div className="flex flex-wrap gap-2 shrink-0">
             <a
-              href={`${WP_ADMIN_URL}/edit.php?post_type=shop_order`}
+              href={WP_ORDERS_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
@@ -141,7 +150,7 @@ export default async function AdminDashboardPage() {
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
             <a
-              href={`${WP_ADMIN_URL}/edit.php?post_type=product`}
+              href={WP_PRODUCTS_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white text-blue-700 text-sm font-medium border border-blue-200 hover:bg-blue-50 transition-colors shadow-sm"
@@ -150,7 +159,7 @@ export default async function AdminDashboardPage() {
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
             <a
-              href={WP_ADMIN_URL}
+              href={WP_DASHBOARD_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white text-slate-700 text-sm font-medium border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm"

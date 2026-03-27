@@ -172,8 +172,8 @@ export function ProductRequirementForm({
 interface RequirementListProps {
   productId: string;
   requirements: (ProductRequirement & {
-    rawMaterial?: { id: string; name: string | null } | null;
-    packagingMaterial?: { id: string; name: string | null } | null;
+    rawMaterial?: { id: string; name: string | null; purchaseRate?: unknown; unit?: string | null } | null;
+    packagingMaterial?: { id: string; name: string | null; costPerUnit?: unknown; unit?: string | null } | null;
   })[];
   onEdit: (req: any) => void;
   onDeleteSuccess?: () => void;
@@ -221,8 +221,10 @@ export function ProductRequirementList({
           <tr className="text-left text-slate-500 border-b border-slate-200 bg-slate-50/50">
             <th className="px-4 py-3 font-medium">Type</th>
             <th className="px-4 py-3 font-medium">Material</th>
-            <th className="px-4 py-3 font-medium">Per Unit</th>
+            <th className="px-4 py-3 font-medium">Qty / Unit</th>
             <th className="px-4 py-3 font-medium">Unit</th>
+            <th className="px-4 py-3 font-medium">Rate</th>
+            <th className="px-4 py-3 font-medium">Cost / Unit</th>
             <th className="px-4 py-3 font-medium">Actions</th>
           </tr>
         </thead>
@@ -230,6 +232,15 @@ export function ProductRequirementList({
           {requirements.map((req) => {
             const materialName = req.rawMaterial?.name || req.packagingMaterial?.name || 'Unknown';
             const type = req.rawMaterial ? 'Raw' : 'Packaging';
+
+            const qty = Number(req.quantityPerUnit ?? 0);
+            const rate = req.rawMaterial
+              ? Number(req.rawMaterial.purchaseRate ?? 0)
+              : Number(req.packagingMaterial?.costPerUnit ?? 0);
+            const costPerUnit = qty * rate;
+            const rateLabel = req.rawMaterial
+              ? (rate > 0 ? `₹${rate.toFixed(2)}` : '-')
+              : (rate > 0 ? `₹${rate.toFixed(2)}` : '-');
 
             return (
               <tr key={req.id} className="border-b border-slate-100 hover:bg-slate-50/50">
@@ -243,6 +254,10 @@ export function ProductRequirementList({
                 <td className="px-4 py-3 font-medium text-slate-900">{materialName}</td>
                 <td className="px-4 py-3 text-slate-600">{req.quantityPerUnit?.toString()}</td>
                 <td className="px-4 py-3 text-slate-600">{req.unit}</td>
+                <td className="px-4 py-3 text-slate-500 text-xs">{rateLabel}</td>
+                <td className="px-4 py-3 font-medium text-slate-900">
+                  {rate > 0 ? `₹${costPerUnit.toFixed(4)}` : <span className="text-slate-400">-</span>}
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
                     <button

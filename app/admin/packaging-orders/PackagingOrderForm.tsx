@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createPackagingOrder, updatePackagingOrder, getVendorsForPackagingOrder, getPackagingMaterialsForOrder } from './actions';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import type { PackagingOrder } from '@prisma/client';
+import { normalizeVendorOrderStatusForForm } from '@/lib/vendor-order-status';
 
 type PackagingOption = { id: string; name: string | null; packagingCode: string | null; unit: string | null };
 type VendorOption = { id: string; name: string };
@@ -27,7 +28,7 @@ export function PackagingOrderForm({ order: existingOrder }: { order?: OrderWith
   const [unit, setUnit] = useState(existingOrder?.unit ?? '');
   const [price, setPrice] = useState(existingOrder?.price != null ? String(existingOrder.price) : '');
   const [deliveryDate, setDeliveryDate] = useState(existingOrder?.deliveryDate ? new Date(existingOrder.deliveryDate).toISOString().split('T')[0] : '');
-  const [status, setStatus] = useState(existingOrder?.status ?? 'pending');
+  const [status, setStatus] = useState(() => normalizeVendorOrderStatusForForm(existingOrder?.status ?? 'pending'));
   const [notes, setNotes] = useState(existingOrder?.notes ?? '');
 
   useEffect(() => {
@@ -186,8 +187,7 @@ export function PackagingOrderForm({ order: existingOrder }: { order?: OrderWith
           >
             <option value="pending">Pending</option>
             <option value="ordered">Ordered</option>
-            <option value="complete">Complete</option>
-            <option value="delivered">Delivered</option>
+            <option value="delivered">Delivered (adds to stock)</option>
             <option value="cancelled">Cancelled</option>
           </select>
         </div>

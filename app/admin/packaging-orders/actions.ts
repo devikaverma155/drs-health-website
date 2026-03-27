@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { syncPackagingCurrentStock } from '@/lib/inventory-sync';
+import { isVendorOrderReceivedStatus, VENDOR_ORDER_RECEIVED_STATUS } from '@/lib/vendor-order-status';
 
 export async function createPackagingOrder(data: {
   vendorId: string;
@@ -34,7 +36,7 @@ export async function createPackagingOrder(data: {
     },
   });
 
-  if ((data.status === 'complete' || data.status === 'delivered') && data.packagingId && data.quantity) {
+  if (data.status === VENDOR_ORDER_RECEIVED_STATUS && data.packagingId && data.quantity) {
     const qty = parseFloat(data.quantity);
     if (!isNaN(qty) && qty > 0) {
       await prisma.packagingBatch.create({
@@ -45,11 +47,22 @@ export async function createPackagingOrder(data: {
           purchaseDate: data.deliveryDate ? new Date(data.deliveryDate) : new Date(),
         },
       });
+      await syncPackagingCurrentStock(data.packagingId);
+      const totalPrice = order.price != null ? Number(order.price) : 0;
+      if (totalPrice > 0) {
+        const unitCost = totalPrice / qty;
+        await prisma.packagingMaterial.update({
+          where: { id: data.packagingId },
+          data: { costPerUnit: unitCost },
+        });
+      }
     }
   }
 
   revalidatePath('/admin/packaging-orders');
   revalidatePath('/admin/vendor-orders');
+  revalidatePath('/admin/materials');
+  revalidatePath('/admin/bom');
   return order.id;
 }
 
@@ -70,8 +83,9 @@ export async function updatePackagingOrder(id: string, data: {
   const existing = await prisma.packagingOrder.findUnique({ where: { id } });
   if (!existing) throw new Error('Order not found');
 
-  const wasComplete = existing.status === 'complete' || existing.status === 'delivered';
-  const nowComplete = data.status === 'complete' || data.status === 'delivered';
+  const mergedStatus = data.status ?? existing.status ?? '';
+  const wasReceived = isVendorOrderReceivedStatus(existing.status);
+  const nowReceived = isVendorOrderReceivedStatus(mergedStatus);
   const packagingId = data.packagingId?.trim() || existing.packagingId;
   const quantity = data.quantity?.trim() || existing.quantity;
 
@@ -90,7 +104,7 @@ export async function updatePackagingOrder(id: string, data: {
     },
   });
 
-  if (!wasComplete && nowComplete && packagingId && quantity) {
+  if (!wasReceived && nowReceived && packagingId && quantity) {
     const qty = parseFloat(quantity);
     if (!isNaN(qty) && qty > 0) {
       await prisma.packagingBatch.create({
@@ -101,11 +115,23 @@ export async function updatePackagingOrder(id: string, data: {
           purchaseDate: existing.deliveryDate || new Date(),
         },
       });
+      await syncPackagingCurrentStock(packagingId);
+      const updated = await prisma.packagingOrder.findUnique({ where: { id } });
+      const totalPrice = updated?.price != null ? Number(updated.price) : 0;
+      if (totalPrice > 0) {
+        const unitCost = totalPrice / qty;
+        await prisma.packagingMaterial.update({
+          where: { id: packagingId },
+          data: { costPerUnit: unitCost },
+        });
+      }
     }
   }
 
   revalidatePath('/admin/packaging-orders');
   revalidatePath('/admin/vendor-orders');
+  revalidatePath('/admin/materials');
+  revalidatePath('/admin/bom');
 }
 
 export async function deletePackagingOrder(id: string) {

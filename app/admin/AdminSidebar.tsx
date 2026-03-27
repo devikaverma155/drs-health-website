@@ -1,9 +1,5 @@
 import Link from 'next/link';
 
-const WP_ADMIN_URL = process.env.NEXT_PUBLIC_SITE_URL
-  ? `${process.env.NEXT_PUBLIC_SITE_URL}/wp-admin`
-  : 'https://9gk.22b.myftpupload.com/wp-admin';
-
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
   { href: '/admin/leads', label: 'Leads (CRM)', icon: '📋' },
@@ -26,19 +22,19 @@ const NAV = [
 
 const WP_LINKS = [
   {
-    href: `${WP_ADMIN_URL}/edit.php?post_type=shop_order`,
+    href: 'https://9gk.22b.myftpupload.com/wp-admin/edit.php?post_type=shop_order',
     label: 'Orders',
     icon: '🛒',
     description: 'View & manage orders',
   },
   {
-    href: `${WP_ADMIN_URL}/edit.php?post_type=product`,
+    href: 'https://9gk.22b.myftpupload.com/wp-admin/edit.php?post_type=product',
     label: 'Products',
     icon: '📦',
     description: 'Add or edit products',
   },
   {
-    href: `${WP_ADMIN_URL}`,
+    href: 'https://9gk.22b.myftpupload.com/wp-admin/index.php',
     label: 'WP Dashboard',
     icon: '🌐',
     description: 'Full WordPress admin',

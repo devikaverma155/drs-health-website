@@ -6,6 +6,7 @@ import { createRawMaterialOrder, updateRawMaterialOrder, createVendor, getAllVen
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import type { Vendor } from '@prisma/client';
 import type { RawMaterialOrder } from '@prisma/client';
+import { normalizeVendorOrderStatusForForm } from '@/lib/vendor-order-status';
 
 type RawMaterialOption = { id: string; name: string | null; materialCode: string | null; unit: string | null };
 
@@ -38,7 +39,7 @@ export function RawMaterialOrderForm({ order: existingOrder }: { order?: OrderWi
   const [unit, setUnit] = useState(existingOrder?.unit ?? '');
   const [price, setPrice] = useState(existingOrder?.price != null ? String(existingOrder.price) : '');
   const [deliveryDate, setDeliveryDate] = useState(existingOrder?.deliveryDate ? new Date(existingOrder.deliveryDate).toISOString().split('T')[0] : '');
-  const [status, setStatus] = useState(existingOrder?.status ?? 'pending');
+  const [status, setStatus] = useState(() => normalizeVendorOrderStatusForForm(existingOrder?.status ?? 'pending'));
   const [notes, setNotes] = useState(existingOrder?.notes ?? '');
 
   useEffect(() => {
@@ -370,8 +371,7 @@ export function RawMaterialOrderForm({ order: existingOrder }: { order?: OrderWi
           >
             <option value="pending">Pending</option>
             <option value="ordered">Ordered</option>
-            <option value="complete">Complete</option>
-            <option value="delivered">Delivered</option>
+            <option value="delivered">Delivered (adds to stock)</option>
             <option value="cancelled">Cancelled</option>
           </select>
         </div>

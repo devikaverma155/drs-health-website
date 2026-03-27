@@ -14,6 +14,7 @@ export async function createClient(data: {
   city?: string;
   state?: string;
   gstNumber?: string;
+  category?: string;
   notes?: string;
 }) {
   const session = await getServerSession(authOptions);
@@ -30,6 +31,7 @@ export async function createClient(data: {
       city: data.city?.trim() || null,
       state: data.state?.trim() || null,
       gstNumber: data.gstNumber?.trim() || null,
+      category: data.category?.trim() || null,
       notes: data.notes?.trim() || null,
     },
   });
@@ -45,6 +47,7 @@ export async function updateClient(id: string, data: {
   city?: string;
   state?: string;
   gstNumber?: string;
+  category?: string;
   notes?: string;
 }) {
   const session = await getServerSession(authOptions);
@@ -61,6 +64,7 @@ export async function updateClient(id: string, data: {
       city: data.city?.trim() || null,
       state: data.state?.trim() || null,
       gstNumber: data.gstNumber?.trim() || null,
+      category: data.category?.trim() || null,
       notes: data.notes?.trim() ?? undefined,
     },
   });

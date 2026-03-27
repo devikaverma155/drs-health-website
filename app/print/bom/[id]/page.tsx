@@ -1,9 +1,18 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { calculateBOM } from '@/lib/bom-calculator';
+import { calculateBOM, formatBomQuantity } from '@/lib/bom-calculator';
 import { PrintProductionListClient } from '@/app/admin/bom/[id]/print/PrintProductionListClient';
 
 export const dynamic = 'force-dynamic';
+
+function fmtInr(n: number) {
+  return `₹${n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function qtyWithUnit(q: number, unit: string) {
+  const u = unit?.trim();
+  return `${formatBomQuantity(q)}${u ? ` ${u}` : ''}`;
+}
 
 export default async function BOMPrintPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -70,6 +79,8 @@ export default async function BOMPrintPage({ params }: { params: Promise<{ id: s
                   <th className="border border-slate-300 px-3 py-2 text-right font-medium">Per unit</th>
                   <th className="border border-slate-300 px-3 py-2 text-left font-medium">Unit</th>
                   <th className="border border-slate-300 px-3 py-2 text-right font-medium">Total required</th>
+                  <th className="border border-slate-300 px-3 py-2 text-right font-medium">Rate / unit</th>
+                  <th className="border border-slate-300 px-3 py-2 text-right font-medium">Line total</th>
                   <th className="border border-slate-300 px-3 py-2 text-right font-medium">In stock</th>
                   <th className="border border-slate-300 px-3 py-2 text-left font-medium">Status</th>
                 </tr>
@@ -78,11 +89,17 @@ export default async function BOMPrintPage({ params }: { params: Promise<{ id: s
                 {result.rawMaterials.map((m) => (
                   <tr key={m.id}>
                     <td className="border border-slate-300 px-3 py-2">{m.name}</td>
-                    <td className="border border-slate-300 px-3 py-2 text-right">{(quantity > 0 ? m.quantityRequired / quantity : 0).toFixed(4)}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right">
+                      {formatBomQuantity(quantity > 0 ? m.quantityRequired / quantity : 0)}
+                    </td>
                     <td className="border border-slate-300 px-3 py-2">{m.unit}</td>
-                    <td className="border border-slate-300 px-3 py-2 text-right">{m.quantityRequired} {m.unit}</td>
-                    <td className="border border-slate-300 px-3 py-2 text-right">{m.currentStock} {m.unit}</td>
-                    <td className="border border-slate-300 px-3 py-2">{m.isShortage ? `Short by ${Math.abs(m.shortage)}` : 'OK'}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right">{qtyWithUnit(m.quantityRequired, m.unit)}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right">{fmtInr(m.costPerUnit)}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right font-medium">{fmtInr(m.totalCost)}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right">{qtyWithUnit(m.currentStock, m.unit)}</td>
+                    <td className="border border-slate-300 px-3 py-2">
+                      {m.isShortage ? `Short by ${qtyWithUnit(Math.abs(m.shortage), m.unit)}` : 'OK'}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -100,6 +117,8 @@ export default async function BOMPrintPage({ params }: { params: Promise<{ id: s
                   <th className="border border-slate-300 px-3 py-2 text-right font-medium">Per unit</th>
                   <th className="border border-slate-300 px-3 py-2 text-left font-medium">Unit</th>
                   <th className="border border-slate-300 px-3 py-2 text-right font-medium">Total required</th>
+                  <th className="border border-slate-300 px-3 py-2 text-right font-medium">Rate / unit</th>
+                  <th className="border border-slate-300 px-3 py-2 text-right font-medium">Line total</th>
                   <th className="border border-slate-300 px-3 py-2 text-right font-medium">In stock</th>
                   <th className="border border-slate-300 px-3 py-2 text-left font-medium">Status</th>
                 </tr>
@@ -108,17 +127,30 @@ export default async function BOMPrintPage({ params }: { params: Promise<{ id: s
                 {result.packagingMaterials.map((m) => (
                   <tr key={m.id}>
                     <td className="border border-slate-300 px-3 py-2">{m.name}</td>
-                    <td className="border border-slate-300 px-3 py-2 text-right">{(quantity > 0 ? m.quantityRequired / quantity : 0).toFixed(4)}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right">
+                      {formatBomQuantity(quantity > 0 ? m.quantityRequired / quantity : 0)}
+                    </td>
                     <td className="border border-slate-300 px-3 py-2">{m.unit}</td>
-                    <td className="border border-slate-300 px-3 py-2 text-right">{m.quantityRequired} {m.unit}</td>
-                    <td className="border border-slate-300 px-3 py-2 text-right">{m.currentStock} {m.unit}</td>
-                    <td className="border border-slate-300 px-3 py-2">{m.isShortage ? `Short by ${Math.abs(m.shortage)}` : 'OK'}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right">{qtyWithUnit(m.quantityRequired, m.unit)}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right">{fmtInr(m.costPerUnit)}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right font-medium">{fmtInr(m.totalCost)}</td>
+                    <td className="border border-slate-300 px-3 py-2 text-right">{qtyWithUnit(m.currentStock, m.unit)}</td>
+                    <td className="border border-slate-300 px-3 py-2">
+                      {m.isShortage ? `Short by ${qtyWithUnit(Math.abs(m.shortage), m.unit)}` : 'OK'}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </section>
         )}
+
+        <div className="mt-6 flex justify-end border-t border-slate-300 pt-4 text-sm print:text-xs">
+          <div className="text-right">
+            <span className="font-semibold text-slate-800">Total materials cost ({quantity} units): </span>
+            <span className="font-bold text-slate-900">{fmtInr(result.totalMaterialsCost)}</span>
+          </div>
+        </div>
 
         <p className="mt-8 text-xs text-slate-500 print:hidden">
           Generated from Product Master (per-unit requirements × quantity). Use &quot;Print / Save as PDF&quot; above or browser Print.

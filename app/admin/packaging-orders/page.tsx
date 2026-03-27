@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import { isVendorOrderReceivedStatus } from '@/lib/vendor-order-status';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,7 +47,7 @@ export default async function PackagingOrdersPage() {
                   <td className="px-4 py-3 text-slate-600">{o.quantity && o.unit ? `${o.quantity} ${o.unit}` : o.quantity || '-'}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      o.status === 'complete' || o.status === 'delivered' ? 'bg-green-100 text-green-700' :
+                      isVendorOrderReceivedStatus(o.status) ? 'bg-green-100 text-green-700' :
                       o.status === 'ordered' ? 'bg-blue-100 text-blue-700' :
                       o.status === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700'
                     }`}>{o.status || 'pending'}</span>

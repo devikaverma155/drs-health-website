@@ -25,9 +25,31 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
       return NextResponse.json({ error: 'File size exceeds 10MB limit' }, { status: 400 });
+    }
+
+    // Validate MIME type — only allow safe document/image types
+    const allowedMimeTypes = [
+      'application/pdf',
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'text/plain',
+      'text/csv',
+    ];
+    const mimeType = file.type || '';
+    if (!allowedMimeTypes.includes(mimeType)) {
+      return NextResponse.json(
+        { error: 'File type not allowed. Accepted: PDF, images, Word, Excel, text files.' },
+        { status: 400 }
+      );
     }
 
     // Use custom document name if provided, otherwise use original filename

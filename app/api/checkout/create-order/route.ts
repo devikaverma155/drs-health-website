@@ -33,6 +33,8 @@ interface OrderRequest {
   customer_note?: string;
   status?: string;
   paymentMethod?: 'razorpay' | 'cod'; // Payment method selection
+  discountApplied?: number; // percentage discount
+  chargeAmount?: number;    // actual amount to charge via Razorpay (supports partial)
 }
 
 /**
@@ -42,7 +44,7 @@ interface OrderRequest {
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const orderData: OrderRequest = await req.json();
-    const paymentMethod = orderData.paymentMethod || 'cod';
+    const paymentMethod = orderData.paymentMethod || 'razorpay';
 
     // Validate required fields
     if (!orderData.billing || !orderData.line_items || orderData.line_items.length === 0) {
@@ -170,7 +172,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // Handle Razorpay payment method
-    const amountPaise = Math.round(total * 100);
+    // If chargeAmount is provided (partial payment), use that; otherwise use full discounted total
+    const effectiveTotal = orderData.chargeAmount != null && orderData.chargeAmount > 0
+      ? orderData.chargeAmount
+      : total;
+    const amountPaise = Math.round(effectiveTotal * 100);
     if (amountPaise < 100) {
       return NextResponse.json(
         { success: false, error: 'Minimum order amount is ₹1 for payment.' },
