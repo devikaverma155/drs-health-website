@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+import { ensureWooCommerceCustomer } from '@/lib/woocommerce/ensure-customer';
 
 interface LineItem {
   product_id: string;
@@ -73,9 +74,29 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
     const baseUrl = wcUrl.replace(/\/$/, '');
 
+    const emailNormalized = orderData.billing.email.trim().toLowerCase();
+
+    const wcCustomer = await ensureWooCommerceCustomer(baseUrl, auth, orderData.billing);
+
     // Map payment method for WooCommerce
     const wcPaymentMethod = paymentMethod === 'cod' ? 'cod' : 'razorpay';
     const initialStatus = paymentMethod === 'cod' ? 'pending' : 'pending';
+
+    const orderPayload: Record<string, unknown> = {
+      billing: orderData.billing,
+      shipping: orderData.shipping,
+      line_items: orderData.line_items.map((item) => ({
+        product_id: parseInt(item.product_id, 10),
+        quantity: item.quantity,
+      })),
+      customer_note: orderData.customer_note || '',
+      status: initialStatus,
+      payment_method: wcPaymentMethod,
+      payment_method_title: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Razorpay',
+    };
+    if (wcCustomer?.id) {
+      orderPayload.customer_id = wcCustomer.id;
+    }
 
     const response = await fetch(`${baseUrl}/orders`, {
       method: 'POST',
@@ -83,18 +104,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         'Content-Type': 'application/json',
         Authorization: `Basic ${auth}`,
       },
-      body: JSON.stringify({
-        billing: orderData.billing,
-        shipping: orderData.shipping,
-        line_items: orderData.line_items.map((item) => ({
-          product_id: parseInt(item.product_id),
-          quantity: item.quantity,
-        })),
-        customer_note: orderData.customer_note || '',
-        status: initialStatus,
-        payment_method: wcPaymentMethod,
-        payment_method_title: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Razorpay',
-      }),
+      body: JSON.stringify(orderPayload),
     });
 
     if (!response.ok) {
@@ -145,7 +155,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           data: {
             wooOrderId: String(wooOrder.id),
             paymentMethod: 'cod',
-            email: orderData.billing.email,
+            email: emailNormalized,
             phone: orderData.billing.phone,
             firstName: orderData.billing.first_name,
             lastName: orderData.billing.last_name,
@@ -238,7 +248,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           wooOrderId: String(wooOrder.id),
           razorpayOrderId: rzpOrder.id,
           paymentMethod: 'razorpay',
-          email: orderData.billing.email,
+          email: emailNormalized,
           phone: orderData.billing.phone,
           firstName: orderData.billing.first_name,
           lastName: orderData.billing.last_name,

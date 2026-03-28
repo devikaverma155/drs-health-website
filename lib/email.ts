@@ -1,3 +1,7 @@
+/**
+ * Generic email helpers (leads, etc.). Order confirmation for checkout is handled by
+ * WooCommerce when order status is updated via the REST API — do not duplicate here.
+ */
 
 interface EmailOptions {
   to: string;

@@ -11,10 +11,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
+    const emailTrimmed = email.trim();
+
     // First, try to fetch from our database (faster and more reliable)
     try {
       const dbOrders = await prisma.customerOrder.findMany({
-        where: { email },
+        where: {
+          email: {
+            equals: emailTrimmed,
+            mode: 'insensitive',
+          },
+        },
         orderBy: { createdAt: 'desc' },
       });
 
@@ -53,15 +60,38 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Create Basic Auth header
     const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
+    const wcBase = baseUrl.replace(/\/$/, '');
 
-    const response = await fetch(`${baseUrl}/orders?customer=${encodeURIComponent(email)}`, {
-      headers: {
-        Authorization: `Basic ${auth}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const customersRes = await fetch(
+      `${wcBase}/customers?email=${encodeURIComponent(emailTrimmed)}`,
+      {
+        headers: {
+          Authorization: `Basic ${auth}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!customersRes.ok) {
+      throw new Error(`WooCommerce customers API error: ${customersRes.statusText}`);
+    }
+
+    const customers = (await customersRes.json()) as { id: number }[];
+    if (!Array.isArray(customers) || customers.length === 0) {
+      return NextResponse.json({ orders: [] });
+    }
+
+    const customerId = customers[0].id;
+    const response = await fetch(
+      `${wcBase}/orders?customer=${customerId}&per_page=100&orderby=date&order=desc`,
+      {
+        headers: {
+          Authorization: `Basic ${auth}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`WooCommerce API error: ${response.statusText}`);

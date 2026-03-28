@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
-import { sendOrderConfirmationEmail } from '@/lib/email';
 
 /**
  * POST /api/razorpay/verify
  * Verify Razorpay payment signature and update WooCommerce order to processing.
+ * Order confirmation emails are sent by WooCommerce (not this app) when status changes.
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
@@ -67,6 +67,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       body: JSON.stringify({
         status: 'processing',
         transaction_id: razorpay_payment_id,
+        set_paid: true,
       }),
     });
 
@@ -92,25 +93,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             status: 'processing',
             razorpayPaymentId: razorpay_payment_id,
           },
-        });
-
-        // Send confirmation email
-        const items = Array.isArray(dbOrder.items)
-          ? dbOrder.items.map((item: any) => ({
-              name: item.name || item.product_id,
-              quantity: item.quantity || 1,
-              price: item.price || '0',
-            }))
-          : [];
-
-        await sendOrderConfirmationEmail(dbOrder.email || '', {
-          orderNumber: resolvedWooOrderId,
-          total: dbOrder.total?.toString() || '0',
-          items,
-          date: new Date().toLocaleDateString('en-IN'),
-        }).catch((err) => {
-          console.error('[Email send error]', err);
-          // Don't fail the request if email fails
         });
       }
     } catch (dbError) {
