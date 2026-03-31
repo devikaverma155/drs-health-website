@@ -62,15 +62,32 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
     return () => clearInterval(t);
   }, []);
 
+  const handleBannerClick = () => {
+    if (current.ctaHref) {
+      window.location.href = current.ctaHref;
+    }
+  };
+
   return (
-    <section className="relative min-h-[320px] sm:min-h-[450px] md:min-h-[620px] flex items-center bg-[#F7F6F1] overflow-hidden">
+    <section 
+      className="relative min-h-[320px] sm:min-h-[450px] md:min-h-[620px] flex items-center bg-[#F7F6F1] overflow-hidden cursor-pointer group"
+      onClick={handleBannerClick}
+      role={current.ctaHref ? 'button' : undefined}
+      tabIndex={current.ctaHref ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (current.ctaHref && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          handleBannerClick();
+        }
+      }}
+    >
       <div className="absolute inset-0">
         {imageToUse ? (
           <Image
             src={imageToUse}
             alt={current.imageAlt ?? current.headline}
             fill
-            className="object-cover"
+            className="object-cover group-hover:opacity-90 transition-opacity"
             priority
             sizes="(max-width: 640px) 1080px, (max-width: 1024px) 1536px, 1920px"
           />
