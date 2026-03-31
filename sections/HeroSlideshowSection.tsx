@@ -51,7 +51,7 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
           setSlides(data.map(mapDbSlide));
         }
       })
-      .catch(() => {/* keep defaults */});
+      .catch(() => {/* keep defaults */ });
   }, [propSlides]);
 
   const current = slides[index % slides.length];
@@ -69,7 +69,7 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
   };
 
   return (
-    <section 
+    <section
       className="relative min-h-[320px] sm:min-h-[450px] md:min-h-[620px] flex items-center bg-[#F7F6F1] overflow-hidden cursor-pointer group"
       onClick={handleBannerClick}
       role={current.ctaHref ? 'button' : undefined}
@@ -102,9 +102,8 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
             type="button"
             aria-label={`Go to slide ${i + 1}`}
             aria-current={i === index % slides.length}
-            className={`h-2 rounded-full transition-all ${
-              i === index % slides.length ? 'w-8 bg-primary' : 'w-2 bg-white/40 hover:bg-white/60'
-            }`}
+            className={`h-2 rounded-full transition-all ${i === index % slides.length ? 'w-8 bg-primary' : 'w-2 bg-white/40 hover:bg-white/60'
+              }`}
             onClick={() => setIndex(i)}
           />
         ))}
