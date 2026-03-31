@@ -40,13 +40,13 @@ async function wcFetch<T>(path: string, params?: Record<string, string>): Promis
     'Content-Type': 'application/json',
     ...(auth ? { Authorization: `Basic ${auth}` } : {}),
   };
-  
+
   try {
     const res = await fetch(url, {
       headers,
       next: { revalidate: REVALIDATE },
     });
-    
+
     if (!res.ok) {
       const text = await res.text();
       if (res.status === 403) {
@@ -56,7 +56,7 @@ async function wcFetch<T>(path: string, params?: Record<string, string>): Promis
       }
       throw new Error(`WooCommerce API error ${res.status}: ${text}`);
     }
-    
+
     const totalPages = parseInt(res.headers.get('X-WP-TotalPages') ?? '1', 10);
     const data = await res.json() as T;
     return { data, totalPages };
@@ -100,18 +100,18 @@ async function getCategoryIdFromSlug(slug: string): Promise<string | null> {
     if (categoryCache && categoryCache.has(slug)) {
       return categoryCache.get(slug) || null;
     }
-    
+
     const { data } = await wcFetch<Array<{ id: number; slug: string }>>('/products/categories', {
       per_page: '100',
       hide_empty: '0',
     });
     const arr = Array.isArray(data) ? data : [];
-    
+
     // Cache the mapping for future use
     if (arr.length > 0) {
       categoryCache = new Map(arr.map((c) => [c.slug, String(c.id)]));
     }
-    
+
     const category = arr.find((c) => c.slug === slug);
     return category ? String(category.id) : null;
   } catch (error) {
@@ -140,7 +140,7 @@ async function fetchWooProducts(params: {
       per_page: String(perPage),
       status: 'publish',
     };
-    
+
     // Convert category slug to ID if provided
     let categoryId: string | null = null;
     if (params.category) {
@@ -153,7 +153,7 @@ async function fetchWooProducts(params: {
         return [];
       }
     }
-    
+
     if (params.search) searchParams.search = params.search;
     if (params.orderby) searchParams.orderby = params.orderby;
     if (params.order) searchParams.order = params.order;
@@ -216,12 +216,12 @@ export async function getCategories(): Promise<Array<{ slug: string; label: stri
       hide_empty: '1',
     });
     const arr = Array.isArray(data) ? data : [];
-    
+
     // Cache the slug->ID mapping for use in getCategoryIdFromSlug
     if (arr.length > 0) {
       categoryCache = new Map(arr.map((c) => [c.slug, String(c.id)]));
     }
-    
+
     // Sort alphabetically by label
     return arr
       .map((c) => ({ slug: c.slug, label: c.name, count: c.count ?? 0 }))
@@ -244,7 +244,7 @@ export async function getProducts(options?: {
   newOnly?: boolean;
 }): Promise<Product[]> {
   if (!getBaseUrl()) return [];
-  
+
   try {
     const perPage = options?.limit ?? 100;
     const category = options?.category;
@@ -312,7 +312,7 @@ export async function getProductsByIds(ids: string[]): Promise<Product[]> {
       status: 'publish',
     });
     const raw = Array.isArray(data) ? data : [];
-    const products = raw.map(mapWooProduct).map(normalizedToProduct);
+    const products = raw.map(mapWooProduct).map((normalized) => normalizedToProduct(normalized));
     // WooCommerce doesn't honour the include order — re-sort to match caller's order
     const idOrder: Record<string, number> = {};
     ids.forEach((id, i) => { idOrder[id] = i; });
@@ -352,13 +352,13 @@ function mapWooReview(raw: WooProductReviewRaw): ProductReview {
   const dateStr = raw.date_created ?? raw.date_created_gmt ?? '';
   const date = dateStr
     ? (() => {
-        try {
-          const d = new Date(dateStr);
-          return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-        } catch {
-          return dateStr;
-        }
-      })()
+      try {
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      } catch {
+        return dateStr;
+      }
+    })()
     : '';
 
   const reviewText = (raw.review as string) ?? '';
