@@ -206,6 +206,24 @@ model WebsiteContent {
   @@map("website_content")
 }
 
+// ---------------------------------------------------------------------------
+// FEATURED / BEST SELLER PRODUCTS (admin-curated, shown on homepage)
+// ---------------------------------------------------------------------------
+model FeaturedProduct {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  wooProductId   String?   @map("woo_product_id")    // WooCommerce numeric product ID
+  wooProductSlug String?   @map("woo_product_slug")  // WooCommerce product slug
+  productName    String?   @map("product_name")      // cached display name for admin UI
+  productImage   String?   @map("product_image")     // cached thumbnail URL
+  sortOrder      Int       @default(0)               @map("sort_order")
+  isActive       Boolean   @default(true)            @map("is_active")
+  section        String    @default("bestsellers")   // "bestsellers" | "featured" etc.
+  createdAt      DateTime? @default(now())           @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@map("featured_products")
+}
+
 model CartEvent {
   id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   customerName String?   @map("customer_name")

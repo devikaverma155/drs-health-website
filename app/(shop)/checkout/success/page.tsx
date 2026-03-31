@@ -13,6 +13,9 @@ const COD_MESSAGE =
 const PARTIAL_MESSAGE =
   'Thank you for your order! Your advance payment was successful. The remaining amount will be collected upon delivery. Our team will contact you shortly.';
 
+const GENERIC_MESSAGE =
+  'Thank you for your order! We have received it and will be in touch shortly.';
+
 function SuccessContent() {
   const searchParams = useSearchParams();
   const method = searchParams.get('method');
@@ -20,8 +23,25 @@ function SuccessContent() {
 
   const isCOD = method === 'cod';
   const isPartial = method === 'partial';
-  const message = isCOD ? COD_MESSAGE : isPartial ? PARTIAL_MESSAGE : RAZORPAY_MESSAGE;
-  const methodName = isCOD ? 'Cash on Delivery' : isPartial ? 'Partial Payment (Pay Later for balance)' : 'Online Payment';
+  const isOnline = method === 'razorpay';
+
+  let message: string;
+  let methodName: string;
+
+  if (isCOD) {
+    message = COD_MESSAGE;
+    methodName = 'Cash on Delivery';
+  } else if (isPartial) {
+    message = PARTIAL_MESSAGE;
+    methodName = 'Partial Payment (balance on delivery)';
+  } else if (isOnline) {
+    message = RAZORPAY_MESSAGE;
+    methodName = 'Online Payment';
+  } else {
+    // No method param — order still confirmed, show generic message
+    message = GENERIC_MESSAGE;
+    methodName = '';
+  }
 
   return (
     <div className="card-soft p-8 max-w-lg w-full text-center">
@@ -31,8 +51,10 @@ function SuccessContent() {
         </svg>
       </div>
       <h1 className="text-2xl font-semibold text-foreground mb-1">Order Confirmed</h1>
-      <p className="text-sm text-body-muted mb-4">Payment Method: {methodName}</p>
-      {orderId && <p className="text-sm text-body-muted mb-4">Order ID: {orderId}</p>}
+      {methodName && (
+        <p className="text-sm text-body-muted mb-4">Payment Method: {methodName}</p>
+      )}
+      {orderId && <p className="text-sm text-body-muted mb-4">Order ID: #{orderId}</p>}
       <p className="text-body-muted mb-8">{message}</p>
       <Link
         href="/shop"
@@ -50,12 +72,14 @@ function SuccessContent() {
 export default function CheckoutSuccessPage() {
   return (
     <div className="min-h-screen bg-background py-12 px-4 flex items-center justify-center">
-      <Suspense fallback={
-        <div className="card-soft p-8 max-w-lg w-full text-center">
-          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6 animate-pulse" />
-          <p className="text-body-muted">Loading...</p>
-        </div>
-      }>
+      <Suspense
+        fallback={
+          <div className="card-soft p-8 max-w-lg w-full text-center">
+            <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6 animate-pulse" />
+            <p className="text-body-muted">Confirming your order…</p>
+          </div>
+        }
+      >
         <SuccessContent />
       </Suspense>
     </div>

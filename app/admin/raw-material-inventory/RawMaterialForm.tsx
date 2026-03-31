@@ -22,6 +22,7 @@ export function RawMaterialForm({
   const [purchaseRate, setPurchaseRate] = useState(material?.purchaseRate?.toString() ?? '');
   const [supplierId, setSupplierId] = useState(material?.supplierId ?? '');
   const [minStock, setMinStock] = useState(material?.minStock?.toString() ?? '');
+  const [currentStock, setCurrentStock] = useState(material?.currentStock?.toString() ?? '');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,9 +30,9 @@ export function RawMaterialForm({
     setLoading(true);
     try {
       if (material) {
-        await updateRawMaterial(material.id, { materialCode, name, unit, purchaseRate, supplierId: supplierId || undefined, minStock });
+        await updateRawMaterial(material.id, { materialCode, name, unit, purchaseRate, supplierId: supplierId || undefined, minStock, currentStock });
       } else {
-        await createRawMaterial({ materialCode, name, unit, purchaseRate, supplierId: supplierId || undefined, minStock });
+        await createRawMaterial({ materialCode, name, unit, purchaseRate, supplierId: supplierId || undefined, minStock, currentStock });
       }
       router.push('/admin/raw-material-inventory');
       router.refresh();
@@ -72,6 +73,10 @@ export function RawMaterialForm({
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Min stock (alert)</label>
           <input type="number" step="0.01" value={minStock} onChange={(e) => setMinStock(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Current stock (manual override)</label>
+          <input type="number" step="0.01" value={currentStock} onChange={(e) => setCurrentStock(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Optional: manual stock entry" />
         </div>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}

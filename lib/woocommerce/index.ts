@@ -6,6 +6,7 @@
 export {
   getProducts,
   getProductBySlug,
+  getProductsByIds,
   getProductsByCategory,
   searchProducts,
   getCategories,

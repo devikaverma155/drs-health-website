@@ -12,6 +12,7 @@ export async function createRawMaterial(data: {
   purchaseRate?: string;
   supplierId?: string;
   minStock?: string;
+  currentStock?: string;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
@@ -24,6 +25,7 @@ export async function createRawMaterial(data: {
       purchaseRate: data.purchaseRate ? parseFloat(data.purchaseRate) : null,
       supplierId: data.supplierId?.trim() || null,
       minStock: data.minStock ? parseFloat(data.minStock) : null,
+      currentStock: data.currentStock ? parseFloat(data.currentStock) : null,
     },
   });
   revalidatePath('/admin/raw-material-inventory');
@@ -36,6 +38,7 @@ export async function updateRawMaterial(id: string, data: {
   purchaseRate?: string;
   supplierId?: string;
   minStock?: string;
+  currentStock?: string;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
@@ -49,6 +52,7 @@ export async function updateRawMaterial(id: string, data: {
       purchaseRate: data.purchaseRate ? parseFloat(data.purchaseRate) : null,
       supplierId: data.supplierId?.trim() || null,
       minStock: data.minStock ? parseFloat(data.minStock) : null,
+      currentStock: data.currentStock ? parseFloat(data.currentStock) : null,
     },
   });
   revalidatePath('/admin/raw-material-inventory');

@@ -299,6 +299,31 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 }
 
 /**
+ * Fetch multiple products by their WooCommerce numeric IDs in a single API call.
+ * Uses ?include=id1,id2,id3 — far more reliable than N separate slug lookups.
+ * Results are re-sorted to match the caller's requested order.
+ */
+export async function getProductsByIds(ids: string[]): Promise<Product[]> {
+  if (!ids.length || !getBaseUrl()) return [];
+  try {
+    const { data } = await wcFetch<WooProductRaw[]>('/products', {
+      include: ids.join(','),
+      per_page: String(Math.min(ids.length, 100)),
+      status: 'publish',
+    });
+    const raw = Array.isArray(data) ? data : [];
+    const products = raw.map(mapWooProduct).map(normalizedToProduct);
+    // WooCommerce doesn't honour the include order — re-sort to match caller's order
+    const idOrder: Record<string, number> = {};
+    ids.forEach((id, i) => { idOrder[id] = i; });
+    return products.sort((a, b) => (idOrder[a.id] ?? 99) - (idOrder[b.id] ?? 99));
+  } catch (err) {
+    console.error('getProductsByIds error:', err instanceof Error ? err.message : String(err));
+    return [];
+  }
+}
+
+/**
  * Get products by category slug.
  */
 export async function getProductsByCategory(category: string, limit = 50): Promise<Product[]> {

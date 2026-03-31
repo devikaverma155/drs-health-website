@@ -4,6 +4,7 @@ const NAV = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
   { href: '/admin/leads', label: 'Leads (CRM)', icon: '📋' },
   { href: '/admin/clients', label: 'Clients', icon: '🏢' },
+  { href: '/admin/customer-orders', label: 'Customer Orders (Online)', icon: '🛍️' },
   { href: '/admin/clinic-patients', label: 'Clinic Patients', icon: '🩺' },
   { href: '/admin/employees', label: 'Employees', icon: '👥' },
   { href: '/admin/materials', label: 'Materials (RM & PM)', icon: '📦' },
@@ -13,10 +14,11 @@ const NAV = [
   { href: '/admin/bom', label: 'Bill of Material (BOM)', icon: '📄' },
   { href: '/admin/production', label: 'Production', icon: '⚙️' },
   { href: '/admin/finished-goods', label: 'Finished Goods', icon: '✅' },
-  { href: '/admin/orders', label: 'Orders & Dispatch', icon: '🚚' },
+  { href: '/admin/orders', label: 'Orders & Dispatch (B2B)', icon: '🚚' },
   { href: '/admin/reports', label: 'Reports', icon: '📈' },
   { href: '/admin/roles', label: 'User Roles', icon: '🔐' },
   { href: '/admin/content', label: 'Content', icon: '📝' },
+  { href: '/admin/content/bestsellers', label: 'Best Sellers Picker', icon: '⭐' },
   { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
 ];
 

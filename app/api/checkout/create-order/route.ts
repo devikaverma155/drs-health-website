@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { ensureWooCommerceCustomer } from '@/lib/woocommerce/ensure-customer';
 
 interface LineItem {
   product_id: string;
@@ -34,8 +33,6 @@ interface OrderRequest {
   customer_note?: string;
   status?: string;
   paymentMethod?: 'razorpay' | 'cod'; // Payment method selection
-  discountApplied?: number; // percentage discount
-  chargeAmount?: number;    // actual amount to charge via Razorpay (supports partial)
 }
 
 /**
@@ -74,29 +71,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
     const baseUrl = wcUrl.replace(/\/$/, '');
 
-    const emailNormalized = orderData.billing.email.trim().toLowerCase();
-
-    const wcCustomer = await ensureWooCommerceCustomer(baseUrl, auth, orderData.billing);
-
     // Map payment method for WooCommerce
     const wcPaymentMethod = paymentMethod === 'cod' ? 'cod' : 'razorpay';
     const initialStatus = paymentMethod === 'cod' ? 'pending' : 'pending';
-
-    const orderPayload: Record<string, unknown> = {
-      billing: orderData.billing,
-      shipping: orderData.shipping,
-      line_items: orderData.line_items.map((item) => ({
-        product_id: parseInt(item.product_id, 10),
-        quantity: item.quantity,
-      })),
-      customer_note: orderData.customer_note || '',
-      status: initialStatus,
-      payment_method: wcPaymentMethod,
-      payment_method_title: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Razorpay',
-    };
-    if (wcCustomer?.id) {
-      orderPayload.customer_id = wcCustomer.id;
-    }
 
     const response = await fetch(`${baseUrl}/orders`, {
       method: 'POST',
@@ -104,7 +81,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         'Content-Type': 'application/json',
         Authorization: `Basic ${auth}`,
       },
-      body: JSON.stringify(orderPayload),
+      body: JSON.stringify({
+        billing: orderData.billing,
+        shipping: orderData.shipping,
+        line_items: orderData.line_items.map((item) => ({
+          product_id: parseInt(item.product_id),
+          quantity: item.quantity,
+        })),
+        customer_note: orderData.customer_note || '',
+        status: initialStatus,
+        payment_method: wcPaymentMethod,
+        payment_method_title: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Razorpay',
+      }),
     });
 
     if (!response.ok) {
@@ -155,7 +143,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           data: {
             wooOrderId: String(wooOrder.id),
             paymentMethod: 'cod',
-            email: emailNormalized,
+            email: orderData.billing.email,
             phone: orderData.billing.phone,
             firstName: orderData.billing.first_name,
             lastName: orderData.billing.last_name,
@@ -182,11 +170,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // Handle Razorpay payment method
-    // If chargeAmount is provided (partial payment), use that; otherwise use full discounted total
-    const effectiveTotal = orderData.chargeAmount != null && orderData.chargeAmount > 0
-      ? orderData.chargeAmount
-      : total;
-    const amountPaise = Math.round(effectiveTotal * 100);
+    const amountPaise = Math.round(total * 100);
     if (amountPaise < 100) {
       return NextResponse.json(
         { success: false, error: 'Minimum order amount is ₹1 for payment.' },
@@ -248,7 +232,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           wooOrderId: String(wooOrder.id),
           razorpayOrderId: rzpOrder.id,
           paymentMethod: 'razorpay',
-          email: emailNormalized,
+          email: orderData.billing.email,
           phone: orderData.billing.phone,
           firstName: orderData.billing.first_name,
           lastName: orderData.billing.last_name,

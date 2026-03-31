@@ -1,23 +1,73 @@
 import Link from 'next/link';
-import { getProducts } from '@/lib/woocommerce';
+import { getProducts, getProductBySlug, getProductsByIds } from '@/lib/woocommerce';
 import { ProductCard } from '@/components/product/ProductCard';
+import { prisma } from '@/lib/prisma';
+import type { Product } from '@/lib/woocommerce/types';
 
-// Revalidate every 60 seconds for ISR (Incremental Static Regeneration)
-export const revalidate = 60;
+// Revalidate immediately when cache is invalidated by admin actions
+export const revalidate = 0;
+
+async function getFeaturedProducts(): Promise<Product[]> {
+  // 1. Check DB for admin-curated bestsellers list
+  try {
+    const featured = await prisma.featuredProduct.findMany({
+      where: { isActive: true, section: 'bestsellers' },
+      orderBy: { sortOrder: 'asc' },
+      select: { wooProductId: true, wooProductSlug: true },
+    });
+
+    console.log('[BestSellersSection] Found featured products in DB:', featured.length);
+    console.log('[BestSellersSection] Featured products data:', JSON.stringify(featured, null, 2));
+
+    if (featured.length > 0) {
+      // Use wooProductId if available (more reliable than slug)
+      const productIds = featured
+        .map((f: any) => f.wooProductId)
+        .filter((id: any) => id);
+
+      if (productIds.length > 0) {
+        console.log('[BestSellersSection] Using product IDs:', productIds);
+        const products = await getProductsByIds(productIds);
+        console.log('[BestSellersSection] Successfully fetched products from WC by ID:', products.length);
+        if (products.length > 0) return products;
+      }
+
+      // Fallback: try by slug if IDs didn't work
+      const results = await Promise.all(
+        featured.map((f: any) => {
+          if (f.wooProductSlug) {
+            console.log('[BestSellersSection] Fetching by slug:', f.wooProductSlug);
+            return getProductBySlug(f.wooProductSlug);
+          }
+          return null;
+        })
+      );
+      const products = results.filter((p: any): p is Product => p !== null);
+      console.log('[BestSellersSection] Fetched by slug - count:', products.length);
+      if (products.length > 0) return products;
+    }
+  } catch (e) {
+    console.error('[BestSellersSection] Error fetching featured products:', e);
+  }
+
+  // 2. Fallback: fetch 8 products from WooCommerce (original behaviour)
+  console.log('[BestSellersSection] Using fallback - fetching 8 random products');
+  return getProducts({ limit: 8 });
+}
 
 export async function BestSellersSection() {
   try {
-    const products = await getProducts({ limit: 8 });
-    
-    // We double the array to create a seamless infinite loop
+    const products = await getFeaturedProducts();
+
+    // Double the array to create a seamless infinite scroll loop
     const displayProducts = [...products, ...products];
 
     return (
       <section
         className="section-padding overflow-hidden relative"
         style={{
-      background: '#FFF5EB',
-    }}
+          background: '#FFF5EB',
+        }}
       >
         {/* Warm decorative glow */}
         <div className="absolute inset-0 -z-10 pointer-events-none">
@@ -62,7 +112,6 @@ export async function BestSellersSection() {
     );
   } catch (error) {
     console.error('Failed to load best sellers:', error);
-    // Return empty section instead of crashing
     return (
       <section
         className="section-padding overflow-hidden relative"
