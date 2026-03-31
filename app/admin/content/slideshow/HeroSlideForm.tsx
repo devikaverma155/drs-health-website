@@ -95,14 +95,13 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Headline *</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Headline</label>
           <input
             type="text"
             value={headline}
             onChange={(e) => setHeadline(e.target.value)}
-            required
             disabled={loading}
-            placeholder="e.g., Syadwad Combo"
+            placeholder="e.g., Syadwad Combo (optional)"
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
         </div>
@@ -120,20 +119,19 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Desktop Image URL *</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Desktop Image URL</label>
           <input
             type="url"
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
             disabled={loading}
-            placeholder="https://example.com/image-desktop.jpg"
-            required
+            placeholder="https://example.com/image-desktop.jpg (optional)"
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
           <p className="mt-2 text-xs text-slate-600 bg-blue-50 border border-blue-200 rounded px-3 py-2">
-            📱 Desktop Image <strong>3.1:1 aspect ratio</strong><br/>
-            Recommended sizes:<br/>
-            • 1920 × 620px (Full HD desktop)<br/>
+            📱 Desktop Image <strong>3.1:1 aspect ratio</strong><br />
+            Recommended sizes:<br />
+            • 1920 × 620px (Full HD desktop)<br />
             • 1536 × 500px (Tablet landscape)
           </p>
         </div>
@@ -149,8 +147,8 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
           <p className="mt-2 text-xs text-slate-600 bg-green-50 border border-green-200 rounded px-3 py-2">
-            📱 Mobile Image <strong>3.4:1 aspect ratio</strong><br/>
-            Recommended size: <strong>1080 × 320px</strong><br/>
+            📱 Mobile Image <strong>3.4:1 aspect ratio</strong><br />
+            Recommended size: <strong>1080 × 320px</strong><br />
             Leave blank to use desktop image on mobile
           </p>
         </div>
@@ -196,9 +194,8 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
                       key={c}
                       type="button"
                       onClick={() => setTextColor(c)}
-                      className={`w-7 h-7 rounded-full border-2 transition-all ${
-                        textColor === c ? 'border-primary scale-110 ring-2 ring-primary/30' : 'border-slate-300 hover:border-slate-400'
-                      }`}
+                      className={`w-7 h-7 rounded-full border-2 transition-all ${textColor === c ? 'border-primary scale-110 ring-2 ring-primary/30' : 'border-slate-300 hover:border-slate-400'
+                        }`}
                       style={{ backgroundColor: c }}
                       title={c}
                     />
@@ -238,14 +235,13 @@ export function HeroSlideForm({ slide }: { slide?: SlideData | null }) {
           <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">⚠️ Adding a link is compulsory. Every slide must have at least a primary button link.</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Button Text *</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Button Text (optional)</label>
               <input
                 type="text"
                 value={ctaLabel}
                 onChange={(e) => setCtaLabel(e.target.value)}
-                required
                 disabled={loading}
-                placeholder="e.g., Shop Products"
+                placeholder="e.g., Shop Products (leave blank for no text)"
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
             </div>

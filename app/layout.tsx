@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import '@/styles/globals.css';
 import { MarqueeBar } from '@/layout/MarqueeBar';
 import { Header } from '@/layout/Header';
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <WishlistProvider>
               <OrganizationSchema />
               <PrintAwareRoot>{children}</PrintAwareRoot>
+              <Analytics />
             </WishlistProvider>
           </CartProvider>
         </AuthSessionProvider>
