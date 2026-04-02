@@ -1,4 +1,3 @@
--- CreateTable
 CREATE TABLE "admin" (
     "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "email" TEXT NOT NULL,
