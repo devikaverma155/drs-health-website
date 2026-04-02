@@ -186,8 +186,56 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile only: Cart + Menu */}
-        <div className="flex md:hidden items-center gap-1 flex-shrink-0">
+        {/* Mobile only: Search, Cart + Menu */}
+        <div className="flex md:hidden items-center gap-1 flex-shrink-0 relative">
+          <div className="relative">
+            <button
+              type="button"
+              aria-label="Search"
+              aria-expanded={searchOpen}
+              className="p-2 text-foreground hover:opacity-70 transition-opacity"
+              onClick={() => setSearchOpen((o) => !o)}
+            >
+              <SearchIcon className="w-5 h-5" />
+            </button>
+            {searchOpen && (
+              <>
+                <div className="absolute -right-28 top-full mt-4 z-50 min-w-[280px] bg-white rounded-xl border border-border shadow-lg overflow-hidden">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const q = searchQuery.trim();
+                      setSearchOpen(false);
+                      setSearchQuery('');
+                      if (q) router.push(`/shop?q=${encodeURIComponent(q)}`);
+                    }}
+                    className="flex"
+                  >
+                    <input
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search products..."
+                      className="flex-1 px-3 py-2.5 text-sm text-foreground placeholder:text-body-muted focus:outline-none border-0"
+                      autoFocus
+                      aria-label="Search products"
+                    />
+                    <button
+                      type="submit"
+                      className="px-3 py-2.5 bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors shrink-0"
+                    >
+                      Search
+                    </button>
+                  </form>
+                </div>
+                <div
+                  className="fixed inset-0 z-40"
+                  aria-hidden
+                  onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
+                />
+              </>
+            )}
+          </div>
           <WishlistIcon className="p-2 text-foreground hover:opacity-70 transition-opacity" />
           <CartIconComponent className="p-2 text-foreground hover:opacity-70 transition-opacity" />
           <button

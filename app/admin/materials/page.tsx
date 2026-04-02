@@ -31,7 +31,7 @@ export default async function MaterialsPage() {
       include: { batches: true },
     }),
   ]);
-
+  
   const rows: MaterialRow[] = [
     ...rawMaterials.map((m) => ({
       id: m.id,
@@ -83,7 +83,7 @@ export default async function MaterialsPage() {
         <strong className="font-medium"> Cost / unit</strong> is set from the order line total ÷ quantity on delivery (for BOM pricing); you can also edit it on each material.
       </p>
 
-      <div className="rounded-xl bg-white border border-slate-200 overflow-hidden">
+      <div className="rounded-xl bg-white border h-[600px] overflow-auto border-slate-200">
         {rows.length === 0 ? (
           <div className="p-8 text-center text-slate-500 text-sm">
             No materials yet. Add raw materials or packaging from the buttons above.

@@ -87,7 +87,7 @@ export function HeroSlideshowSection({ slides: propSlides }: { slides?: HeroSlid
             src={imageToUse}
             alt={current.imageAlt ?? current.headline}
             fill
-            className="object-cover group-hover:opacity-90 transition-opacity"
+            className="object-center group-hover:opacity-90 transition-opacity"
             priority
             sizes="(max-width: 640px) 1080px, (max-width: 1024px) 1536px, 1920px"
           />
