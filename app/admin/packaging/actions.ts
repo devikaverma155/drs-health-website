@@ -5,9 +5,12 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+
+
 export async function createPackagingMaterial(data: {
   packagingCode?: string;
   name?: string;
+  costPerUnit?: string;
   supplierId?: string;
   quantity?: string;
   unit?: string;
@@ -24,6 +27,7 @@ export async function createPackagingMaterial(data: {
       quantity: data.quantity ? parseFloat(data.quantity) : null,
       unit: data.unit?.trim() || null,
       minStock: data.minStock ? parseFloat(data.minStock) : null,
+      costPerUnit: data.costPerUnit ? parseFloat(data.costPerUnit) : null,
     },
   });
   revalidatePath('/admin/packaging');
@@ -34,6 +38,7 @@ export async function updatePackagingMaterial(id: string, data: {
   name?: string;
   supplierId?: string;
   quantity?: string;
+  costPerUnit?: string;
   unit?: string;
   minStock?: string;
 }) {
@@ -49,6 +54,7 @@ export async function updatePackagingMaterial(id: string, data: {
       quantity: data.quantity ? parseFloat(data.quantity) : null,
       unit: data.unit?.trim() || null,
       minStock: data.minStock ? parseFloat(data.minStock) : null,
+      costPerUnit: data.costPerUnit ? parseFloat(data.costPerUnit) : null,
     },
   });
   revalidatePath('/admin/packaging');

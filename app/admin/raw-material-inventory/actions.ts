@@ -9,7 +9,7 @@ export async function createRawMaterial(data: {
   materialCode?: string;
   name?: string;
   unit?: string;
-  purchaseRate?: string;
+  costPerUnit?: string;
   supplierId?: string;
   minStock?: string;
   currentStock?: string;
@@ -22,7 +22,7 @@ export async function createRawMaterial(data: {
       materialCode: data.materialCode?.trim() || null,
       name: data.name?.trim() || null,
       unit: data.unit?.trim() || null,
-      purchaseRate: data.purchaseRate ? parseFloat(data.purchaseRate) : null,
+      costPerUnit: data.costPerUnit ? parseFloat(data.costPerUnit) : null,
       supplierId: data.supplierId?.trim() || null,
       minStock: data.minStock ? parseFloat(data.minStock) : null,
       currentStock: data.currentStock ? parseFloat(data.currentStock) : null,
@@ -35,7 +35,7 @@ export async function updateRawMaterial(id: string, data: {
   materialCode?: string;
   name?: string;
   unit?: string;
-  purchaseRate?: string;
+  costPerUnit?: string;
   supplierId?: string;
   minStock?: string;
   currentStock?: string;
@@ -49,7 +49,7 @@ export async function updateRawMaterial(id: string, data: {
       materialCode: data.materialCode?.trim() || null,
       name: data.name?.trim() || null,
       unit: data.unit?.trim() || null,
-      purchaseRate: data.purchaseRate ? parseFloat(data.purchaseRate) : null,
+      costPerUnit: data.costPerUnit ? parseFloat(data.costPerUnit) : null,
       supplierId: data.supplierId?.trim() || null,
       minStock: data.minStock ? parseFloat(data.minStock) : null,
       currentStock: data.currentStock ? parseFloat(data.currentStock) : null,

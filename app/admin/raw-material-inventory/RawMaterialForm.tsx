@@ -19,7 +19,7 @@ export function RawMaterialForm({
   const [materialCode, setMaterialCode] = useState(material?.materialCode ?? '');
   const [name, setName] = useState(material?.name ?? '');
   const [unit, setUnit] = useState(material?.unit ?? '');
-  const [purchaseRate, setPurchaseRate] = useState(material?.purchaseRate?.toString() ?? '');
+  const [costPerUnit, setCostPerUnit] = useState(material?.costPerUnit?.toString() ?? '');
   const [supplierId, setSupplierId] = useState(material?.supplierId ?? '');
   const [minStock, setMinStock] = useState(material?.minStock?.toString() ?? '');
   const [currentStock, setCurrentStock] = useState(material?.currentStock?.toString() ?? '');
@@ -30,9 +30,9 @@ export function RawMaterialForm({
     setLoading(true);
     try {
       if (material) {
-        await updateRawMaterial(material.id, { materialCode, name, unit, purchaseRate, supplierId: supplierId || undefined, minStock, currentStock });
+        await updateRawMaterial(material.id, { materialCode, name, unit, costPerUnit, supplierId: supplierId || undefined, minStock, currentStock });
       } else {
-        await createRawMaterial({ materialCode, name, unit, purchaseRate, supplierId: supplierId || undefined, minStock, currentStock });
+        await createRawMaterial({ materialCode, name, unit, costPerUnit, supplierId: supplierId || undefined, minStock, currentStock });
       }
       router.push('/admin/raw-material-inventory');
       router.refresh();
@@ -58,8 +58,8 @@ export function RawMaterialForm({
           <input type="text" value={unit} onChange={(e) => setUnit(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Purchase rate</label>
-          <input type="number" step="0.01" value={purchaseRate} onChange={(e) => setPurchaseRate(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+          <label className="block text-sm font-medium text-slate-700 mb-1">Cost per unit</label>
+          <input type="number" step="0.01" value={costPerUnit} onChange={(e) => setCostPerUnit(e.target.value)} disabled={loading} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Supplier</label>
