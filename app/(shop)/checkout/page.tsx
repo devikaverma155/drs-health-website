@@ -37,6 +37,9 @@ declare global {
 }
 
 const PAYMENT_DESCRIPTION = 'UPI | Credit Card | Debit Card | NetBanking';
+const DISCOUNT_RATE = 0.1;
+const DELIVERY_CHARGE = 100;
+const PARTIAL_ADVANCE_RATIO = 0.5;
 
 function loadRazorpay(): Promise<void> {
   return new Promise((resolve) => {
@@ -79,7 +82,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showBillingForm, setShowBillingForm] = useState(false);
   const [shipToDifferentAddress, setShipToDifferentAddress] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'razorpay' | 'cod'>('razorpay');
+  const [paymentMethod, setPaymentMethod] = useState<'razorpay' | 'cod' | 'partial'>('razorpay');
   const [customerInfo, setCustomerInfo] = useState<AddressInfo>({ ...emptyAddress });
   const [shippingInfo, setShippingInfo] = useState<AddressInfo>({ ...emptyAddress });
 
@@ -141,6 +144,14 @@ export default function CheckoutPage() {
   const billingFilled = customerInfo.firstName && customerInfo.email && customerInfo.phone && customerInfo.address;
   const shippingFilled = shippingInfo.firstName && shippingInfo.address;
   const shippingToUse = shipToDifferentAddress ? shippingInfo : customerInfo;
+  const subtotal = Number(cart.totalPrice || 0);
+  const isOnlineOrPartial = paymentMethod === 'razorpay' || paymentMethod === 'partial';
+  const discountAmount = isOnlineOrPartial
+    ? Math.round(subtotal * DISCOUNT_RATE * 100) / 100
+    : 0;
+  const deliveryCharge = subtotal < 699 ? DELIVERY_CHARGE : 0;
+  const payableTotal = Math.max(0, subtotal - discountAmount + deliveryCharge);
+  const partialAdvanceAmount = paymentMethod === 'partial' ? Math.round(payableTotal * PARTIAL_ADVANCE_RATIO * 100) / 100 : 0;
 
   const handleCheckout = useCallback(async () => {
     if (cart.items.length === 0) {
@@ -247,12 +258,13 @@ export default function CheckoutPage() {
                 razorpay_payment_id: res.razorpay_payment_id,
                 razorpay_signature: res.razorpay_signature,
                 wooOrderId,
+                paymentMethod,
               }),
             });
             const verifyData = await verifyRes.json();
             if (verifyData.success) {
               clearAllItems();
-              window.location.href = '/checkout/success';
+              window.location.href = `/checkout/success?method=${paymentMethod}&order=${wooOrderId}`;
             } else {
               alert(verifyData.error || 'Payment verification failed');
             }
@@ -299,11 +311,11 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-foreground mb-8">Checkout</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="md:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          <div className="md:col-span-7 space-y-6">
             {/* Billing — show as summary, or form when "Change" clicked */}
             <div className="card-soft p-6">
               <div className="flex items-center justify-between mb-4">
@@ -378,80 +390,108 @@ export default function CheckoutPage() {
                   <input type="tel" name="phone" placeholder="Phone (optional)" value={shippingInfo.phone} onChange={handleShippingChange} className={inputClass} />
                 </div>
               )}
-              {/* Payment Method Selection */}
-              <div className="card-soft p-6">
-                <h2 className="text-xl font-bold text-foreground mb-4">Payment Method</h2>
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors" style={{ borderColor: paymentMethod === 'razorpay' ? '#A3261A' : undefined }}>
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="razorpay"
-                      checked={paymentMethod === 'razorpay'}
-                      onChange={(e) => setPaymentMethod(e.target.value as 'razorpay' | 'cod')}
-                      className="w-4 h-4"
-                    />
-                    <div>
-                      <p className="font-medium text-foreground">Online Payment (Razorpay)</p>
-                      <p className="text-sm text-body-muted">UPI • Credit Card • Debit Card • NetBanking</p>
-                    </div>
-                  </label>
-
-                  <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors" style={{ borderColor: paymentMethod === 'cod' ? '#A3261A' : undefined }}>
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="cod"
-                      checked={paymentMethod === 'cod'}
-                      onChange={(e) => setPaymentMethod(e.target.value as 'razorpay' | 'cod')}
-                      className="w-4 h-4"
-                    />
-                    <div>
-                      <p className="font-medium text-foreground">Cash on Delivery (COD)</p>
-                      <p className="text-sm text-body-muted">Pay when you receive your order</p>
-                    </div>
-                  </label>
-                </div>
-              </div>
             </div>
 
-            <div className="md:col-span-1">
-              <div className="card-soft p-6 sticky top-24">
-                <h2 className="text-xl font-bold text-foreground mb-4">Order Summary</h2>
-                <div className="space-y-3 mb-4 pb-4 border-b border-border">
-                  {cart.items.map((item) => (
-                    <div key={item.id} className="flex justify-between text-sm">
-                      <span className="text-body-muted">{item.productName} x {item.quantity}</span>
-                      <span className="font-medium text-foreground">₹{(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="space-y-2 mb-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-body-muted">Subtotal</span>
-                    <span className="font-medium text-foreground">₹{cart.totalPrice}</span>
+            {/* Payment Method Selection */}
+            <div className="card-soft p-6">
+              <h2 className="text-xl font-bold text-foreground mb-4">Payment Method</h2>
+              <div className="space-y-3">
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors" style={{ borderColor: paymentMethod === 'razorpay' ? '#A3261A' : undefined }}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="razorpay"
+                    checked={paymentMethod === 'razorpay'}
+                    onChange={(e) => setPaymentMethod(e.target.value as 'razorpay' | 'cod' | 'partial')}
+                    className="w-4 h-4"
+                  />
+                  <div>
+                    <p className="font-medium text-foreground">Online Payment (Razorpay)</p>
+                    <p className="text-sm text-body-muted">UPI • Credit Card • Debit Card • NetBanking • 10% off</p>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-body-muted">Shipping</span>
-                    <span className="font-medium text-foreground">TBD</span>
+                </label>
+
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors" style={{ borderColor: paymentMethod === 'partial' ? '#A3261A' : undefined }}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="partial"
+                    checked={paymentMethod === 'partial'}
+                    onChange={(e) => setPaymentMethod(e.target.value as 'razorpay' | 'cod' | 'partial')}
+                    className="w-4 h-4"
+                  />
+                  <div>
+                    <p className="font-medium text-foreground">Partial Payment (50% now)</p>
+                    <p className="text-sm text-body-muted">Pay ₹{partialAdvanceAmount.toFixed(2)} now, remaining on delivery • 10% off</p>
                   </div>
-                </div>
-                <div className="flex justify-between text-lg font-bold text-foreground mb-6 pb-6 border-b border-border">
-                  <span>Total</span>
-                  <span>₹{cart.totalPrice}</span>
-                </div>
-                <button
-                  onClick={handleCheckout}
-                  disabled={isProcessing}
-                  className="w-full px-4 py-3 bg-primary text-white rounded-xl hover:bg-primary-dark disabled:opacity-50 font-bold"
-                >
-                  {isProcessing ? 'Opening payment...' : 'Pay Now'}
-                </button>
-                <p className="text-xs text-body-muted mt-2 text-center">{PAYMENT_DESCRIPTION}</p>
-                <Link href="/cart" className="block mt-4 text-center text-primary hover:underline text-sm font-medium">
-                  Back to Cart
-                </Link>
+                </label>
+
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-slate-50/50 transition-colors" style={{ borderColor: paymentMethod === 'cod' ? '#A3261A' : undefined }}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={paymentMethod === 'cod'}
+                    onChange={(e) => setPaymentMethod(e.target.value as 'razorpay' | 'cod' | 'partial')}
+                    className="w-4 h-4"
+                  />
+                  <div>
+                    <p className="font-medium text-foreground">Cash on Delivery (COD)</p>
+                    <p className="text-sm text-body-muted">Delivery charge ₹{DELIVERY_CHARGE} applies below ₹699</p>
+                  </div>
+                </label>
               </div>
+            </div>
+          </div>
+
+          <div className="md:col-span-5">
+            <div className="card-soft p-6 sticky top-24">
+              <h2 className="text-xl font-bold text-foreground mb-4">Order Summary</h2>
+              <div className="space-y-3 mb-4 pb-4 border-b border-border">
+                {cart.items.map((item) => (
+                  <div key={item.id} className="flex justify-between text-sm">
+                    <span className="text-body-muted">{item.productName} x {item.quantity}</span>
+                    <span className="font-medium text-foreground">₹{(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-2 mb-6">
+                <div className="flex justify-between text-sm">
+                  <span className="text-body-muted">Subtotal</span>
+                  <span className="font-medium text-foreground">₹{subtotal.toFixed(2)}</span>
+                </div>
+                {discountAmount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-body-muted">Online Payment Discount (10%)</span>
+                    <span className="font-medium text-green-700">-₹{discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-sm">
+                  <span className="text-body-muted">Delivery Charges</span>
+                  <span className="font-medium text-foreground">₹{deliveryCharge.toFixed(2)}</span>
+                </div>
+                {paymentMethod === 'partial' && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-body-muted">Pay now (50%)</span>
+                    <span className="font-medium text-foreground">₹{partialAdvanceAmount.toFixed(2)}</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-between text-lg font-bold text-foreground mb-6 pb-6 border-b border-border">
+                <span>Total</span>
+                <span>₹{payableTotal.toFixed(2)}</span>
+              </div>
+              <button
+                onClick={handleCheckout}
+                disabled={isProcessing}
+                className="w-full px-4 py-3 bg-primary text-white rounded-xl hover:bg-primary-dark disabled:opacity-50 font-bold"
+              >
+                {isProcessing ? 'Opening payment...' : paymentMethod === 'partial' ? 'Pay Advance Now' : 'Pay Now'}
+              </button>
+              <p className="text-xs text-body-muted mt-2 text-center">{PAYMENT_DESCRIPTION}</p>
+              <Link href="/cart" className="block mt-4 text-center text-primary hover:underline text-sm font-medium">
+                Back to Cart
+              </Link>
             </div>
           </div>
         </div>

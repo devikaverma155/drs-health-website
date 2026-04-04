@@ -23,7 +23,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ success: false, error: 'Invalid request body' }, { status: 400 });
   }
 
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, wooOrderId } = body;
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, wooOrderId, paymentMethod } = body;
 
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !wooOrderId) {
     return NextResponse.json(
@@ -73,7 +73,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     console.error('[Razorpay] DB lookup for wooOrderId failed (using client-supplied):', err);
   }
 
-  // ── Step 3: Update WooCommerce order status to "processing" ─────────────────
+  const isPartialPayment = paymentMethod === 'partial';
+
+  // ── Step 3: Update WooCommerce order status ─────────────────────────────────
   try {
     const wcUrl = process.env.NEXT_PUBLIC_WC_API_URL;
     const consumerKey = process.env.WC_CONSUMER_KEY;
@@ -91,9 +93,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           Authorization: `Basic ${auth}`,
         },
         body: JSON.stringify({
-          status: 'processing',
+          status: isPartialPayment ? 'on-hold' : 'processing',
           transaction_id: razorpay_payment_id,
-          set_paid: true,
+          set_paid: !isPartialPayment,
         }),
       });
 
@@ -117,7 +119,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       await prisma.customerOrder.update({
         where: { id: dbOrder.id },
         data: {
-          status: 'processing',
+          status: isPartialPayment ? 'partial_paid' : 'processing',
           razorpayPaymentId: razorpay_payment_id,
         },
       });

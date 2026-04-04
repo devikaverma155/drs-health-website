@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
+const DISCOUNT_RATE = 0.1;
+const DELIVERY_CHARGE = 100;
+const PARTIAL_ADVANCE_RATIO = 0.5;
+
 interface LineItem {
   product_id: string;
   quantity: number;
@@ -32,7 +36,7 @@ interface OrderRequest {
   line_items: LineItem[];
   customer_note?: string;
   status?: string;
-  paymentMethod?: 'razorpay' | 'cod'; // Payment method selection
+  paymentMethod?: 'razorpay' | 'cod' | 'partial'; // Payment method selection
 }
 
 /**
@@ -43,6 +47,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const orderData: OrderRequest = await req.json();
     const paymentMethod = orderData.paymentMethod || 'razorpay';
+    const subtotal = orderData.line_items.reduce((sum, item) => {
+      const linePrice = parseFloat(String(item.price || 0));
+      const lineQty = Number(item.quantity || 0);
+      return sum + (Number.isFinite(linePrice) ? linePrice : 0) * (Number.isFinite(lineQty) ? lineQty : 0);
+    }, 0);
+    const isOnlineOrPartial = paymentMethod === 'razorpay' || paymentMethod === 'partial';
+    const discountAmount = isOnlineOrPartial ? subtotal * DISCOUNT_RATE : 0;
+    const deliveryCharge = subtotal < 699 ? DELIVERY_CHARGE : 0;
 
     // Validate required fields
     if (!orderData.billing || !orderData.line_items || orderData.line_items.length === 0) {
@@ -72,8 +84,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const baseUrl = wcUrl.replace(/\/$/, '');
 
     // Map payment method for WooCommerce
-    const wcPaymentMethod = paymentMethod === 'cod' ? 'cod' : 'razorpay';
+    const wcPaymentMethod = paymentMethod === 'cod' || paymentMethod === 'partial' ? 'cod' : 'razorpay';
     const initialStatus = paymentMethod === 'cod' ? 'pending' : 'pending';
+    const feeLines: { name: string; total: string }[] = [];
+    if (deliveryCharge > 0) {
+      feeLines.push({ name: 'Delivery Charges', total: deliveryCharge.toFixed(2) });
+    }
+    if (discountAmount > 0) {
+      feeLines.push({ name: 'Online Payment Discount (10%)', total: (-discountAmount).toFixed(2) });
+    }
 
     const response = await fetch(`${baseUrl}/orders`, {
       method: 'POST',
@@ -91,7 +110,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         customer_note: orderData.customer_note || '',
         status: initialStatus,
         payment_method: wcPaymentMethod,
-        payment_method_title: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Razorpay',
+        payment_method_title:
+          paymentMethod === 'cod'
+            ? 'Cash on Delivery'
+            : paymentMethod === 'partial'
+              ? 'Partial Payment (Advance + COD)'
+              : 'Razorpay',
+        ...(feeLines.length > 0 ? { fee_lines: feeLines } : {}),
       }),
     });
 
@@ -169,8 +194,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       });
     }
 
-    // Handle Razorpay payment method
-    const amountPaise = Math.round(total * 100);
+    // Handle Razorpay / Partial payment method
+    const payableNow = paymentMethod === 'partial' ? total * PARTIAL_ADVANCE_RATIO : total;
+    const amountPaise = Math.round(payableNow * 100);
     if (amountPaise < 100) {
       return NextResponse.json(
         { success: false, error: 'Minimum order amount is ₹1 for payment.' },
@@ -231,7 +257,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         data: {
           wooOrderId: String(wooOrder.id),
           razorpayOrderId: rzpOrder.id,
-          paymentMethod: 'razorpay',
+          paymentMethod: paymentMethod,
           email: orderData.billing.email,
           phone: orderData.billing.phone,
           firstName: orderData.billing.first_name,
@@ -257,7 +283,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       amount: amountPaise,
       key: keyId,
       wooOrderId: String(wooOrder.id),
-      paymentMethod: 'razorpay',
+      paymentMethod,
     });
   } catch (error) {
     console.error('Checkout error:', error);
