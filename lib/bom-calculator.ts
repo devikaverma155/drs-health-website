@@ -5,6 +5,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { loadPackagingBatchStockMap, loadRawBatchStockMap } from '@/lib/inventory-sync';
+import { calculateCost } from '@/lib/units';
 
 /** Human-readable qty for BOM tables (avoids ambiguous "12 20" when labels were wrong). */
 export function formatBomQuantity(n: number): string {
@@ -98,7 +99,14 @@ export async function calculateBOM(
       const currentStock = rawStockMap.get(req.rawMaterialId) ?? 0;
       const minStock = Number(req.rawMaterial.minStock || 0);
       const costPerUnit = Number(req.rawMaterial.costPerUnit || 0);
-      const totalCost = quantityRequired * costPerUnit;
+      
+      // Calculate cost with unit conversion (e.g. 10g requirement for ₹100/kg material)
+      const totalCost = calculateCost(
+        quantityRequired,
+        displayUnit,
+        costPerUnit,
+        req.rawMaterial.unit || 'unit'
+      );
 
       const shortage = currentStock - quantityRequired;
       const isShortage = shortage < 0;
@@ -133,7 +141,14 @@ export async function calculateBOM(
       const currentStock = packStockMap.get(req.packagingMaterialId) ?? 0;
       const minStock = Number(req.packagingMaterial.minStock || 0);
       const costPerUnit = Number(req.packagingMaterial.costPerUnit || 0);
-      const totalCost = quantityRequired * costPerUnit;
+      
+      // Calculate cost with unit conversion
+      const totalCost = calculateCost(
+        quantityRequired,
+        displayUnit,
+        costPerUnit,
+        req.packagingMaterial.unit || 'unit'
+      );
 
       const shortage = currentStock - quantityRequired;
       const isShortage = shortage < 0;

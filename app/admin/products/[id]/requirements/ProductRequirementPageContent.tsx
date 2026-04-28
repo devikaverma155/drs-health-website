@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ProductRequirementForm, ProductRequirementList } from './RequirementForm';
 import type { Product, ProductRequirement } from '@prisma/client';
 import type { Decimal } from '@prisma/client/runtime/library';
+import { calculateCost } from '@/lib/units';
 
 type RawMaterialOption = { id: string; name: string | null; purchaseRate?: Decimal | null; unit?: string | null };
 type PackagingMaterialOption = { id: string; name: string | null; costPerUnit?: Decimal | null; unit?: string | null };
@@ -48,7 +49,11 @@ export function ProductRequirementPageContent({
     const rate = req.rawMaterial
       ? Number(req.rawMaterial.purchaseRate ?? 0)
       : Number(req.packagingMaterial?.costPerUnit ?? 0);
-    return sum + qty * rate;
+    
+    const materialUnit = req.rawMaterial?.unit || req.packagingMaterial?.unit || 'unit';
+    const lineCost = calculateCost(qty, req.unit || materialUnit, rate, materialUnit);
+    
+    return sum + lineCost;
   }, 0);
 
   return (
