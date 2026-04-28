@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import { ExportMaterialsButton } from '@/components/admin/ExportMaterialsButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -64,6 +65,7 @@ export default async function MaterialsPage() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className="text-2xl font-semibold text-slate-900">Materials (RM & PM)</h1>
         <div className="flex gap-2">
+          <ExportMaterialsButton data={rows} />
           <Link
             href="/admin/raw-material-inventory/new"
             className="rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark"

@@ -1,18 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createProductRequirement, updateProductRequirement, deleteProductRequirement } from './actions';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { calculateCost, UNIT_CONVERSIONS } from '@/lib/units';
 import type { ProductRequirement } from '@prisma/client';
 
 interface RequirementFormProps {
   productId: string;
   requirement?: (ProductRequirement & {
-    rawMaterial?: { id: string; name: string | null } | null;
-    packagingMaterial?: { id: string; name: string | null } | null;
+    rawMaterial?: { id: string; name: string | null; unit?: string | null } | null;
+    packagingMaterial?: { id: string; name: string | null; unit?: string | null } | null;
   }) | null;
-  rawMaterials: { id: string; name: string | null }[];
-  packagingMaterials: { id: string; name: string | null }[];
+  rawMaterials: { id: string; name: string | null; unit?: string | null }[];
+  packagingMaterials: { id: string; name: string | null; unit?: string | null }[];
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -37,6 +38,18 @@ export function ProductRequirementForm({
     requirement?.quantityPerUnit?.toString() || ''
   );
   const [unit, setUnit] = useState(requirement?.unit || '');
+
+  const materials = materialType === 'raw' ? rawMaterials : packagingMaterials;
+
+  // Auto-set unit from material when selecting for the first time
+  useEffect(() => {
+    if (!requirement && materialId) {
+      const mat = materials.find(m => m.id === materialId);
+      if (mat?.unit && !unit) {
+        setUnit(mat.unit.toLowerCase());
+      }
+    }
+  }, [materialId, materials, requirement, unit]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -69,8 +82,6 @@ export function ProductRequirementForm({
       setLoading(false);
     }
   }
-
-  const materials = materialType === 'raw' ? rawMaterials : packagingMaterials;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 rounded-xl bg-white border border-slate-200 p-6">
@@ -133,15 +144,20 @@ export function ProductRequirementForm({
           <label className="block text-sm font-medium text-slate-700 mb-1">
             Unit *
           </label>
-          <input
-            type="text"
-            value={unit}
+          <select
+            value={unit.toLowerCase()}
             onChange={(e) => setUnit(e.target.value)}
             disabled={loading}
             required
-            placeholder="e.g., kg, pieces, L"
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-          />
+          >
+            <option value="">— Select unit —</option>
+            {Object.keys(UNIT_CONVERSIONS).sort().map((u) => (
+              <option key={u} value={u}>
+                {u}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -235,12 +251,13 @@ export function ProductRequirementList({
 
             const qty = Number(req.quantityPerUnit ?? 0);
             const rate = req.rawMaterial
-              ? Number(req.rawMaterial.purchaseRate ?? 0)
-              : Number(req.packagingMaterial?.costPerUnit ?? 0);
-            const costPerUnit = qty * rate;
-            const rateLabel = req.rawMaterial
-              ? (rate > 0 ? `₹${rate.toFixed(2)}` : '-')
-              : (rate > 0 ? `₹${rate.toFixed(2)}` : '-');
+              ? Number((req.rawMaterial as any).purchaseRate ?? 0)
+              : Number((req.packagingMaterial as any).costPerUnit ?? 0);
+            
+            const materialUnit = req.rawMaterial?.unit || req.packagingMaterial?.unit || 'unit';
+            const costPerUnit = calculateCost(qty, req.unit || materialUnit, rate, materialUnit);
+            
+            const rateLabel = rate > 0 ? `₹${rate.toFixed(2)}` : '-';
 
             return (
               <tr key={req.id} className="border-b border-slate-100 hover:bg-slate-50/50">
