@@ -203,7 +203,7 @@ export async function GET(request: Request) {
         id: r.id,
         title: r.name || r.materialCode || 'Material',
         subtitle: r.materialCode ? `Code: ${r.materialCode}` : 'RM',
-        href: '/admin/materials',
+        href: `/admin/raw-material-inventory/${r.id}`,
       });
     }
     for (const p of packagingMaterials) {
@@ -212,7 +212,7 @@ export async function GET(request: Request) {
         id: p.id,
         title: p.name || p.packagingCode || 'Packaging',
         subtitle: p.packagingCode ? `Code: ${p.packagingCode}` : 'PM',
-        href: '/admin/materials',
+        href: `/admin/packaging/${p.id}`,
       });
     }
     for (const v of vendors) {
